@@ -1,7 +1,25 @@
-<template><h1>Archieve</h1></template>
+<template>
+  <div>
+    <h1>Archieve</h1>
+    <div id="management-bar">
+      <div id="title"><h2>Archieved courses</h2></div>
+    </div>
+
+    <div id="course-list">
+      <CourseCard :archieved="true" />
+      <CourseCard :archieved="true" />
+      <CourseCard :archieved="true" />
+      <CourseCard :archieved="true" />
+    </div>
+  </div>
+</template>
 
 <script>
-export default {};
+import CourseCard from "../components/CourseCard.vue";
+
+export default {
+  components: { CourseCard },
+};
 </script>
 
 <style></style>

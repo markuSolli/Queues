@@ -1,12 +1,13 @@
 <template>
   <div id="card">
     <div class="element-1"><h3>Name of course</h3></div>
-    <div class="element-2" v-if="!edit">
-      <h3>
+    <div class="element-2" v-if="edit || archieved || inactive"></div>
+    <div class="element-2" v-else>
+      <h4>
         <router-link class="link" tag="li" to="/courseQueue"
           >Go to queue -></router-link
         >
-      </h3>
+      </h4>
     </div>
     <div class="element-3"><h3>course description should be here</h3></div>
     <div class="element-4" v-if="!edit">
@@ -30,15 +31,19 @@ import { ref } from "@vue/reactivity";
 import Button from "./Button.vue";
 
 export default {
-  props: ["edit"],
+  props: ["edit", "archieved", "inactive"],
   components: { Button },
   setup(props) {
     let edit = ref(props.edit);
+    let archieved = ref(props.archieved);
+    let inactive = ref(props.inactive);
 
     const editCourse = () => {};
 
     return {
       edit,
+      archieved,
+      inactive,
     };
   },
 };
@@ -46,7 +51,7 @@ export default {
 
 <style>
 #card {
-  height: 100px;
+  height: 60px;
   background: rgb(7, 3, 29);
   /*background: linear-gradient(
     217deg,
@@ -55,7 +60,7 @@ export default {
   );*/
   border-radius: 10px;
   text-align: left;
-  padding: 30px;
+  padding: 25px;
   margin: 0px 0px 10px 0px;
   display: grid;
   grid-template-areas: "element-1 element-2" "element-3 element-4";

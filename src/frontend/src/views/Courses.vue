@@ -11,6 +11,8 @@
 
     <div id="queue-container">
       <div id="queue-container-header"><h1>Inactive</h1></div>
+      <Card :inactive="true" />
+      <Card :inactive="true" />
       <div>There is currently no courses inactive courses</div>
     </div>
   </div>
