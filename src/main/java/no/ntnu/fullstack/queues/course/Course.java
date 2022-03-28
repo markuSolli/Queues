@@ -8,6 +8,7 @@ import java.sql.Date;
 
 @Entity
 public class Course {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -53,6 +54,10 @@ public class Course {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setCode(String code) {
