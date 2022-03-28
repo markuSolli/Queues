@@ -18,7 +18,6 @@ public class Course {
     private Date endDate;
     private boolean arhived = false;
     private boolean active = false;
-
     @ManyToMany(targetEntity = Room.class)
     private List<Room> rooms;
 

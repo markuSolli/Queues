@@ -9,7 +9,6 @@ public class Task {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private int number;
-
     @ManyToOne(targetEntity = TaskGroup.class)
     private TaskGroup taskGroup;
 
