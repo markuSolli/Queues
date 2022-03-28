@@ -1,7 +1,7 @@
 <template>
   <div id="card">
     <div class="element-1"><h3>Name of course</h3></div>
-    <div class="element-2">
+    <div class="element-2" v-if="!edit">
       <h3>
         <router-link class="link" tag="li" to="/courseQueue"
           >Go to queue -></router-link
@@ -9,7 +9,7 @@
       </h3>
     </div>
     <div class="element-3"><h3>course description should be here</h3></div>
-    <div class="element-4">
+    <div class="element-4" v-if="!edit">
       <div id="prog-text"><h4>Course progress:</h4></div>
       <div class="loadingBar-1">1</div>
       <div class="loadingBar-1">2</div>
@@ -19,11 +19,29 @@
       <div class="loadingBar-2">6</div>
       <div class="loadingBar-2">7</div>
     </div>
+    <div class="element-4" v-if="edit">
+      <Button :title="'Edit course'" :route="'course'" />
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { ref } from "@vue/reactivity";
+import Button from "./Button.vue";
+
+export default {
+  props: ["edit"],
+  components: { Button },
+  setup(props) {
+    let edit = ref(props.edit);
+
+    const editCourse = () => {};
+
+    return {
+      edit,
+    };
+  },
+};
 </script>
 
 <style>
@@ -92,6 +110,7 @@ export default {};
 }
 
 .element-3 {
+  justify-self: start;
   grid-area: element-3;
   font-size: 12px;
 }

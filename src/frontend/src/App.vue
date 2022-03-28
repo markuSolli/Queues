@@ -1,9 +1,30 @@
 <template>
-  <div id="container"><Navbar /> <router-view /></div>
+  <div id="grid"><Navbar v-if="loggedIn" /> <router-view /></div>
 </template>
 
-<script setup>
+<script>
+import { computed, ref } from "@vue/reactivity";
 import Navbar from "./components/Navbar";
+import { useStore } from "vuex";
+
+export default {
+  components: { Navbar },
+  setup() {
+    const store = useStore();
+
+    let loggedIn = computed(() => {
+      if (store.state.loggedIn) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    return {
+      loggedIn,
+    };
+  },
+};
 </script>
 
 <style>
@@ -12,7 +33,9 @@ import Navbar from "./components/Navbar";
   padding: 0px;
 }
 
-#container {
+#grid {
+  display: grid;
+  grid-area: "Navbar" "router-view";
   width: 1200px;
   margin: 0 auto;
 }
