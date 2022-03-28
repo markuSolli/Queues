@@ -1,0 +1,25 @@
+image: maven:3-jdk-11
+
+stages:
+  - test
+  - package
+
+cache:
+  paths:
+    - .m2/repository
+  key: "$CI_BUILD_REF_NAME"
+
+test:
+  stage: test
+  script:
+    - mvn clean test
+
+package:
+    stage: package
+    script:
+      - mvn -DskipTests package
+    artifacts:
+      paths:
+        - target/*.jar
+    only:
+      - main
