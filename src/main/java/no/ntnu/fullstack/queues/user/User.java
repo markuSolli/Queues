@@ -1,9 +1,6 @@
 package no.ntnu.fullstack.queues.user;
 
-import no.ntnu.fullstack.queues.course.Course;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class User {
