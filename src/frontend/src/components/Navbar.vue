@@ -1,26 +1,53 @@
 <template>
   <div id="nav">
-    <h2>Queues</h2>
-    <router-link class="link" tag="li" to="/">Courses</router-link>
-    <router-link class="link" tag="li" to="/about">About</router-link>
-    <router-link class="link" tag="li" to="/settings">Settings</router-link>
+    <div id="left">
+      <h1>Queues</h1>
+      <router-link class="link" tag="li" to="/">Courses</router-link>
+      <router-link class="link" tag="li" to="/about">About</router-link>
+      <router-link class="link" tag="li" to="/archieve">Archieve</router-link>
+      <router-link v-if="properRank" class="link" tag="li" to="/management"
+        >Management</router-link
+      >
+    </div>
+    <div id="right">
+      <router-link class="link" tag="li" to="/profile">Profile</router-link>
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { computed } from "@vue/runtime-core";
+import { useStore } from "vuex";
+
+export default {
+  setup() {
+    const store = useStore();
+
+    const properRank = computed(() => {
+      if (store.state.rank < 2) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    return {
+      properRank,
+    };
+  },
+};
 </script>
 
 <style>
 #nav {
   text-align: left;
-  font-size: 18px;
+  font-size: 16px;
   padding: 30px;
 }
 
-h2 {
+h1 {
   display: inline;
-  margin-right: 40px;
+  margin-right: 30px;
 }
 
 .link {
@@ -32,6 +59,14 @@ h2 {
 
 .link:hover {
   color: grey;
+}
+
+#left {
+  float: left;
+}
+
+#right {
+  float: right;
 }
 
 li.router-link-active,
