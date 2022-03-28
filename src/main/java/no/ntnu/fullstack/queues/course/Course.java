@@ -32,52 +32,52 @@ public class Course {
         return id;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public boolean isArhived() {
-        return arhived;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public void setCode(String code) {
         this.code = code;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Date getStartDate() {
+        return startDate;
     }
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
+    public boolean isArhived() {
+        return arhived;
+    }
+
     public void setArhived(boolean arhived) {
         this.arhived = arhived;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setActive(boolean active) {
