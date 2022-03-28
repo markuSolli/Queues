@@ -3,19 +3,29 @@ package no.ntnu.fullstack.queues.location;
 import javax.persistence.*;
 
 @Entity
-@IdClass(BuildingID.class)
 public class Building {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
     private String name;
-    @Id
-    private String campus;
+
+    @ManyToOne
+    private Campus campus;
 
     protected Building() {}
 
-    public Building(String name, String campus) {
+    public Building(String name, Campus campus) {
         this.name = name;
         this.campus = campus;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -26,11 +36,11 @@ public class Building {
         this.name = name;
     }
 
-    public String getCampus() {
+    public Campus getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(Campus campus) {
         this.campus = campus;
     }
 }

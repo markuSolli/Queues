@@ -1,25 +1,33 @@
 package no.ntnu.fullstack.queues.location;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.File;
 
 @Entity
-@IdClass(RoomID.class)
 public class Room {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
     private String name;
-    @Id
-    private BuildingID building;
     private File map;
+
+    @ManyToOne
+    private Building building;
 
     protected Room() {}
 
-    public Room(String name, BuildingID building) {
+    public Room(String name, Building building) {
         this.name = name;
         this.building = building;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -30,19 +38,19 @@ public class Room {
         this.name = name;
     }
 
-    public BuildingID getBuilding() {
-        return building;
-    }
-
-    public void setBuilding(BuildingID building) {
-        this.building = building;
-    }
-
     public File getMap() {
         return map;
     }
 
     public void setMap(File map) {
         this.map = map;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
     }
 }
