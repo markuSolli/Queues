@@ -1,10 +1,10 @@
 package no.ntnu.fullstack.queues.course;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import no.ntnu.fullstack.queues.location.Room;
+
+import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 public class Course {
@@ -18,6 +18,9 @@ public class Course {
     private Date endDate;
     private boolean arhived = false;
     private boolean active = false;
+
+    @ManyToMany(targetEntity = Room.class)
+    private List<Room> rooms;
 
     protected Course(){}
 
@@ -82,5 +85,13 @@ public class Course {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 }
