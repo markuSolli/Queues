@@ -16,11 +16,12 @@ public class Approved {
     @ManyToOne(targetEntity = User.class)
     private User user;
     private Date date;
-    private String assistant;
+    @ManyToOne(targetEntity = User.class)
+    private User assistant;
 
     protected Approved() {}
 
-    public Approved(Task task, User user, Date date, String assistant) {
+    public Approved(Task task, User user, Date date, User assistant) {
         this.task = task;
         this.user = user;
         this.date = date;
@@ -59,11 +60,11 @@ public class Approved {
         this.date = date;
     }
 
-    public String getAssistant() {
+    public User getAssistant() {
         return assistant;
     }
 
-    public void setAssistant(String assistant) {
+    public void setAssistant(User assistant) {
         this.assistant = assistant;
     }
 }
