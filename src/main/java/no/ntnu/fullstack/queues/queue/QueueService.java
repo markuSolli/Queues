@@ -17,7 +17,7 @@ public class QueueService {
      * @param course course to look for
      * @return all people in queue for that course
      */
-    public Iterable<Queue> getQueues(Course course) {
+    public Iterable<Queue> getQueue(Course course) {
         return queueRepository.findAllByCourse(course);
     }
 }
