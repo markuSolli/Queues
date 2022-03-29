@@ -1,15 +1,16 @@
 <template>
   <div id="card">
     <div class="element-1"><h3>Name of course</h3></div>
-    <div class="element-2">
-      <h3>
+    <div class="element-2" v-if="edit || archieved || inactive"></div>
+    <div class="element-2" v-else>
+      <h4>
         <router-link class="link" tag="li" to="/courseQueue"
           >Go to queue -></router-link
         >
-      </h3>
+      </h4>
     </div>
     <div class="element-3"><h3>course description should be here</h3></div>
-    <div class="element-4">
+    <div class="element-4" v-if="!edit">
       <div id="prog-text"><h4>Course progress:</h4></div>
       <div class="loadingBar-1">1</div>
       <div class="loadingBar-1">2</div>
@@ -19,16 +20,38 @@
       <div class="loadingBar-2">6</div>
       <div class="loadingBar-2">7</div>
     </div>
+    <div class="element-4" v-if="edit">
+      <Button :title="'Edit course'" :route="'course'" />
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { ref } from "@vue/reactivity";
+import Button from "./Button.vue";
+
+export default {
+  props: ["edit", "archieved", "inactive"],
+  components: { Button },
+  setup(props) {
+    let edit = ref(props.edit);
+    let archieved = ref(props.archieved);
+    let inactive = ref(props.inactive);
+
+    const editCourse = () => {};
+
+    return {
+      edit,
+      archieved,
+      inactive,
+    };
+  },
+};
 </script>
 
 <style>
 #card {
-  height: 100px;
+  height: 60px;
   background: rgb(7, 3, 29);
   /*background: linear-gradient(
     217deg,
@@ -37,7 +60,7 @@ export default {};
   );*/
   border-radius: 10px;
   text-align: left;
-  padding: 30px;
+  padding: 25px;
   margin: 0px 0px 10px 0px;
   display: grid;
   grid-template-areas: "element-1 element-2" "element-3 element-4";
@@ -92,6 +115,7 @@ export default {};
 }
 
 .element-3 {
+  justify-self: start;
   grid-area: element-3;
   font-size: 12px;
 }
