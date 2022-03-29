@@ -9,7 +9,7 @@ stages:
 
 variables:
  MYSQL_DATABASE_NAME: qs
- MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/src/main/resources/static/sql/demodb.sql" 
+ MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/src/main/resources/static/db.sql" 
  MYSQL_ROOT_PASSWORD: password
 
 cache:
