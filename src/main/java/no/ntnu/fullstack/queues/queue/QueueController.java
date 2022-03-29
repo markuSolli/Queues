@@ -21,7 +21,7 @@ public class QueueController {
         this.queueService = queueService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Iterable<Queue>> getQueue(@PathVariable Long id){
         try{
             logger.info("Retrieving queue for course " + id + "...");
@@ -47,11 +47,11 @@ public class QueueController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping
+    @PostMapping("/approved")
     public ResponseEntity<Approved> approveQueue(@RequestBody Queue queue){
         logger.info("Approving queue " + queue.toString() + "...");
-        Approved addedAproval = queueService.approveQueue(queue, queue.getAssistant());
-        return new ResponseEntity<>(addedAproval, HttpStatus.CREATED);
+        Approved addedApproval = queueService.approveQueue(queue, queue.getAssistant());
+        return new ResponseEntity<>(addedApproval, HttpStatus.CREATED);
     }
 
     @PutMapping
