@@ -53,6 +53,9 @@ public class CourseService {
         existingCourse.setId(course.getId());
         existingCourse.setCode(course.getCode());
         existingCourse.setTitle(course.getTitle());
+        existingCourse.setStartDate(course.getStartDate());
+        existingCourse.setEndDate(course.getEndDate());
+        existingCourse.setTitle(course.getTitle());
         existingCourse.setActive(course.isActive());
         existingCourse.setArchived(course.isArchived());
         existingCourse.setRooms(course.getRooms());

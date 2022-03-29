@@ -22,6 +22,7 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<Iterable<Course>> getAllCourses() {
+        logger.info("Retrieving all courses...");
         Iterable<Course> courses = courseService.getAll();
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
@@ -29,6 +30,7 @@ public class CourseController {
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourse(@PathVariable Long id) {
         try {
+            logger.info("Retrieving course " + id + "...");
             return new ResponseEntity<>(courseService.getCourse(id), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -38,17 +40,20 @@ public class CourseController {
 
     @PostMapping
     public ResponseEntity<Course> addCourse(@RequestBody Course course) {
+        logger.info("Creating course " + course.toString() + "...");
         Course addedCourse = courseService.addCourse(course);
         return new ResponseEntity<>(addedCourse, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Course> editCourse(@RequestBody Course course) {
+        logger.info("Editing course " + course.toString() + "...");
         return new ResponseEntity<>(courseService.updateCourse(course), HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Course course) {
+        logger.info("Deleting course " + course.toString() + "...");
         courseService.deleteCourse(course);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
