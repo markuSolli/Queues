@@ -1,9 +1,6 @@
 stages:
-  - buildFront
-  - lintFront
-  - testFront
-  - testBack
-  - packageBack
+  - frontend
+  - backend
 
 cache:
   paths:
@@ -13,34 +10,28 @@ cache:
 
 install_dependencies:
   image: node:14.15.4
-  stage: buildFront
+  stage: frontend
   script:
     - npm install
   artifacts:
     paths:
      - node_modules/
 
-lintFront:
+test_front:
   image: node:14.15.4
-  stage: lintFront
-  script:
-    - npm run lint
-
-testFront:
-  image: node:14.15.4
-  stage: testFront
+  stage: frontend
   script:
     - npm run test
 
-testBack:
+test_back:
   image: maven:3-jdk-11
-  stage: testBack
+  stage: backend
   script:
     - mvn clean test
 
-packageBack:
+package:
     image: maven:3-jdk-11
-    stage: packageBack
+    stage: backend
     script:
       - mvn -DskipTests package
     only:
