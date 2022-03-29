@@ -25,14 +25,12 @@
         <Button
           v-bind:class="{ buttonSelected: help }"
           :title="'Help'"
-          :route="'courseQueue'"
-          :func="clickHelp"
+          @click="clickHelp"
         />
         <Button
           v-bind:class="{ buttonSelected: approval }"
           :title="'Approval'"
-          :route="'courseQueue'"
-          :func="clickApproval"
+          @click="clickApproval"
         />
       </div>
     </div>
@@ -82,9 +80,8 @@ export default {
 <style>
 #help-approval {
   display: flex;
-  margin: 20px auto;
-  width: 400px;
-  justify-content: space-evenly;
+  margin: 20px 0px;
+  justify-content: center;
 }
 
 .buttonSelected {

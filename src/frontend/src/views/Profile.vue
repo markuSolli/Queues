@@ -6,10 +6,10 @@
     <h2 id="spacer">Firstname:</h2>
     <h2 id="spacer">Lastname:</h2>
     <div id="log-out-button">
-      <Button :title="'Reset password'" :func="resetPassword" />
+      <Button :title="'Reset password'" @click="resetPassword" />
     </div>
     <div id="log-out-button">
-      <Button :title="'Log out'" :func="logOut" />
+      <Button :title="'Log out'" @click="logOut" />
     </div>
   </div>
 </template>

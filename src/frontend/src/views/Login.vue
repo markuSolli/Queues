@@ -21,7 +21,7 @@
       </div>
       <div id="input-row">
         <div id="login-button">
-          <Button :title="'Log in'" :func="logIn" />
+          <Button :title="'Log in'" @click="logIn" />
         </div>
       </div>
     </div>
