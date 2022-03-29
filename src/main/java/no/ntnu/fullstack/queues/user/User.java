@@ -4,12 +4,6 @@ import javax.persistence.*;
 
 @Entity
 public class User {
-    private enum Role{
-        STUDENT,
-        ASSISTANT,
-        TEACHER,
-        ADMIN
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
