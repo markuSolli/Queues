@@ -14,30 +14,30 @@ public class Queue {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    @ManyToOne(targetEntity = Course.class)
+    @ManyToOne
     private Course course;
     @ManyToOne
     private User user;
     private Date time;
     private boolean help;
-    @ManyToOne(targetEntity = Room.class)
+    @ManyToOne
     private Room room;
-    private int table;
+    private Integer desk;
     @ManyToOne(targetEntity = Task.class)
-    private int Task;
+    private Task task;
     @ManyToOne(targetEntity = User.class)
     private User assistant;
 
     protected Queue() {}
 
-    public Queue(Course course, User user, Date time, boolean help, Room room, int table, int task) {
+    public Queue(Course course, User user, Date time, boolean help, Room room, Integer desk, Task task) {
         this.course = course;
         this.user = user;
         this.time = time;
         this.help = help;
         this.room = room;
-        this.table = table;
-        Task = task;
+        this.desk = desk;
+        this.task =  task;
     }
 
     public Long getId() {
@@ -88,20 +88,20 @@ public class Queue {
         this.room = room;
     }
 
-    public int getTable() {
-        return table;
+    public Integer getDesk() {
+        return desk;
     }
 
-    public void setTable(int table) {
-        this.table = table;
+    public void setDesk(Integer table) {
+        this.desk = table;
     }
 
-    public int getTask() {
-        return Task;
+    public Task getTask() {
+        return task;
     }
 
-    public void setTask(int task) {
-        Task = task;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public User getAssistant() {

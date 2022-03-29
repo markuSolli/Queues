@@ -16,7 +16,7 @@ public class Course {
     private String title;
     private Date startDate;
     private Date endDate;
-    private boolean arhived = false;
+    private boolean archived = false;
     private boolean active = false;
     @ManyToMany(targetEntity = Room.class)
     private List<Room> rooms;
@@ -70,12 +70,12 @@ public class Course {
         this.endDate = endDate;
     }
 
-    public boolean isArhived() {
-        return arhived;
+    public boolean isArchived() {
+        return archived;
     }
 
-    public void setArhived(boolean arhived) {
-        this.arhived = arhived;
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public boolean isActive() {
