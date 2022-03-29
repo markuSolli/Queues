@@ -1,7 +1,16 @@
+services:
+ - mysql
+
 stages:
-  - install
+  - build
+  - connect
   - test
   - package
+
+variables:
+ MYSQL_DATABASE_NAME: qs
+ MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/src/main/resources/static/sql/demodb.sql" 
+ MYSQL_ROOT_PASSWORD: password
 
 cache:
   paths:
@@ -11,12 +20,31 @@ cache:
 
 install_dependencies:
   image: node:14.15.4
-  stage: install
+  stage: build
   script:
     - npm install
   artifacts:
     paths:
      - node_modules/
+
+build_backend:
+  image: maven:3-jdk-11
+  stage: build
+  script:
+  - mvn clean compile
+
+connect:
+  image: mysql
+  stage: connect
+  needs: ["build_backend"]
+  before_script:
+  - mysql --version
+  - apt-get update -q && apt-get install -qqy --no-install-recommends mysql-client
+  script:
+  - echo "create database $MYSQL_DATABASE_NAME;" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql
+  - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE_NAME < $MYSQL_DATABASE_SCHEMA
+  - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "show databases; use $MYSQL_DATABASE_NAME; show tables;"
+
 
 test_front:
   image: node:14.15.4
@@ -28,6 +56,7 @@ test_front:
 test_back:
   image: maven:3-jdk-11
   stage: test
+  needs: ["connect"]
   script:
     - mvn clean test
 
