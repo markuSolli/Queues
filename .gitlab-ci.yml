@@ -1,6 +1,7 @@
 stages:
-  - frontend
-  - backend
+  - install
+  - test
+  - package
 
 cache:
   paths:
@@ -10,7 +11,7 @@ cache:
 
 install_dependencies:
   image: node:14.15.4
-  stage: frontend
+  stage: install
   script:
     - npm install
   artifacts:
@@ -19,20 +20,20 @@ install_dependencies:
 
 test_front:
   image: node:14.15.4
-  stage: frontend
+  stage: test
   needs: ["install_dependencies"]
   script:
     - npm run test
 
 test_back:
   image: maven:3-jdk-11
-  stage: backend
+  stage: test
   script:
     - mvn clean test
 
 package:
     image: maven:3-jdk-11
-    stage: backend
+    stage: package
     needs: ["test_back"]
     script:
       - mvn -DskipTests package
