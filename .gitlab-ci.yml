@@ -1,25 +1,47 @@
-image: maven:3-jdk-11
-
 stages:
-  - test
-  - package
+  - buildFront
+  - lintFront
+  - testFront
+  - testBack
+  - packageBack
 
 cache:
   paths:
     - .m2/repository
+    - node_modules/
   key: "$CI_BUILD_REF_NAME"
 
-test:
-  stage: test
+install_dependencies:
+  image: node:14.15.4
+  stage: buildFront
+  script:
+    - npm install
+  artifacts:
+    paths:
+     - node_modules/
+
+lintFront:
+  image: node:14.15.4
+  stage: lintFront
+  script:
+    - npm run lint
+
+testFront:
+  image: node:14.15.4
+  stage: testFront
+  script:
+    - npm run test
+
+testBack:
+  image: maven:3-jdk-11
+  stage: testBack
   script:
     - mvn clean test
 
-package:
-    stage: package
+packageBack:
+    image: maven:3-jdk-11
+    stage: packageBack
     script:
       - mvn -DskipTests package
-    artifacts:
-      paths:
-        - target/*.jar
     only:
       - main
