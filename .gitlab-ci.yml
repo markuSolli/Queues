@@ -1,25 +1,41 @@
-image: maven:3-jdk-11
-
 stages:
+  - install
   - test
   - package
 
 cache:
   paths:
     - .m2/repository
+    - node_modules/
   key: "$CI_BUILD_REF_NAME"
 
-test:
+install_dependencies:
+  image: node:14.15.4
+  stage: install
+  script:
+    - npm install
+  artifacts:
+    paths:
+     - node_modules/
+
+test_front:
+  image: node:14.15.4
+  stage: test
+  needs: ["install_dependencies"]
+  script:
+    - npm run test
+
+test_back:
+  image: maven:3-jdk-11
   stage: test
   script:
     - mvn clean test
 
 package:
+    image: maven:3-jdk-11
     stage: package
+    needs: ["test_back"]
     script:
       - mvn -DskipTests package
-    artifacts:
-      paths:
-        - target/*.jar
     only:
       - main
