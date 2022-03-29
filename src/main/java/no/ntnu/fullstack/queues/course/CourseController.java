@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
  * The controller layer for Courses
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/courses")
 public class CourseController {
     private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
