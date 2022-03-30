@@ -140,7 +140,7 @@ export default {
   border-radius: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  padding: 15px;
+  padding: 5px 20px;
   margin: 5px 0px 0px 0px;
 }
 

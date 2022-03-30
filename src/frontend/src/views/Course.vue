@@ -9,20 +9,14 @@
         v-model="code"
         placeholder="Code"
       />
-    </div>
-
-    <div class="row">
       <input
         class="input-field"
         type="text"
         v-model="title"
         placeholder="Title"
       />
-    </div>
-
-    <div class="row">
       <div id="date-row">
-        <h2>Select start and end date</h2>
+        <h3>Start and end date</h3>
         <div id="datepicker">
           <Datepicker range v-model="date"></Datepicker>
         </div>
