@@ -1,7 +1,13 @@
-<template></template>
+<template>
+  <PersonList />
+</template>
 
 <script>
-export default {};
+import PersonList from "../components/PersonList.vue";
+
+export default {
+  components: { PersonList },
+};
 </script>
 
 <style></style>
