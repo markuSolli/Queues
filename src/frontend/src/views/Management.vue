@@ -7,12 +7,18 @@
         <Button :title="'Add new course'" :route="'course'" />
       </div>
     </div>
-
     <div id="course-list">
       <CourseCard :edit="true" />
       <CourseCard :edit="true" />
       <CourseCard :edit="true" />
       <CourseCard :edit="true" />
+    </div>
+    <div id="management-bar">
+      <div id="title"><h2>Users</h2></div>
+      <div id="buttons">
+        <Button :title="'Add new user'" :route="'course'" />
+        <Button :title="'Add new user'" :route="'course'" />
+      </div>
     </div>
   </div>
 </template>
