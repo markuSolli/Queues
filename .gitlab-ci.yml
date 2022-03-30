@@ -64,6 +64,7 @@ build_front:
   needs: ["test_front"]
   script:
     - cd src/frontend
+    - npm install --progress=false
     - npm run build
   artifacts:
     paths:
