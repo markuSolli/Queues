@@ -18,7 +18,7 @@
           <h3>Group {{ taskgroup.number }}</h3>
         </div>
         <div id="group-description">
-          <h3>Tasks required to pass:</h3>
+          <h4>Tasks required to pass:</h4>
           <input
             v-model="number"
             placeholder="Number"
@@ -26,10 +26,10 @@
             type="number"
             @input="updateRequired(taskgroup, number)"
           />
-          <h3>
+          <h4>
             /
             {{ taskgroup.total }}
-          </h3>
+          </h4>
         </div>
         <div id="group-buttons">
           <Button
@@ -133,7 +133,7 @@ export default {
 <style>
 #amount-input {
   height: 20px;
-  width: 80px;
+  width: 75px;
   margin: 0px 10px;
   background: transparent;
   border-bottom: 1px solid white;
@@ -142,25 +142,27 @@ export default {
   border-left: none;
   border-right: none;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 #tasks {
   display: grid;
   grid-auto-columns: 1fr 1fr 1fr;
-  padding: 10px 20px;
+  padding: 0px 20px;
   border: 1px white dashed;
 }
 
 #group-header {
   grid-column: 1/2;
   justify-self: start;
+  align-self: center;
 }
 
 #group-description {
   display: flex;
   grid-column: 2/3;
   justify-self: center;
+  align-self: center;
 }
 
 #group-buttons {
@@ -172,6 +174,7 @@ export default {
 #header {
   grid-column: 1/2;
   justify-self: start;
+  align-self: center;
 }
 
 #buttons {
@@ -186,7 +189,7 @@ export default {
   border-right: 1px white solid;
   border-top: 1px white solid;
   margin: 20px 0px 0px 0px;
-  padding: 20px;
+  padding: 10px 20px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
