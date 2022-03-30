@@ -4,7 +4,7 @@
     <div id="management-bar">
       <div id="title"><h2>Your courses</h2></div>
       <div id="buttons">
-        <Button :title="'Add new course'" />
+        <Button :title="'Add new course'" :route="'course'" />
       </div>
     </div>
 

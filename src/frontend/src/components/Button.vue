@@ -2,13 +2,13 @@
   <div id="button">
     <div>
       <router-link
-        v-if="!func"
+        v-if="route"
         class="button-text"
         tag="li"
         :to="'/' + route"
         >{{ title }}</router-link
       >
-      <div @click="func" v-else>{{ title }}</div>
+      <div v-else>{{ title }}</div>
     </div>
   </div>
 </template>
@@ -17,14 +17,12 @@
 import { ref } from "vue";
 
 export default {
-  props: ["title", "route", "func"],
+  props: ["title", "route"],
   setup(props) {
     const route = ref(props.route);
-    const func = props.func;
 
     return {
       route,
-      func,
     };
   },
 };
@@ -35,8 +33,9 @@ export default {
   cursor: pointer;
   border: 1px white solid;
   border-radius: 12px;
-  padding: 10px;
-  width: 150px;
+  padding: 10px 20px;
+  margin: 0px 5px;
+  text-align: center;
 }
 
 #button:hover ~ .button-text {

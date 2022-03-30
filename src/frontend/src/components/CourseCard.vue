@@ -1,16 +1,18 @@
 <template>
   <div id="card">
-    <div class="element-1"><h3>Name of course</h3></div>
-    <div class="element-2" v-if="edit || archieved || inactive"></div>
-    <div class="element-2" v-else>
+    <div class="queue-element-1"><h3>Name of course</h3></div>
+    <div class="queue-element-2" v-if="edit || archieved || inactive"></div>
+    <div class="queue-element-2" v-else>
       <h4>
         <router-link class="link" tag="li" to="/courseQueue"
           >Go to queue -></router-link
         >
       </h4>
     </div>
-    <div class="element-3"><h3>course description should be here</h3></div>
-    <div class="element-4" v-if="!edit">
+    <div class="queue-element-3">
+      <h3>course description should be here</h3>
+    </div>
+    <div class="queue-element-4" v-if="!edit">
       <div id="prog-text"><h4>Course progress:</h4></div>
       <div class="loadingBar-1">1</div>
       <div class="loadingBar-1">2</div>
@@ -20,8 +22,10 @@
       <div class="loadingBar-2">6</div>
       <div class="loadingBar-2">7</div>
     </div>
-    <div class="element-4" v-if="edit">
-      <Button :title="'Edit course'" :route="'course'" />
+    <div class="queue-element-4" v-if="edit">
+      <Button :title="'Edit'" :route="'course'" />
+      <Button :title="'Archieve'" :route="'course'" />
+      <Button :title="'Delete'" :route="'course'" />
     </div>
   </div>
 </template>
@@ -105,24 +109,25 @@ export default {
   background: rgb(5, 158, 0);
 }
 
-.element-1 {
+.queue-element-1 {
   grid-area: element-1;
 }
 
-.element-2 {
+.queue-element-2 {
   text-align: right;
   grid-area: element-2;
 }
 
-.element-3 {
+.queue-element-3 {
   justify-self: start;
   grid-area: element-3;
   font-size: 12px;
 }
 
-.element-4 {
+.queue-element-4 {
   grid-area: element-4;
   justify-self: end;
   align-self: end;
+  display: flex;
 }
 </style>
