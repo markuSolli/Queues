@@ -53,7 +53,8 @@ build_back:
   script:
     - mvn -DskipTests package -B $PIPELINE_PROFILE
   artifacts:
-    - target/*.jar
+    paths:
+      - target/*.jar
 #  only:
 #    - main
 
@@ -65,7 +66,7 @@ build_front:
     - cd src/frontend
     - npm run build
   artifacts:
-    - paths:
-        - dist/
+    paths:
+      - dist/
 #  only:
 #    - main
