@@ -42,8 +42,8 @@ public class CourseController {
     /**
      * This method allows for creation of a course with a large amount of details
      *
-     * @param courseDTO
-     * @return
+     * @param courseDTO information about the course
+     * @return course that was created
      */
     @PostMapping
     public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseDTO) {

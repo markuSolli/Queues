@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.authentication.jwt;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,11 +42,30 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Decodes a jwt with. If the token is expired, has been tampered with or is otherwise not trustworthy,
+     * the method will throw a JwtException.
+     * @param jwt Jwt
+     * @return Subject from the payload of the jwt. In this case it should be the email of the authenticated user
+     * @throws JwtException this exception is thrown if the jwt is not trustable.
+     */
+    public String decode(String jwt) throws JwtException {
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtConfig.getSecretKey())
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody()
+                .getSubject();
+    }
+
+    /**
+     * Returns name of cookie used for the refresh token
+     *
+     * @return name of cookie
+     */
     public String cookieName() {
         return jwtConfig.getCookieName();
     }
 
-    public String decode(String refreshToken) {
-        return null;
-    }
+
 }

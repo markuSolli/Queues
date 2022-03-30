@@ -2,6 +2,7 @@ package no.ntnu.fullstack.queues.config;
 
 import no.ntnu.fullstack.queues.authentication.CustomUsernamePasswordAuthenticationFilter;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtUtil;
+import no.ntnu.fullstack.queues.authentication.jwt.JwtValidationFilter;
 import no.ntnu.fullstack.queues.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,21 +33,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable();
-//                .cors().and()
-//                    .sessionManagement()
-//                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                    .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtil))
-//                .authorizeRequests()
-//                    .antMatchers("/courses").hasAnyRole("ADMIN", "TEACHER")
-//                    .antMatchers("/login").permitAll()
-//                    .antMatchers("/signup").permitAll()
-//                    .antMatchers("/swagger-ui/**").permitAll()
-//                    .antMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.DELETE, "/courses/**").hasRole("ADMIN")
-//                .anyRequest().authenticated();
-        ;
+                .csrf().disable()
+                .cors().and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                    .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtil))
+                .addFilterAfter(new JwtValidationFilter(jwtUtil, userService), CustomUsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                    .antMatchers("/courses").hasAnyRole("ADMIN", "TEACHER", "STUDENT")
+                    .antMatchers("/login").permitAll()
+                    .antMatchers("/signup").permitAll()
+                    .antMatchers("/swagger-ui/**").permitAll()
+                    .antMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/courses/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
     }
 
 
