@@ -55,8 +55,8 @@ build_back:
   artifacts:
     paths:
       - target/*.jar
-#  only:
-#    - main
+  only:
+    - main
 
 #build_front:
 #  image: node:14.15.4
