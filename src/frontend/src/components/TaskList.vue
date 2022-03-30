@@ -148,8 +148,9 @@ export default {
 #tasks {
   display: grid;
   grid-auto-columns: 1fr 1fr 1fr;
-  padding: 0px 20px;
-  border: 1px white dashed;
+  padding: 5px 20px;
+  margin-top: 2px;
+  background: rgb(7, 3, 29);
 }
 
 #group-header {
@@ -185,13 +186,12 @@ export default {
 #task-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-left: 1px white solid;
-  border-right: 1px white solid;
-  border-top: 1px white solid;
+
   margin: 20px 0px 0px 0px;
   padding: 10px 20px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background: rgb(7, 3, 29);
 }
 
 .add-row {

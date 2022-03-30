@@ -9,6 +9,11 @@
         <Button :title="'Add from CSV'" />
       </div>
     </div>
+    <PersonCard
+      :email="'Email'"
+      :firstname="'Firstname'"
+      :lastname="'Lastname'"
+    />
     <div v-for="person in list" :key="person.email" class="person-list">
       <div v-if="person.create == null">
         <PersonCard
@@ -16,6 +21,7 @@
           :email="person.email"
           :firstname="person.firstname"
           :lastname="person.lastname"
+          :edit="true"
         />
       </div>
       <div v-else>

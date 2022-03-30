@@ -32,10 +32,11 @@ export default {
 #button {
   cursor: pointer;
   border: 1px white solid;
-  border-radius: 12px;
-  padding: 10px 20px;
+  border-radius: 10px;
+  padding: 5px 15px;
   margin: 0px 5px;
   text-align: center;
+  font-size: 15px;
 }
 
 #button:hover ~ .button-text {
