@@ -1,18 +1,18 @@
 <template>
   <div id="person-card">
-    <div v-if="edit || create" id="element-1">
+    <div v-if="currentlyEditing || create" id="element-1">
       Email <input id="input-field" v-model="email" type="text" />
     </div>
     <div v-else id="element-1">
       {{ email }}
     </div>
-    <div v-if="edit || create" id="element-2">
+    <div v-if="currentlyEditing || create" id="element-2">
       Firstname<input id="input-field" v-model="firstname" type="text" />
     </div>
     <div v-else id="element-2">
       {{ firstname }}
     </div>
-    <div v-if="edit || create" id="element-3">
+    <div v-if="currentlyEditing || create" id="element-3">
       Lastname<input id="input-field" v-model="lastname" type="text" />
     </div>
     <div v-else id="element-3">
@@ -22,11 +22,11 @@
       <Button :title="'Done'" @click="doneCreatePerson" />
       <Button :title="'Cancel'" @click="cancelAddPerson" />
     </div>
-    <div v-if="edit" id="element-4">
+    <div v-if="currentlyEditing" id="element-4">
       <Button :title="'Edit'" @click="doneEditPerson" />
       <Button :title="'Cancel'" @click="cancelEditPerson" />
     </div>
-    <div v-if="!create && !edit" id="element-4">
+    <div v-if="edit" id="element-4">
       <Button :title="'Edit'" @click="editPerson" />
       <Button :title="'Delete'" @click="deletePerson" />
     </div>
@@ -46,6 +46,7 @@ export default {
     let firstname = ref(props.firstname);
     let lastname = ref(props.lastname);
     let edit = ref(props.edit);
+    let currentlyEditing = false;
     let create = ref(props.create);
     let editEmail = ref(props.email);
     let editFirstname = ref(props.firstname);
@@ -90,7 +91,7 @@ export default {
       email.value = editEmail.value;
       firstname.value = editFirstname.value;
       lastname.value = editLastname.value;
-      edit.value = false;
+      currentlyEditing.value = false;
     };
     const doneEditPerson = () => {
       // validation, check if unique email and not blank fields
@@ -103,7 +104,7 @@ export default {
         }
         // create new user based on new input
         doneCreatePerson();
-        edit.value = false;
+        currentlyEditing.value = false;
       }
     };
 
@@ -128,6 +129,7 @@ export default {
       firstname,
       lastname,
       edit,
+      currentlyEditing,
       create,
     };
   },
@@ -136,12 +138,12 @@ export default {
 
 <style>
 #person-card {
-  border: 1px solid black;
-  border-radius: 20px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   padding: 5px 20px;
-  margin: 5px 0px 0px 0px;
+  margin: 3px 0px 0px 0px;
+  background: rgb(7, 3, 29);
 }
 
 #element-1 {
