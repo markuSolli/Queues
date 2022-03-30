@@ -92,18 +92,4 @@ public class AuthenticationController {
         }
     }
 
-
-    /**
-     * Used for getting information about one self, such that this can be displayed where needed
-     * @param authentication
-     * @return
-     */
-    @GetMapping("/me")
-    public UserInfo whoAmI(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return new UserInfo(user.getUsername(), user.getFirstName(), user.getLastName());
-    }
-
-
-
 }

@@ -1,7 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
 import no.ntnu.fullstack.queues.task.TaskGroup;
-import no.ntnu.fullstack.queues.task.TaskService;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +8,10 @@ import org.springframework.stereotype.Service;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final UserService userService;
-    private final TaskService taskService;
 
-    public CourseService(CourseRepository courseRepository, UserService userService, TaskService taskService) {
+    public CourseService(CourseRepository courseRepository, UserService userService) {
         this.courseRepository = courseRepository;
         this.userService = userService;
-        this.taskService = taskService;
     }
 
     /**
@@ -77,6 +74,9 @@ public class CourseService {
 
     /**
      * Takes all data about a course and creates a complete network of everything that should be stored
+     *
+     * @param courseDTO information about a course
+     * @return the course that was created from the data
      */
     public Course createCourse(CourseDTO courseDTO) {
         Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getStartDate(), courseDTO.getEndDate());
