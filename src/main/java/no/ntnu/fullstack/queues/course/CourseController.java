@@ -59,4 +59,12 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("/complete")
+    public void addUserToCourse(@RequestBody UserCourse userCourse) {
+        logger.info("Adding {} to {}...", userCourse.getUser(), userCourse.getCourse());
+        Course course = userCourse.getCourse();
+        course.addUser(userCourse.getUser(), userCourse.getRole());
+        courseService.addCourse(course);
+    }
+
 }

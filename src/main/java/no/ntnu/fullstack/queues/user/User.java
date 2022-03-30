@@ -1,13 +1,12 @@
 package no.ntnu.fullstack.queues.user;
 
+import no.ntnu.fullstack.queues.course.UserCourse;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 @Entity
 public class User implements UserDetails {
@@ -18,9 +17,10 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private boolean enabled = true;
+    private Role role;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new HashSet<>();
+    @OneToMany
+    private List<UserCourse> courses = new ArrayList<>();
 
     protected User() {}
 
@@ -47,21 +47,25 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<UserCourse> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<UserCourse> courses) {
+        this.courses = courses;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> authorities = new HashSet<>();
-        roles.forEach((role) -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
-        return authorities;
+        return List.of(new SimpleGrantedAuthority(role.toString()));
     }
 
     @Override

@@ -32,7 +32,6 @@ public class CourseService {
         return courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
     }
 
-
     /**
      * Adds the given course to the database
      *

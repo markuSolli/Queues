@@ -55,4 +55,14 @@ public class UserCourse {
     public void setRole(CourseRole role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "UserCourse{" +
+                "id=" + id +
+                ", user=" + user +
+                ", course=" + course +
+                ", role=" + role +
+                '}';
+    }
 }

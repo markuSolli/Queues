@@ -1,22 +1,25 @@
 package no.ntnu.fullstack.queues.user;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder bCrypt;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder bCrypt) {
+    public UserService(UserRepository userRepository, PasswordEncoder bCrypt) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.bCrypt = bCrypt;
     }
 
@@ -31,7 +34,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Couldn't find " + username));
     }
 
-
     /**
      * Creates a new user in the database, if and only if the user does not already exist in the database and
      * after their password has been encrypted.
@@ -44,33 +46,36 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("Email already in use");
         }
 
-        System.out.println(userDTO.getEmail());
-        System.out.println(userDTO.getPassword());
+        // Encoding password
+        String encodedPassword = bCrypt.encode(userDTO.getPassword());
+
+        // Creating user-object
+        User user = new User(userDTO.getEmail(), encodedPassword, userDTO.getFirstName(), userDTO.getLastName());
+        user.setRole(Role.STUDENT);
+
+        return userRepository.save(user);
+    }
+
+    /**
+     * Creates a new user in the database, if and only if the user does not already exist in the database and
+     * after their password has been encrypted.
+     *
+     * @param userDTO information about the user to signup
+     * @return user that was signed up
+     */
+    public User signupTeacher(UserDTO userDTO) throws UserAlreadyExistsException {
+        if (userExits(userDTO.getEmail())) {
+            throw new UserAlreadyExistsException("Email already in use");
+        }
 
         // Encoding password
         String encodedPassword = bCrypt.encode(userDTO.getPassword());
 
         // Creating user-object
         User user = new User(userDTO.getEmail(), encodedPassword, userDTO.getFirstName(), userDTO.getLastName());
+        user.setRole(Role.TEACHER);
 
         return userRepository.save(user);
-    }
-
-    /**
-     * Used for assigning roles to the users
-     *
-     * @param roleName name of the role
-     * @param email email of the user
-     */
-    public void addRoleToUser(String roleName, String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        Optional<Role> role = roleRepository.findByName(roleName);
-        if(role.isEmpty()) {
-            role = roleRepository.findByName("ROLE_STUDENT");
-        }
-        if(user.isPresent() && role.isPresent()) {
-            user.get().getRoles().add(role.get());
-        }
     }
 
     /**
@@ -81,5 +86,22 @@ public class UserService implements UserDetailsService {
      */
     private boolean userExits(String username) {
         return userRepository.findByEmail(username).isPresent();
+    }
+
+
+    /**
+     * This is used for defining the hierarchy of the roles the users can have.
+     *
+     * @return the hierarchy structure of the roles in this program
+     */
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy =
+                "ROLE_ADMIN > ROLE_TEACHER \n " +
+                "ROLE_TEACHER > ROLE_ASSISTANT \n " +
+                "ROLE_ASSISTANT > ROLE_STUDENT";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
     }
 }

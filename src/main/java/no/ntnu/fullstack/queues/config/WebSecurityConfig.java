@@ -33,19 +33,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                    .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtil))
-                .authorizeRequests()
-                    .antMatchers("/courses").hasAnyRole("ADMIN", "TEACHER")
-                    .antMatchers("/login").permitAll()
-                    .antMatchers("/signup").permitAll()
-                    .antMatchers("/swagger-ui/**").permitAll()
-                    .antMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/courses/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+//                .cors().and()
+//                    .sessionManagement()
+//                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                    .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtil))
+//                .authorizeRequests()
+//                    .antMatchers("/courses").hasAnyRole("ADMIN", "TEACHER")
+//                    .antMatchers("/login").permitAll()
+//                    .antMatchers("/signup").permitAll()
+//                    .antMatchers("/swagger-ui/**").permitAll()
+//                    .antMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
+//                    .antMatchers(HttpMethod.DELETE, "/courses/**").hasRole("ADMIN")
+//                .anyRequest().authenticated();
         ;
     }
 

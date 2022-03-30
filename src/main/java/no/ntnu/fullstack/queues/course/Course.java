@@ -1,9 +1,11 @@
 package no.ntnu.fullstack.queues.course;
 
 import no.ntnu.fullstack.queues.location.Room;
+import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,6 +22,8 @@ public class Course {
     private boolean active = false;
     @ManyToMany(targetEntity = Room.class)
     private List<Room> rooms;
+    @OneToMany
+    private List<UserCourse> users = new ArrayList<>();
 
     protected Course(){}
 
@@ -92,6 +96,45 @@ public class Course {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public List<UserCourse> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserCourse> users) {
+        this.users = users;
+    }
+
+    /**
+     * Adds a user to this course and defines which role this user has in the course
+     *
+     * @param user user to add to course
+     * @param courseRole role of user in the course
+     */
+    public void addUser(User user, CourseRole courseRole) {
+        UserCourse userCourse = new UserCourse(user, this, courseRole);
+        users.add(userCourse);
+        user.getCourses().add(userCourse);
+    }
+
+    /**
+     * Removes a user from the course
+     *
+     * @param user user to remove from course
+     */
+    public void removeUser(User user) {
+        UserCourse userCourseToRemove = null;
+        for(UserCourse userCourse : users) {
+            if(userCourse.getUser().equals(user)) {
+                userCourseToRemove = userCourse;
+                break;
+            }
+        }
+        if(userCourseToRemove != null) {
+            users.remove(userCourseToRemove);
+            userCourseToRemove.getUser().getCourses().remove(userCourseToRemove);
+        }
     }
 
     @Override
