@@ -1,6 +1,8 @@
 package no.ntnu.fullstack.queues.course;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.user.User;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -10,9 +12,10 @@ public class UserCourse {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
     private CourseRole role;
 

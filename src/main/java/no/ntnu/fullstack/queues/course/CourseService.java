@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.user.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -69,4 +70,26 @@ public class CourseService {
     public void deleteCourse(Course course) {
         courseRepository.deleteById(course.getId());
     }
+
+
+    /**
+     * Takes all data about a course and creates a complete network of everything that should be stored
+     */
+    public Course createCourse(CourseDTO courseDTO) {
+        Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getStartDate(), courseDTO.getEndDate());
+
+        // Adding all the users to the course with their respective roles
+        for(User teacher : courseDTO.getTeachers()) {
+            course.addUser(teacher, CourseRole.TEACHER);
+        }
+        for(User assistant : courseDTO.getAssistants()) {
+            course.addUser(assistant, CourseRole.ASSISTANT);
+        }
+        for(User student : courseDTO.getStudents()) {
+            course.addUser(student, CourseRole.STUDENT);
+        }
+
+        return courseRepository.save(course);
+    }
+
 }

@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.course.UserCourse;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,8 +20,9 @@ public class User implements UserDetails {
     private boolean enabled = true;
     private Role role;
 
-    @OneToMany
-    private List<UserCourse> courses = new ArrayList<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user")
+//    private Set<UserCourse> courses = new HashSet<>();
 
     protected User() {}
 
@@ -29,6 +31,14 @@ public class User implements UserDetails {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -55,17 +65,17 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public List<UserCourse> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<UserCourse> courses) {
-        this.courses = courses;
-    }
+//    public Set<UserCourse> getCourses() {
+//        return courses;
+//    }
+//
+//    public void setCourses(Set<UserCourse> courses) {
+//        this.courses = courses;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.toString()));
+        return List.of(new SimpleGrantedAuthority("STUDENT"));
     }
 
     @Override
@@ -96,5 +106,15 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+//                ", courses=" + courses +
+                '}';
     }
 }

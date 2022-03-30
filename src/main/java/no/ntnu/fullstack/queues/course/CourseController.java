@@ -39,11 +39,16 @@ public class CourseController {
         }
     }
 
+    /**
+     * This method allows for creation of a course with a large amount of details
+     *
+     * @param courseDTO
+     * @return
+     */
     @PostMapping
-    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
-        logger.info("Creating course " + course.toString() + "...");
-        Course addedCourse = courseService.addCourse(course);
-        return new ResponseEntity<>(addedCourse, HttpStatus.CREATED);
+    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseDTO) {
+        logger.info("Creating course " + courseDTO.getCode() + "...");
+        return new ResponseEntity<>(courseService.createCourse(courseDTO), HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -57,14 +62,6 @@ public class CourseController {
         logger.info("Deleting course " + course.toString() + "...");
         courseService.deleteCourse(course);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PostMapping("/complete")
-    public void addUserToCourse(@RequestBody UserCourse userCourse) {
-        logger.info("Adding {} to {}...", userCourse.getUser(), userCourse.getCourse());
-        Course course = userCourse.getCourse();
-        course.addUser(userCourse.getUser(), userCourse.getRole());
-        courseService.addCourse(course);
     }
 
 }

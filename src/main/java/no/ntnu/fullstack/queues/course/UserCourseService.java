@@ -28,17 +28,4 @@ public class UserCourseService {
         userCourseRepository.save(new UserCourse(user, course, courseRole));
     }
 
-    /**
-     * Adds a User - Course relationship to the database
-     *
-     * @param userCourse user course to add
-     * @return UserCourse
-     */
-    public UserCourse addUserCourse(UserCourse userCourse) {
-        User user = (User) userService.loadUserByUsername(userCourse.getUser().getUsername());
-        Course course = courseService.findCourse(userCourse.getCourse().getCode());
-        return userCourseRepository.save(userCourse);
-    }
-
-
 }

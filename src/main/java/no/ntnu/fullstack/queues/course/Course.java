@@ -2,11 +2,15 @@ package no.ntnu.fullstack.queues.course;
 
 import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.user.User;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.bytecode.enhance.spi.interceptor.AbstractLazyLoadInterceptor;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Course {
@@ -22,8 +26,8 @@ public class Course {
     private boolean active = false;
     @ManyToMany(targetEntity = Room.class)
     private List<Room> rooms;
-    @OneToMany
-    private List<UserCourse> users = new ArrayList<>();
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private Set<UserCourse> users = new HashSet<>();
 
     protected Course(){}
 
@@ -98,11 +102,11 @@ public class Course {
         this.rooms = rooms;
     }
 
-    public List<UserCourse> getUsers() {
+    public Set<UserCourse> getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserCourse> users) {
+    public void setUsers(Set<UserCourse> users) {
         this.users = users;
     }
 
@@ -115,7 +119,7 @@ public class Course {
     public void addUser(User user, CourseRole courseRole) {
         UserCourse userCourse = new UserCourse(user, this, courseRole);
         users.add(userCourse);
-        user.getCourses().add(userCourse);
+//        user.getCourses().add(userCourse);
     }
 
     /**
@@ -133,7 +137,7 @@ public class Course {
         }
         if(userCourseToRemove != null) {
             users.remove(userCourseToRemove);
-            userCourseToRemove.getUser().getCourses().remove(userCourseToRemove);
+//            userCourseToRemove.getUser().getCourses().remove(userCourseToRemove);
         }
     }
 
