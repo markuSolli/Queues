@@ -46,19 +46,19 @@ connect:
   - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "show databases; use $MYSQL_DATABASE_NAME; show tables;"
 
 
-test_front:
-  image: node:14.15.4
-  stage: test
-  needs: ["install_dependencies"]
-  script:
-    - npm run test
+#test_front:
+#  image: node:14.15.4
+#  stage: test
+#  needs: ["install_dependencies"]
+#  script:
+#    - npm run test
 
-test_back:
-  image: maven:3-jdk-11
-  stage: test
-  needs: ["connect"]
-  script:
-    - mvn clean test
+#test_back:
+#  image: maven:3-jdk-11
+#  stage: test
+#  needs: ["connect"]
+#  script:
+#    - mvn clean test
 
 package:
     image: maven:3-jdk-11
