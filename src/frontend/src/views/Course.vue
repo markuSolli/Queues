@@ -18,7 +18,7 @@
       <div id="date-row">
         <h3>Start and end date</h3>
         <div id="datepicker">
-          <Datepicker range v-model="date"></Datepicker>
+          <!--<Datepicker range v-model="date"></Datepicker>-->
         </div>
       </div>
     </div>
@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
+//import Datepicker from "@vuepic/vue-datepicker";
+//import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import PersonList from "../components/PersonList.vue";
@@ -57,7 +57,7 @@ import TaskList from "../components/TaskList.vue";
 import router from "../router";
 
 export default {
-  components: { Datepicker, Button, PersonList, TaskList },
+  components: { Button, PersonList, TaskList },
   setup() {
     const title = ref("");
     const code = ref("");
