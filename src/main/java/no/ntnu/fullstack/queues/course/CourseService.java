@@ -1,17 +1,20 @@
 package no.ntnu.fullstack.queues.course;
 
-import no.ntnu.fullstack.queues.user.User;
-import org.springframework.http.ResponseEntity;
+import no.ntnu.fullstack.queues.task.TaskGroup;
+import no.ntnu.fullstack.queues.task.TaskService;
+import no.ntnu.fullstack.queues.user.*;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final UserService userService;
+    private final TaskService taskService;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, UserService userService, TaskService taskService) {
         this.courseRepository = courseRepository;
+        this.userService = userService;
+        this.taskService = taskService;
     }
 
     /**
@@ -80,13 +83,32 @@ public class CourseService {
 
         // Adding all the users to the course with their respective roles
         for(User teacher : courseDTO.getTeachers()) {
+            try {
+                userService.signup(new UserDTO(teacher.getEmail(), teacher.getFirstName(), teacher.getLastName()), Role.TEACHER);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             course.addUser(teacher, CourseRole.TEACHER);
         }
         for(User assistant : courseDTO.getAssistants()) {
+            try {
+                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.STUDENT);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             course.addUser(assistant, CourseRole.ASSISTANT);
         }
         for(User student : courseDTO.getStudents()) {
+            try {
+                userService.signup(new UserDTO(student.getEmail(), student.getFirstName(), student.getLastName()), Role.STUDENT);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             course.addUser(student, CourseRole.STUDENT);
+        }
+
+        for(TaskGroup taskGroup : courseDTO.getTaskGroups()) {
+            course.getTasks().add(taskGroup);
         }
 
         return courseRepository.save(course);

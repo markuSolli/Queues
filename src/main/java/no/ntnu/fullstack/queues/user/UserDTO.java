@@ -11,6 +11,12 @@ public class UserDTO {
 
     public UserDTO(){}
 
+    public UserDTO(String email, String firstName, String lastName) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public String getEmail() {
         return email;
     }

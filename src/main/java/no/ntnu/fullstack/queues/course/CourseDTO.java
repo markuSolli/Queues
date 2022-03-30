@@ -14,7 +14,7 @@ public class CourseDTO {
     private List<User> students;
     private List<User> assistants;
     private List<User> teachers;
-    private List<TaskGroup> tasks;
+    private List<TaskGroup> taskGroups;
 
     public CourseDTO() {
     }
@@ -75,12 +75,12 @@ public class CourseDTO {
         this.teachers = teachers;
     }
 
-    public List<TaskGroup> getTasks() {
-        return tasks;
+    public List<TaskGroup> getTaskGroups() {
+        return taskGroups;
     }
 
-    public void setTasks(List<TaskGroup> tasks) {
-        this.tasks = tasks;
+    public void setTaskGroups(List<TaskGroup> taskGroups) {
+        this.taskGroups = taskGroups;
     }
 }
 

@@ -1,6 +1,7 @@
 package no.ntnu.fullstack.queues.course;
 
 import no.ntnu.fullstack.queues.location.Room;
+import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.bytecode.enhance.spi.interceptor.AbstractLazyLoadInterceptor;
@@ -23,7 +24,9 @@ public class Course {
     private Date startDate;
     private Date endDate;
     private boolean archived = false;
-    private boolean active = false;
+    private boolean active = true;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<TaskGroup> tasks = new HashSet<>();
     @ManyToMany(targetEntity = Room.class)
     private List<Room> rooms;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
@@ -94,6 +97,14 @@ public class Course {
         this.active = active;
     }
 
+    public Set<TaskGroup> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<TaskGroup> tasks) {
+        this.tasks = tasks;
+    }
+
     public List<Room> getRooms() {
         return rooms;
     }
@@ -119,7 +130,6 @@ public class Course {
     public void addUser(User user, CourseRole courseRole) {
         UserCourse userCourse = new UserCourse(user, this, courseRole);
         users.add(userCourse);
-//        user.getCourses().add(userCourse);
     }
 
     /**
@@ -137,7 +147,6 @@ public class Course {
         }
         if(userCourseToRemove != null) {
             users.remove(userCourseToRemove);
-//            userCourseToRemove.getUser().getCourses().remove(userCourseToRemove);
         }
     }
 
@@ -151,7 +160,9 @@ public class Course {
                 ", endDate=" + endDate +
                 ", archived=" + archived +
                 ", active=" + active +
+                ", tasks=" + tasks +
                 ", rooms=" + rooms +
+                ", users=" + users +
                 '}';
     }
 }

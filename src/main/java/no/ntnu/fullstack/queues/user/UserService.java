@@ -41,39 +41,23 @@ public class UserService implements UserDetailsService {
      * @param userDTO information about the user to signup
      * @return user that was signed up
      */
-    public User signup(UserDTO userDTO) throws UserAlreadyExistsException {
+    public User signup(UserDTO userDTO, Role role) throws UserAlreadyExistsException {
         if (userExits(userDTO.getEmail())) {
             throw new UserAlreadyExistsException("Email already in use");
         }
 
-        // Encoding password
-        String encodedPassword = bCrypt.encode(userDTO.getPassword());
-
-        // Creating user-object
-        User user = new User(userDTO.getEmail(), encodedPassword, userDTO.getFirstName(), userDTO.getLastName());
-        user.setRole(Role.STUDENT);
-
-        return userRepository.save(user);
-    }
-
-    /**
-     * Creates a new user in the database, if and only if the user does not already exist in the database and
-     * after their password has been encrypted.
-     *
-     * @param userDTO information about the user to signup
-     * @return user that was signed up
-     */
-    public User signupTeacher(UserDTO userDTO) throws UserAlreadyExistsException {
-        if (userExits(userDTO.getEmail())) {
-            throw new UserAlreadyExistsException("Email already in use");
+        if(userDTO.getPassword() == null) {
+            User user = new User(userDTO.getEmail(), null, userDTO.getFirstName(), userDTO.getLastName());
+            user.setRole(role);
+            user.setEnabled(false);
+            return userRepository.save(user);
         }
 
         // Encoding password
         String encodedPassword = bCrypt.encode(userDTO.getPassword());
-
         // Creating user-object
         User user = new User(userDTO.getEmail(), encodedPassword, userDTO.getFirstName(), userDTO.getLastName());
-        user.setRole(Role.TEACHER);
+        user.setRole(role);
 
         return userRepository.save(user);
     }
@@ -103,5 +87,9 @@ public class UserService implements UserDetailsService {
                 "ROLE_ASSISTANT > ROLE_STUDENT";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
+    }
+
+    public boolean userExists(String email) {
+        return userRepository.existsById(email);
     }
 }

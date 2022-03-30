@@ -14,10 +14,13 @@ public class User implements UserDetails {
 
     @Id
     private String email;
+    @JsonIgnore
     private String password;
     private String firstName;
     private String lastName;
+    @JsonIgnore
     private boolean enabled = true;
+    @JsonIgnore
     private Role role;
 
 //    @JsonIgnore
@@ -55,6 +58,10 @@ public class User implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Role getRole() {

@@ -33,7 +33,7 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody UserDTO userDTO) {
         try {
-            User user = userService.signup(userDTO);
+            User user = userService.signup(userDTO, Role.STUDENT);
             return new ResponseEntity<>(user.getUsername(), HttpStatus.CREATED);
         } catch (UserAlreadyExistsException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
