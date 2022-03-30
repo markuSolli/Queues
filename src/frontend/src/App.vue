@@ -41,7 +41,6 @@ export default {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -53,5 +52,6 @@ export default {
     rgba(11, 4, 36, 1) 11%,
     rgba(0, 0, 0, 1) 100%
   );
+  font-family: "Mukta", Helvetica, Arial;
 }
 </style>

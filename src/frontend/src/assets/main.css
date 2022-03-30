@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Nunito";
+  font-weight: 400;
+  font-style: normal;
+  font-display: auto;
+  unicode-range: U+000-5FF;
+  src: local("Nunito"),
+    url("/fonts/Nunito/Nunito-VariableFont_wght.ttf") format("woff2");
+}
