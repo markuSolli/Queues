@@ -11,7 +11,7 @@ variables:
  MYSQL_DATABASE_NAME: qs
  MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/src/main/resources/static/db.sql" 
  MYSQL_ROOT_PASSWORD: password
- SPRING_DATASOURCE: -Dspring-boot.run.arguments='--spring.datasource.url=jdbc:mysql://mysql:3306/qs?createDatabaseIfNotExist=true'
+ PIPELINE_PROFILE: -Dspring.profiles.active=pipeline
 
 cache:
   paths:
@@ -59,13 +59,13 @@ test_back:
   stage: test
   needs: ["connect"]
   script:
-    - mvn test $SPRING_DATASOURCE
+    - mvn test $PIPELINE_PROFILE
 
 package:
     image: maven:3-jdk-11
     stage: package
     needs: ["test_back"]
     script:
-      - mvn -DskipTests package $SPRING_DATASOURCE
+      - mvn -DskipTests package $PIPELINE_PROFILE
 #    only:
 #      - main
