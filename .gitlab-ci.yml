@@ -53,18 +53,18 @@ connect:
 #  script:
 #    - npm run test
 
-#test_back:
-#  image: maven:3-jdk-11
-#  stage: test
-#  needs: ["connect"]
-#  script:
-#    - mvn clean test
+test_back:
+  image: maven:3-jdk-11
+  stage: test
+  needs: ["connect"]
+  script:
+    - mvn test
 
 package:
     image: maven:3-jdk-11
     stage: package
-    #needs: ["test_back"]
+    needs: ["test_back"]
     script:
       - mvn -DskipTests package
-    only:
-      - main
+#    only:
+#      - main
