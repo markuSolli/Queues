@@ -6,13 +6,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder bCrypt;
 
-    public UserService(UserRepository userRepository, PasswordEncoder bCrypt) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder bCrypt) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.bCrypt = bCrypt;
     }
 
@@ -50,6 +54,23 @@ public class UserService implements UserDetailsService {
         User user = new User(userDTO.getEmail(), encodedPassword, userDTO.getFirstName(), userDTO.getLastName());
 
         return userRepository.save(user);
+    }
+
+    /**
+     * Used for assigning roles to the users
+     *
+     * @param roleName name of the role
+     * @param email email of the user
+     */
+    public void addRoleToUser(String roleName, String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        Optional<Role> role = roleRepository.findByName(roleName);
+        if(role.isEmpty()) {
+            role = roleRepository.findByName("ROLE_STUDENT");
+        }
+        if(user.isPresent() && role.isPresent()) {
+            user.get().getRoles().add(role.get());
+        }
     }
 
     /**

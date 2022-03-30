@@ -3,16 +3,11 @@ package no.ntnu.fullstack.queues.authentication;
 import io.jsonwebtoken.JwtException;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtResponse;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtUtil;
-import no.ntnu.fullstack.queues.user.User;
-import no.ntnu.fullstack.queues.user.UserAlreadyExistsException;
-import no.ntnu.fullstack.queues.user.UserDTO;
-import no.ntnu.fullstack.queues.user.UserService;
+import no.ntnu.fullstack.queues.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -97,6 +92,17 @@ public class AuthenticationController {
         }
     }
 
+
+    /**
+     * Used for getting information about one self, such that this can be displayed where needed
+     * @param authentication
+     * @return
+     */
+    @GetMapping("/me")
+    public UserInfo whoAmI(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return new UserInfo(user.getUsername(), user.getFirstName(), user.getLastName());
+    }
 
 
 

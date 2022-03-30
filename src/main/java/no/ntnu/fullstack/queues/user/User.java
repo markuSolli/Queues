@@ -1,10 +1,13 @@
 package no.ntnu.fullstack.queues.user;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 public class User implements UserDetails {
@@ -14,8 +17,10 @@ public class User implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
-    private Role role;
     private boolean enabled = true;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new HashSet<>();
 
     protected User() {}
 
@@ -42,17 +47,21 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public Role getRole() {
-        return role;
+    public Collection<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Collection<SimpleGrantedAuthority> authorities = new HashSet<>();
+        roles.forEach((role) -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return authorities;
     }
 
     @Override
