@@ -1,17 +1,11 @@
 package no.ntnu.fullstack.queues.user;
 
-/**
- * Login request data from a user
- */
-public class UserDTO {
+public class UserInfo {
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
 
-    public UserDTO(){}
-
-    public UserDTO(String email, String firstName, String lastName) {
+    public UserInfo(String email, String firstName, String lastName) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,14 +17,6 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {

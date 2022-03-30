@@ -1,6 +1,8 @@
 package no.ntnu.fullstack.queues.course;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.user.User;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -12,6 +14,7 @@ public class UserCourse {
     private Long id;
     @ManyToOne
     private User user;
+    @JsonIgnore
     @ManyToOne
     private Course course;
     private CourseRole role;
@@ -54,5 +57,15 @@ public class UserCourse {
 
     public void setRole(CourseRole role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCourse{" +
+                "id=" + id +
+                ", user=" + user +
+                ", course=" + course +
+                ", role=" + role +
+                '}';
     }
 }

@@ -1,5 +1,7 @@
 package no.ntnu.fullstack.queues.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,6 +11,7 @@ public class Task {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private int number;
+    @JsonIgnore
     @ManyToOne(targetEntity = TaskGroup.class)
     private TaskGroup taskGroup;
 

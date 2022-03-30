@@ -1,21 +1,31 @@
 package no.ntnu.fullstack.queues.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import no.ntnu.fullstack.queues.course.UserCourse;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.*;
 
 @Entity
 public class User implements UserDetails {
 
     @Id
     private String email;
+    @JsonIgnore
     private String password;
     private String firstName;
     private String lastName;
-    private Role role;
+    @JsonIgnore
     private boolean enabled = true;
+    @JsonIgnore
+    private Role role;
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user")
+//    private Set<UserCourse> courses = new HashSet<>();
 
     protected User() {}
 
@@ -24,6 +34,14 @@ public class User implements UserDetails {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -42,6 +60,10 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -50,9 +72,10 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority("STUDENT"));
     }
 
     @Override
@@ -60,21 +83,25 @@ public class User implements UserDetails {
         return password;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
@@ -83,5 +110,15 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+//                ", courses=" + courses +
+                '}';
     }
 }

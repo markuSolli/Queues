@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
  * The controller layer for Courses
  */
 @RestController
-@CrossOrigin
 @RequestMapping("/courses")
+@CrossOrigin
 public class CourseController {
     private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
@@ -39,11 +39,16 @@ public class CourseController {
         }
     }
 
+    /**
+     * This method allows for creation of a course with a large amount of details
+     *
+     * @param courseDTO
+     * @return
+     */
     @PostMapping
-    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
-        logger.info("Creating course " + course.toString() + "...");
-        Course addedCourse = courseService.addCourse(course);
-        return new ResponseEntity<>(addedCourse, HttpStatus.CREATED);
+    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseDTO) {
+        logger.info("Creating course " + courseDTO.getCode() + "...");
+        return new ResponseEntity<>(courseService.createCourse(courseDTO), HttpStatus.CREATED);
     }
 
     @PutMapping
