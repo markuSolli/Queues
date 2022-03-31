@@ -1,5 +1,5 @@
 <template>
-  <div id="grid"><Navbar v-if="loggedIn" /> <router-view /></div>
+  <div id="grid" v-if="!isLoading"><Navbar v-if="loggedIn" /> <router-view /></div>
 </template>
 
 <script>
@@ -12,7 +12,7 @@ import { onBeforeMount } from "vue";
 export default {
   components: { Navbar },
   setup() {
-    const store = useStore();
+    let isLoading = ref(true);
 
     onBeforeMount(() => {
       const fetchUser = async () => {
@@ -26,10 +26,14 @@ export default {
           store.commit("setAccessToken", response.data.accessToken);
         } catch (err) {
           console.log(err);
+        } finally {
+          isLoading.value = false;
         }
       }
       fetchUser();
     })
+
+    const store = useStore();
 
     let loggedIn = computed(() => {
       if (store.state.loggedIn) {
@@ -40,6 +44,7 @@ export default {
     });
 
     return {
+      isLoading,
       loggedIn,
     };
   },

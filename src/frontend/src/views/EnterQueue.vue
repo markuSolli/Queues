@@ -66,8 +66,8 @@ export default {
     let taskgroups = ref();
 
     onMounted(() => {
-      axios
-        .get("http://localhost:3000/courses/" + route.params.id)
+      http
+        .get("/courses/" + route.params.id)
         .then((response) => {
           const course = response.data;
 
@@ -98,8 +98,8 @@ export default {
       approval.value = true;
     };
     const enterQueue = () => {
-      axios
-        .post("http://localhost:3000/queue/", {
+      http
+        .post("/queue", {
           help: help.value,
           course: route.params.id,
           task: selectedTaskId.value,
