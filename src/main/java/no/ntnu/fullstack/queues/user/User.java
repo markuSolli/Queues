@@ -23,9 +23,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private Role role;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "user")
-//    private Set<UserCourse> courses = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Set<UserCourse> courses = new HashSet<>();
 
     protected User() {}
 
@@ -70,6 +70,14 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Set<UserCourse> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<UserCourse> courses) {
+        this.courses = courses;
     }
 
     @JsonIgnore
@@ -118,7 +126,6 @@ public class User implements UserDetails {
                 "email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-//                ", courses=" + courses +
                 '}';
     }
 }

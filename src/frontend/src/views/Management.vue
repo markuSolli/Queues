@@ -47,7 +47,7 @@ import Button from "../components/Button.vue";
 import CourseCard from "../components/CourseCard.vue";
 import UserCard from "../components/UserCard.vue";
 import { computed, onMounted } from "@vue/runtime-core";
-import {fetchCourses} from "@/service/CourseService";
+import http from "@/service/http-common"
 
 export default {
   components: { Button, CourseCard, UserCard },
@@ -56,11 +56,7 @@ export default {
     let courses = ref();
 
     onMounted(() => {
-<<<<<<< HEAD
-      fetchCourses().then((response) => {
-        courses.value = response.data;
-=======
-      axios.get("http://localhost:3000/courses").then((response) => {
+      http.get("/courses").then((response) => {
         let notArchived = [];
 
         for (const course in response.data) {
@@ -68,9 +64,7 @@ export default {
             notArchived.push(response.data[course]);
           }
         }
-
         courses.value = notArchived;
->>>>>>> 05eeeda0d013fcbbfd19e9fbd481f105d87ad76d
       });
     });
 

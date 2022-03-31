@@ -13,7 +13,7 @@
 
 <script>
 import CourseCard from "../components/CourseCard";
-import axios from "axios";
+import http from "@/service/http-common";
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 
@@ -23,7 +23,7 @@ export default {
     let archivedCourses = ref();
 
     onMounted(() => {
-      axios.get("http://localhost:3000/courses").then((response) => {
+      http.get("http://localhost:3000/courses").then((response) => {
         let archived = [];
 
         for (const course in response.data) {

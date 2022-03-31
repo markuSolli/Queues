@@ -56,7 +56,6 @@ public class AuthenticationController {
      */
     @PostMapping("/token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("Attempting to read refresh token...");
         String refreshToken = "";
         if (request.getCookies() == null) {
             // If there is no cookie, the user is not trying to fetch a new accessToken anyway
@@ -75,13 +74,12 @@ public class AuthenticationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        logger.info("Trying to validate refresh token...");
-
         // If we get here, we should have a refresh token. Now we must validate it
         try {
             String subject = jwtUtil.decode(refreshToken);
 
             // If we get here, the token has been validated
+            logger.info("Refresh token is valid, sending new access token...");
 
             // We create a new access token for the user
             String accessToken = jwtUtil.createAccessToken(subject);

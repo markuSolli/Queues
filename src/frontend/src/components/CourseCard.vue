@@ -52,7 +52,7 @@ import Button from "./Button.vue";
 import router from "../router";
 import { useStore } from "vuex";
 import { computed } from "@vue/runtime-core";
-import axios from "axios";
+import http from "@/service/http-common";
 
 export default {
   props: ["course", "cardInQueue"],
@@ -79,8 +79,8 @@ export default {
 
     const deleteCourse = () => {
       console.log(course);
-      axios
-        .delete("http://localhost:3000/courses", course)
+      http
+        .delete("/courses/" + course.id)
         .then((response) => {});
     };
 

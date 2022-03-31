@@ -41,7 +41,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtil))
                 .addFilterAfter(new JwtValidationFilter(jwtUtil, userService), CustomUsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                    .antMatchers("/courses").hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                     .antMatchers("/login").permitAll()
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/token").permitAll()

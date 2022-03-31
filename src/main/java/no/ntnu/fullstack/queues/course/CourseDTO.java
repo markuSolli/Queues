@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 public class CourseDTO {
-    private Long id;
     private String code;
     private String title;
     private Date startDate;
@@ -23,14 +22,6 @@ public class CourseDTO {
     private Set<Room> rooms;
 
     public CourseDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCode() {

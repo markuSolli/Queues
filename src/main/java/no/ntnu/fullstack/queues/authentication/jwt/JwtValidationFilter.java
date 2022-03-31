@@ -44,8 +44,6 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        logger.info("Attempting to validate token...");
-
         // Extract token from request
         String token = authorizationHeader.replace("Bearer ", "");
 
@@ -65,12 +63,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             // Set the user as authenticated, then keep going
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            logger.info("Token authentication successful");
-
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
             logger.error("Token {} cannot be trusted", token);
-            throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+            filterChain.doFilter(request, response);
         }
 
     }

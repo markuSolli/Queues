@@ -5,6 +5,7 @@ import no.ntnu.fullstack.queues.user.User;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class UserCourse {
@@ -64,7 +65,6 @@ public class UserCourse {
         return "UserCourse{" +
                 "id=" + id +
                 ", user=" + user +
-                ", course=" + course +
                 ", role=" + role +
                 '}';
     }

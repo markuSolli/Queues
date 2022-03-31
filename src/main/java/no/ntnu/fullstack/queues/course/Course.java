@@ -21,11 +21,11 @@ public class Course {
     private Date endDate;
     private boolean archived = false;
     private boolean active = true;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<TaskGroup> tasks = new HashSet<>();
-    @ManyToMany(targetEntity = Room.class)
+    @ManyToMany
     private Set<Room> rooms;
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<TaskGroup> taskGroups = new HashSet<>();
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserCourse> users = new HashSet<>();
 
     protected Course(){}
@@ -93,12 +93,12 @@ public class Course {
         this.active = active;
     }
 
-    public Set<TaskGroup> getTasks() {
-        return tasks;
+    public Set<TaskGroup> getTaskGroups() {
+        return taskGroups;
     }
 
-    public void setTasks(Set<TaskGroup> tasks) {
-        this.tasks = tasks;
+    public void setTaskGroups(Set<TaskGroup> tasks) {
+        this.taskGroups = tasks;
     }
 
     public Set<Room> getRooms() {
@@ -156,9 +156,9 @@ public class Course {
                 ", endDate=" + endDate +
                 ", archived=" + archived +
                 ", active=" + active +
-                ", tasks=" + tasks +
+                ", tasks=" + taskGroups +
                 ", rooms=" + rooms +
-                ", users=" + users +
+                ", users=" + users+
                 '}';
     }
 }
