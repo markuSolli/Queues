@@ -5,11 +5,7 @@
     </div>
 
     <div class="queue-element-2" v-if="cardInQueue && active">
-      <h4>
-        <router-link class="link" tag="li" to="/courseQueue"
-          >Go to queue -></router-link
-        >
-      </h4>
+      <div @click="goToQueue">Go to queue -></div>
     </div>
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
@@ -78,7 +74,6 @@ export default {
     });
 
     const deleteCourse = () => {
-      console.log(course);
       axios
         .delete("http://localhost:3000/courses", course)
         .then((response) => {});
@@ -87,6 +82,15 @@ export default {
     const editCourse = () => {
       router.push({
         name: "courseEdit",
+        params: {
+          id: id,
+        },
+      });
+    };
+
+    const goToQueue = () => {
+      router.push({
+        name: "enterQueue",
         params: {
           id: id,
         },
@@ -107,6 +111,7 @@ export default {
       cardInQueue,
       editCourse,
       deleteCourse,
+      goToQueue,
     };
   },
 };
