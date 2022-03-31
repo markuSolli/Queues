@@ -2,24 +2,57 @@
   <div id="main">
     <div id="queue-container">
       <div id="queue-container-header"><h1>Active</h1></div>
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
+
+      <div v-for="course in activeCourses" :key="course.id">
+        <CourseCard :course="course" :cardInQueue="true" />
+      </div>
     </div>
 
     <div id="queue-container">
       <div id="queue-container-header"><h1>Inactive</h1></div>
-      <Card :inactive="true" />
-      <Card :inactive="true" />
-      <div>There is currently no courses inactive courses</div>
+      <div v-for="course in inActiveCourses" :key="course.id">
+        <CourseCard :course="course" :cardInQueue="true" />
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import Card from "../components/CourseCard";
+<script>
+import CourseCard from "../components/CourseCard";
+import axios from "axios";
+import { ref } from "@vue/reactivity";
+import { onMounted } from "@vue/runtime-core";
+
+export default {
+  components: { CourseCard },
+  setup() {
+    let activeCourses = ref();
+    let inActiveCourses = ref();
+
+    onMounted(() => {
+      axios.get("http://localhost:3000/courses").then((response) => {
+        let active = [];
+        let inactive = [];
+
+        for (const course in response.data) {
+          if (response.data[course].active) {
+            active.push(response.data[course]);
+          } else {
+            inactive.push(response.data[course]);
+          }
+        }
+
+        activeCourses.value = active;
+        inActiveCourses.value = inactive;
+      });
+    });
+
+    return {
+      activeCourses,
+      inActiveCourses,
+    };
+  },
+};
 </script>
 
 <style>

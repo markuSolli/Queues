@@ -8,7 +8,7 @@
       </div>
     </div>
     <div v-for="course in courses" :key="course.id" id="course-list">
-      <CourseCard :edit="true" :name="course.title" :id="course.id" />
+      <CourseCard :course="course" />
     </div>
     <div id="management-bar">
       <div id="title"><h2>Users</h2></div>
@@ -56,8 +56,21 @@ export default {
     let courses = ref();
 
     onMounted(() => {
+<<<<<<< HEAD
       fetchCourses().then((response) => {
         courses.value = response.data;
+=======
+      axios.get("http://localhost:3000/courses").then((response) => {
+        let notArchived = [];
+
+        for (const course in response.data) {
+          if (!response.data[course].archived) {
+            notArchived.push(response.data[course]);
+          }
+        }
+
+        courses.value = notArchived;
+>>>>>>> 05eeeda0d013fcbbfd19e9fbd481f105d87ad76d
       });
     });
 
