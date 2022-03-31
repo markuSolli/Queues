@@ -24,7 +24,7 @@ export default {
     const store = useStore();
 
     const properRank = computed(() => {
-      if (store.state.rank < 2) {
+      if (store.state.role < 3) {
         return true;
       } else {
         return false;
