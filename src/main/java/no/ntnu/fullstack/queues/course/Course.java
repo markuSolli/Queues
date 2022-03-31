@@ -3,14 +3,10 @@ package no.ntnu.fullstack.queues.course;
 import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.bytecode.enhance.spi.interceptor.AbstractLazyLoadInterceptor;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,7 +24,7 @@ public class Course {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<TaskGroup> tasks = new HashSet<>();
     @ManyToMany(targetEntity = Room.class)
-    private List<Room> rooms;
+    private Set<Room> rooms;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private Set<UserCourse> users = new HashSet<>();
 
@@ -105,11 +101,11 @@ public class Course {
         this.tasks = tasks;
     }
 
-    public List<Room> getRooms() {
+    public Set<Room> getRooms() {
         return rooms;
     }
 
-    public void setRooms(List<Room> rooms) {
+    public void setRooms(Set<Room> rooms) {
         this.rooms = rooms;
     }
 

@@ -1,22 +1,36 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 public class CourseDTO {
+    private Long id;
     private String code;
     private String title;
     private Date startDate;
     private Date endDate;
+    private boolean archived;
+    private boolean active;
     private List<User> students;
     private List<User> assistants;
     private List<User> teachers;
     private List<TaskGroup> taskGroups;
+    private Set<Room> rooms;
 
     public CourseDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -51,6 +65,22 @@ public class CourseDTO {
         this.endDate = endDate;
     }
 
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public List<User> getStudents() {
         return students;
     }
@@ -81,6 +111,14 @@ public class CourseDTO {
 
     public void setTaskGroups(List<TaskGroup> taskGroups) {
         this.taskGroups = taskGroups;
+    }
+
+    public Set<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Set<Room> rooms) {
+        this.rooms = rooms;
     }
 }
 

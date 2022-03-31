@@ -47,14 +47,14 @@ public class CourseController {
      */
     @PostMapping
     public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseDTO) {
-        logger.info("Creating course " + courseDTO.getCode() + "...");
+        logger.info("Creating course {} ...", courseDTO.getCode());
         return new ResponseEntity<>(courseService.createCourse(courseDTO), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Course> editCourse(@RequestBody Course course) {
-        logger.info("Editing course " + course.toString() + "...");
-        return new ResponseEntity<>(courseService.updateCourse(course), HttpStatus.OK);
+    public ResponseEntity<Course> editCourse(@RequestBody CourseDTO courseDTO) {
+        logger.info("Editing course {} ...", courseDTO.getCode());
+        return new ResponseEntity<>(courseService.editCourse(courseDTO), HttpStatus.OK);
     }
 
     @DeleteMapping

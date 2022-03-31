@@ -16,9 +16,11 @@
         placeholder="Title"
       />
       <div id="date-row">
-        <h3>Start and end date</h3>
         <div id="datepicker">
           <!--<Datepicker range v-model="date"></Datepicker>-->
+          <div>Start date: <input type="date" v-model="startDate" /></div>
+
+          <div>End date: <input type="date" v-model="endDate" /></div>
         </div>
       </div>
     </div>
@@ -43,6 +45,7 @@
       <div id="done-button">
         <Button :title="'Done'" @click="createCourse" />
       </div>
+      <div id="done-text">{{ status }}</div>
     </div>
   </div>
 </template>
@@ -55,92 +58,132 @@ import Button from "../components/Button.vue";
 import PersonList from "../components/PersonList.vue";
 import TaskList from "../components/TaskList.vue";
 import router from "../router";
+import { useRoute } from "vue-router";
+import axios from "axios";
+import { useStore } from "vuex";
+import { onMounted } from "@vue/runtime-core";
 
 export default {
   components: { Button, PersonList, TaskList },
   setup() {
+    const route = useRoute();
+    const status = ref("");
     const title = ref("");
     const code = ref("");
-    const date = ref();
-    let listOfTeachers = ref([
-      { email: "asdasdasd", firstname: "thor", lastname: "dfdfdf" },
-      { email: "123123", firstname: "thor1", lastname: "dfdfdf2" },
-      { email: "ghghgh", firstname: "thor2", lastname: "dfdfdf3" },
-    ]);
-    let listOfStudents = ref([
-      { email: "student1", firstname: "thor", lastname: "dfdfdf" },
-      { email: "student3", firstname: "thor1", lastname: "dfdfdf2" },
-      { email: "student4", firstname: "thor2", lastname: "dfdfdf3" },
-    ]);
-    let listOfStudAss = ref([
-      { email: "studass1", firstname: "thor", lastname: "dfdfdf" },
-      { email: "studass2", firstname: "thor1", lastname: "dfdfdf2" },
-      { email: "studass3", firstname: "thor2", lastname: "dfdfdf3" },
-    ]);
+    const startDate = ref("");
+    const endDate = ref("");
+    let listOfTeachers = ref([]);
+    let listOfStudents = ref([]);
+    let listOfStudAss = ref([]);
     let tasks = ref({
-      taskgroups: [
-        {
-          number: 1,
-          tasks: [
-            {
-              number: 1,
-            },
-            {
-              number: 2,
-            },
-            {
-              number: 3,
-            },
-            {
-              number: 4,
-            },
-          ],
-          required: 2,
-          total: 4,
-        },
-        {
-          number: 2,
-          tasks: [
-            {
-              number: 5,
-            },
-            {
-              number: 6,
-            },
-            {
-              number: 7,
-            },
-          ],
-          required: 2,
-          total: 3,
-        },
-        {
-          number: 3,
-          tasks: [
-            {
-              number: 8,
-            },
-          ],
-          required: 1,
-          total: 1,
-        },
-      ],
+      taskgroups: [],
     });
 
-    const createCourse = () => {
-      // validate title, code and date
-      console.log(title.value);
-      console.log(code.value);
-      console.log(date.value);
+    // EDIT
+    onMounted(() => {
+      if (route.params.id) {
+        axios
+          .get("http://localhost:3000/courses/" + route.params.id)
+          .then((response) => {
+            const course = response.data;
+            title.value = course.title;
+            code.value = course.code;
+            startDate.value = course.startDate;
+            endDate.value = course.endDate;
+            for (const user in course.users) {
+              if (course.users[user].role == "TEACHER")
+                listOfTeachers.value.push(course.users[user].user);
+              if (course.users[user].role == "ASSISTANT")
+                listOfStudAss.value.push(course.users[user].user);
+              if (course.users[user].role == "STUDENT")
+                listOfStudents.value.push(course.users[user].user);
+            }
 
-      // redirect to management page
-      router.push("/management");
+            createCourse = () => {
+              // validate title, code and date
+              console.log(route.params.id);
+
+              if (
+                title.value == "" ||
+                code.value == "" ||
+                startDate.value == "" ||
+                endDate.value == ""
+              ) {
+                status.value = "Fields cant be empty";
+              } else {
+                axios
+                  .put("http://localhost:3000/courses", {
+                    code: title.value,
+                    title: code.value,
+                    startDate: startDate.value,
+                    endDate: endDate.value,
+                    taskGroups: tasks.value.taskgroups,
+                    students: listOfStudents.value,
+                    assistants: listOfStudAss.value,
+                    teachers: listOfTeachers.value,
+                    id: route.params.id,
+                  })
+                  .then((response) => {
+                    console.log(response.status);
+                    if (response.status == 201) {
+                      router.push("/management");
+                    } else {
+                      status.value = "Something went wrong";
+                    }
+                  });
+              }
+            };
+          });
+      } else {
+        // if this course page is not edit, load current teacher first in teacher list
+
+        const store = useStore();
+        if (store.state.role == 1)
+          listOfTeachers.value.push({
+            email: store.state.email,
+            firstname: store.state.firstname,
+            lastname: store.state.lastname,
+          });
+      }
+    });
+
+    let createCourse = () => {
+      // validate title, code and date
+      if (
+        title.value == "" ||
+        code.value == "" ||
+        startDate.value == "" ||
+        endDate.value == ""
+      ) {
+        status.value = "Fields cant be empty";
+      } else {
+        axios
+          .post("http://localhost:3000/courses", {
+            code: title.value,
+            title: code.value,
+            startDate: startDate.value,
+            endDate: endDate.value,
+            taskGroups: tasks.value.taskgroups,
+            students: listOfStudents.value,
+            assistants: listOfStudAss.value,
+            teachers: listOfTeachers.value,
+          })
+          .then((response) => {
+            if (response.status == 201) {
+              router.push("/management");
+            } else {
+              status.value = "Something went wrong";
+            }
+          });
+      }
     };
 
     return {
+      status,
       title,
       code,
-      date,
+      startDate,
+      endDate,
       listOfTeachers,
       listOfStudents,
       listOfStudAss,
@@ -152,14 +195,19 @@ export default {
 </script>
 
 <style>
+#done-text {
+  color: red;
+}
+
 #done-button {
-  display: flex;
+  display: inline-block;
   justify-content: center;
 }
 
 #datepicker {
   width: 350px;
   margin-left: 10px;
+  display: inline-block;
 }
 
 #date-row {

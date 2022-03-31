@@ -4,6 +4,8 @@ import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
@@ -112,6 +114,34 @@ public class CourseService {
         }
 
         return courseRepository.save(course);
+    }
+
+    /**
+     * Edits course based on the courseDTO object
+     *
+     * @param course new data for course
+     * @return the edited course
+     */
+    public Course editCourse(CourseDTO course) {
+        Course existingCourse = courseRepository.findById(course.getId()).orElse(new Course());
+        existingCourse.setCode(course.getCode());
+        existingCourse.setTitle(course.getTitle());
+        existingCourse.setStartDate(course.getStartDate());
+        existingCourse.setEndDate(course.getEndDate());
+        existingCourse.setTitle(course.getTitle());
+        existingCourse.setRooms(course.getRooms());
+        existingCourse.setTasks(Set.copyOf(course.getTaskGroups()));
+
+        for(User teacher : course.getTeachers()) {
+            existingCourse.addUser(teacher, CourseRole.TEACHER);
+        }
+        for(User assistant : course.getAssistants()) {
+            existingCourse.addUser(assistant, CourseRole.ASSISTANT);
+        }
+        for(User student : course.getAssistants()) {
+            existingCourse.addUser(student, CourseRole.STUDENT);
+        }
+        return courseRepository.save(existingCourse);
     }
 
 }

@@ -41,6 +41,13 @@ const routes = [
     name: "course",
     component: Course,
   },
+
+  {
+    path: "/course:id",
+    name: "courseEdit",
+    component: Course,
+    props: true,
+  },
   {
     path: "/coursetest",
     name: "coursetest",
