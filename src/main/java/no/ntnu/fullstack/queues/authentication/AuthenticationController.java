@@ -99,4 +99,14 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Returns the currently logged on user and some information about them
+     *
+     * @return information about the currently loggen in user
+     */
+    @GetMapping("/me")
+    public ResponseEntity<User> fetchCurrentUser(Authentication authentication) {
+        return new ResponseEntity<>((User) authentication.getPrincipal(), HttpStatus.OK);
+    }
+
 }

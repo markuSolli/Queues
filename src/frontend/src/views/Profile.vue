@@ -2,9 +2,8 @@
   <div>
     <h1>Profile</h1>
 
-    <h2 id="spacer">Email:</h2>
-    <h2 id="spacer">Firstname:</h2>
-    <h2 id="spacer">Lastname:</h2>
+    <h2 id="spacer">{{user.firstName + " " + user.lastName}}</h2>
+    <h3 id="spacer">{{user.email}}</h3>
     <div id="log-out-button">
       <Button :title="'Reset password'" @click="resetPassword" />
     </div>
@@ -17,12 +16,28 @@
 <script>
 import Button from "../components/Button.vue";
 import router from "../router";
+import http from "@/service/http-common";
 import { useStore } from "vuex";
+import { ref } from "@vue/reactivity";
+import { onBeforeMount } from "vue";
 
 export default {
   components: { Button },
   setup() {
     const store = useStore();
+    const user = ref({})
+
+    onBeforeMount(() => {
+      http.
+        get("/me")
+      .then((response) => {
+        user.value = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+
+    })
 
     const logOut = () => {
       store.commit("updateLoggedin", false);
@@ -34,6 +49,7 @@ export default {
     return {
       logOut,
       resetPassword,
+      user,
     };
   },
 };
