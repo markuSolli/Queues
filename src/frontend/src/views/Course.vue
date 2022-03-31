@@ -62,6 +62,7 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 import { useStore } from "vuex";
 import { onMounted } from "@vue/runtime-core";
+import {fetchCourse} from "@/service/CourseService";
 
 export default {
   components: { Button, PersonList, TaskList },
@@ -80,38 +81,37 @@ export default {
     });
 
     // EDIT
-    onMounted(() => {
+    onMounted(async () => {
       if (route.params.id) {
-        axios
-          .get("http://localhost:3000/courses/" + route.params.id)
-          .then((response) => {
-            const course = response.data;
-            title.value = course.title;
-            code.value = course.code;
-            startDate.value = course.startDate;
-            endDate.value = course.endDate;
-            for (const user in course.users) {
-              if (course.users[user].role == "TEACHER")
-                listOfTeachers.value.push(course.users[user].user);
-              if (course.users[user].role == "ASSISTANT")
-                listOfStudAss.value.push(course.users[user].user);
-              if (course.users[user].role == "STUDENT")
-                listOfStudents.value.push(course.users[user].user);
-            }
+        try {
+          const response = await fetchCourse(id);
+          const course = response.data;
+          title.value = course.title;
+          code.value = course.code;
+          startDate.value = course.startDate;
+          endDate.value = course.endDate;
+          for (const user in course.users) {
+            if (course.users[user].role == "TEACHER")
+              listOfTeachers.value.push(course.users[user].user);
+            if (course.users[user].role == "ASSISTANT")
+              listOfStudAss.value.push(course.users[user].user);
+            if (course.users[user].role == "STUDENT")
+              listOfStudents.value.push(course.users[user].user);
+          }
 
-            createCourse = () => {
-              // validate title, code and date
-              console.log(route.params.id);
+          createCourse = () => {
+            // validate title, code and date
+            console.log(route.params.id);
 
-              if (
+            if (
                 title.value == "" ||
                 code.value == "" ||
                 startDate.value == "" ||
                 endDate.value == ""
-              ) {
-                status.value = "Fields cant be empty";
-              } else {
-                axios
+            ) {
+              status.value = "Fields cant be empty";
+            } else {
+              axios
                   .put("http://localhost:3000/courses", {
                     code: title.value,
                     title: code.value,
@@ -131,9 +131,14 @@ export default {
                       status.value = "Something went wrong";
                     }
                   });
-              }
-            };
-          });
+            }
+          };
+        } catch(err) {
+          console.log(err);
+        };
+        fetchCourse(id)
+          .then((response) => {
+             });
       } else {
         // if this course page is not edit, load current teacher first in teacher list
 

@@ -6,11 +6,28 @@
 import { computed, ref } from "@vue/reactivity";
 import Navbar from "./components/Navbar";
 import { useStore } from "vuex";
+import { refreshToken } from "@/service/AuthenticationService";
 
 export default {
   components: { Navbar },
   setup() {
     const store = useStore();
+
+    const fetchUser = async () => {
+      console.log("Fetching user");
+      try {
+        const response = await refreshToken();
+        if(!response.data.accessToken) {
+          //
+          return;
+        }
+        store.commit("setAccessToken", response.data.accessToken);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    fetchUser();
 
     let loggedIn = computed(() => {
       if (store.state.loggedIn) {

@@ -31,7 +31,7 @@ const fetchClient = () => {
                     withCredentials: true,
                 });
                 token = response.data.accessToken;
-                store.state.accessToken = token;
+                store.commit("setAccessToken", token);
             } catch (err) {
                 console.log(err);
             }

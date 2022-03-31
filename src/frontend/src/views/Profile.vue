@@ -24,6 +24,8 @@ export default {
   setup() {
     const store = useStore();
 
+    console.log(store.state.accessToken);
+
     const logOut = () => {
       store.commit("updateLoggedin", false);
       router.push("logIn");

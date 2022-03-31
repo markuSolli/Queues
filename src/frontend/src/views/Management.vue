@@ -46,8 +46,8 @@ import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import CourseCard from "../components/CourseCard.vue";
 import UserCard from "../components/UserCard.vue";
-import axios from "axios";
 import { computed, onMounted } from "@vue/runtime-core";
+import {fetchCourses} from "@/service/CourseService";
 
 export default {
   components: { Button, CourseCard, UserCard },
@@ -56,7 +56,7 @@ export default {
     let courses = ref();
 
     onMounted(() => {
-      axios.get("http://localhost:3000/courses").then((response) => {
+      fetchCourses().then((response) => {
         courses.value = response.data;
       });
     });

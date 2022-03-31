@@ -3,7 +3,10 @@ package no.ntnu.fullstack.queues.authentication;
 import io.jsonwebtoken.JwtException;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtResponse;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtUtil;
+import no.ntnu.fullstack.queues.authentication.jwt.JwtValidationFilter;
 import no.ntnu.fullstack.queues.user.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@CrossOrigin
 public class AuthenticationController {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
@@ -51,10 +56,12 @@ public class AuthenticationController {
      */
     @PostMapping("/token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        logger.info("Attempting to read refresh token...");
         String refreshToken = "";
         if (request.getCookies() == null) {
             // If there is no cookie, the user is not trying to fetch a new accessToken anyway
             // TODO: Assess if this is needed
+            logger.error("No refresh token");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -67,6 +74,8 @@ public class AuthenticationController {
         if (refreshToken.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        logger.info("Trying to validate refresh token...");
 
         // If we get here, we should have a refresh token. Now we must validate it
         try {

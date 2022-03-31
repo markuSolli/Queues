@@ -33,7 +33,6 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        logger.info("Attempting to validate token...");
         if(request.getServletPath().equals("/login") || request.getServletPath().equals("/token") ||request.getServletPath().equals("/logout")) {
             filterChain.doFilter(request, response);
             return;
@@ -44,6 +43,8 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+        logger.info("Attempting to validate token...");
 
         // Extract token from request
         String token = authorizationHeader.replace("Bearer ", "");
