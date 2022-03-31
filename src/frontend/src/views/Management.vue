@@ -8,7 +8,7 @@
       </div>
     </div>
     <div v-for="course in courses" :key="course.id" id="course-list">
-      <CourseCard :edit="true" :name="course.title" :id="course.id" />
+      <CourseCard :course="course" />
     </div>
     <div id="management-bar">
       <div id="title"><h2>Users</h2></div>
@@ -57,7 +57,15 @@ export default {
 
     onMounted(() => {
       axios.get("http://localhost:3000/courses").then((response) => {
-        courses.value = response.data;
+        let notArchived = [];
+
+        for (const course in response.data) {
+          if (!response.data[course].archived) {
+            notArchived.push(response.data[course]);
+          }
+        }
+
+        courses.value = notArchived;
       });
     });
 
