@@ -1,10 +1,10 @@
 <template>
   <div id="card">
     <div class="queue-element-1">
-      <h3>{{ name }}</h3>
+      <h3>{{ title }}</h3>
     </div>
-    <div class="queue-element-2" v-if="edit || archieved || inactive"></div>
-    <div class="queue-element-2" v-else>
+
+    <div class="queue-element-2" v-if="cardInQueue && active">
       <h4>
         <router-link class="link" tag="li" to="/courseQueue"
           >Go to queue -></router-link
@@ -12,7 +12,7 @@
       </h4>
     </div>
     <div class="queue-element-3"></div>
-    <div class="queue-element-4" v-if="!edit">
+    <div class="queue-element-4" v-if="cardInQueue">
       <div id="prog-text"><h4>Course progress:</h4></div>
       <div class="loadingBar-1">1</div>
       <div class="loadingBar-1">2</div>
@@ -22,10 +22,26 @@
       <div class="loadingBar-2">6</div>
       <div class="loadingBar-2">7</div>
     </div>
-    <div class="queue-element-4" v-if="edit">
+
+    <div class="queue-element-4" v-if="edit && !cardInQueue && !archived">
       <Button :title="'Edit'" @click="editCourse" />
       <Button :title="'Archieve'" :route="'course'" />
-      <Button :title="'Delete'" :route="'course'" />
+      <Button :title="'Delete'" @click="deleteCourse" />
+    </div>
+    <div class="queue-element-4" v-if="assistant && active && !cardInQueue">
+      <Button :title="'Stop queue'" @click="editCourse" />
+    </div>
+    <div
+      class="queue-element-4"
+      v-if="assistant && !active && !cardInQueue && !archived"
+    >
+      <Button :title="'Start queue'" @click="editCourse" />
+    </div>
+    <div
+      class="queue-element-4"
+      v-if="archived && !assistant && !student && !cardInQueue && archived"
+    >
+      <Button :title="'Restore course'" @click="editCourse" />
     </div>
   </div>
 </template>
@@ -34,16 +50,39 @@
 import { ref } from "@vue/reactivity";
 import Button from "./Button.vue";
 import router from "../router";
+import { useStore } from "vuex";
+import { computed } from "@vue/runtime-core";
+import axios from "axios";
 
 export default {
-  props: ["edit", "archieved", "inactive", "name", "id"],
+  props: ["course", "cardInQueue"],
   components: { Button },
   setup(props) {
-    let edit = ref(props.edit);
-    let archieved = ref(props.archieved);
-    let inactive = ref(props.inactive);
-    let name = ref(props.name);
-    let id = props.id;
+    const store = useStore();
+    let course = Object.assign({}, props.course);
+
+    let active = ref(course.active);
+    let archived = ref(course.archived);
+    let title = ref(course.title);
+    let id = course.id;
+    let cardInQueue = props.cardInQueue;
+
+    let assistant = computed(() => {
+      if (store.state.role == 2) return true;
+    });
+    let edit = computed(() => {
+      if (store.state.role < 2) return true;
+    });
+    let student = computed(() => {
+      if (store.state.role == 3) return true;
+    });
+
+    const deleteCourse = () => {
+      console.log(course);
+      axios
+        .delete("http://localhost:3000/courses", course)
+        .then((response) => {});
+    };
 
     const editCourse = () => {
       router.push({
@@ -56,12 +95,18 @@ export default {
 
     const goToCourse = () => {};
 
+    const startQueue = () => {};
+
     return {
       edit,
-      archieved,
-      inactive,
-      name,
+      active,
+      archived,
+      title,
+      assistant,
+      student,
+      cardInQueue,
       editCourse,
+      deleteCourse,
     };
   },
 };
