@@ -23,11 +23,6 @@ import Card from "../components/CourseCard";
 </script>
 
 <style>
-#main {
-  width: 1200px;
-  margin: 0 auto;
-}
-
 #queue-container {
   margin: 20px 0px 0px 0px;
 
