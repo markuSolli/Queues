@@ -4,13 +4,21 @@
     <div id="spacer">
       <h2>Select task:</h2>
       <div id="list-of-tasks">
-        <div class="task-1" @click="taskClick(1)">1</div>
-        <div class="task-1" @click="taskClick(2)">2</div>
-        <div class="task-1" @click="taskClick(3)">3</div>
-        <div class="task-1" @click="taskClick(4)">4</div>
-        <div class="task-2" @click="taskClick(5)">5</div>
-        <div class="task-2" @click="taskClick(6)">6</div>
-        <div class="task-2" @click="taskClick(7)">7</div>
+        <div
+          id="taskgroup-grid"
+          v-for="taskgroup in taskgroups"
+          :key="taskgroup.id"
+        >
+          <div id="group-header">Group {{ taskgroup.number }}</div>
+          <div id="taskgroup">
+            <div v-for="task in taskgroup.tasks" :key="task.id">
+              <div @click="taskClick(task.number, task.id)" class="task-1">
+                {{ task.number }}
+              </div>
+            </div>
+          </div>
+          <div id="group-status">Group status: / {{ taskgroup.required }}</div>
+        </div>
       </div>
       <div v-if="selectedTask != 0">
         <h3>Selected task: {{ selectedTask }}</h3>
@@ -35,7 +43,7 @@
       </div>
     </div>
     <div id="button-pos">
-      <Button :title="'Enter queue'" :route="'courseQueue'" />
+      <Button :title="'Enter queue'" @click="enterQueue" />
     </div>
   </div>
 </template>
@@ -43,17 +51,42 @@
 <script>
 import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
+import { useRoute } from "vue-router";
+import { onMounted } from "@vue/runtime-core";
+import http from "@/service/http-common";
 
 export default {
   components: { Button },
   setup() {
+    const route = useRoute();
     let selectedTask = ref(0);
+    let selectedTaskId = ref();
     let help = ref(false);
     let approval = ref(false);
+    let taskgroups = ref();
 
-    const taskClick = (taskNumber) => {
-      console.log(taskNumber);
+    onMounted(() => {
+      axios
+        .get("http://localhost:3000/courses/" + route.params.id)
+        .then((response) => {
+          const course = response.data;
+
+          for (const taskgroup in course.tasks) {
+            course.tasks[taskgroup].tasks.sort(function (a, b) {
+              return a.number - b.number;
+            });
+          }
+
+          taskgroups.value = course.tasks;
+
+          console.log(course.tasks);
+        });
+    });
+
+    const taskClick = (taskNumber, taskId) => {
       selectedTask.value = taskNumber;
+      selectedTaskId.value = taskId;
+      console.log(selectedTaskId.value);
     };
 
     const clickHelp = () => {
@@ -64,20 +97,57 @@ export default {
       help.value = false;
       approval.value = true;
     };
+    const enterQueue = () => {
+      axios
+        .post("http://localhost:3000/queue/", {
+          help: help.value,
+          course: route.params.id,
+          task: selectedTaskId.value,
+        })
+        .then((response) => {});
+    };
 
     return {
       taskClick,
       selectedTask,
       clickHelp,
       clickApproval,
+      enterQueue,
       help,
       approval,
+      taskgroups,
     };
   },
 };
 </script>
 
 <style>
+#group-header {
+  grid-row: 1/2;
+  font-size: 25px;
+}
+
+#group-status {
+  grid-row: 3 /4;
+  justify-self: center;
+  align-self: center;
+  font-size: 20px;
+}
+
+#taskgroup-grid {
+  display: grid;
+  background: rgb(187, 187, 187);
+  color: black;
+  padding: 0px 10px;
+  border-radius: 20px;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+#taskgroup {
+  grid-row: 2 /3;
+  display: flex;
+}
+
 #help-approval {
   display: flex;
   margin: 20px 0px;
@@ -115,11 +185,11 @@ export default {
 .task-1,
 .task-2 {
   background: green;
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
+  border-radius: 20px;
+
   font-size: 30px;
-  padding: 25px;
+  padding: 5px 40px;
+  margin: 0px 5px;
 }
 
 .task-2 {
