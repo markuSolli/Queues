@@ -1,40 +1,47 @@
 package no.ntnu.fullstack.queues.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import no.ntnu.fullstack.queues.course.UserCourse;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
-public class User {
-    private enum Role{
-        STUDENT,
-        ASSISTANT,
-        TEACHER,
-        ADMIN
-    }
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String email;
+    @JsonIgnore
+    private String password;
     private String firstName;
     private String lastName;
-    private String email;
-    private String hash;
+    @JsonIgnore
+    private boolean enabled = true;
+    @JsonIgnore
     private Role role;
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user")
+//    private Set<UserCourse> courses = new HashSet<>();
 
     protected User() {}
 
-    public User(String firstName, String lastName, String email, Role role) {
+    public User(String email, String password, String firstName, String lastName) {
+        this.email = email;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
-        this.role = role;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -53,20 +60,8 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Role getRole() {
@@ -75,5 +70,55 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("STUDENT"));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+//                ", courses=" + courses +
+                '}';
     }
 }

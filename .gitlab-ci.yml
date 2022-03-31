@@ -1,25 +1,73 @@
-image: maven:3-jdk-11
+services:
+ - mysql
 
 stages:
   - test
-  - package
+  - build
+
+variables:
+ MYSQL_DATABASE_NAME: qs
+ MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/src/main/resources/static/db.sql" 
+ MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+ PIPELINE_PROFILE: -Dspring.profiles.active=pipeline
 
 cache:
   paths:
-    - .m2/repository
+    - node_modules/
   key: "$CI_BUILD_REF_NAME"
 
-test:
+test_front:
+  image: node:14.15.4
   stage: test
   script:
-    - mvn clean test
+    - cd src/frontend
+    - npm install --progress=false
+    - npm run test:unit
+  artifacts:
+    paths:
+      - node_modules/
 
-package:
-    stage: package
-    script:
-      - mvn -DskipTests package
-    artifacts:
-      paths:
-        - target/*.jar
-    only:
-      - main
+connect:
+  image: mysql
+  stage: test
+  before_script:
+    - mysql --version
+    - apt-get update -q && apt-get install -qqy --no-install-recommends mysql-client
+  script:
+    - echo "create database $MYSQL_DATABASE_NAME;" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE_NAME < $MYSQL_DATABASE_SCHEMA
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "show databases; use $MYSQL_DATABASE_NAME; show tables;"
+
+
+test_back:
+  image: maven:3-jdk-11
+  stage: test
+  needs: ["connect"]
+  script:
+    - mvn test $PIPELINE_PROFILE
+
+build_back:
+  image: maven:3-jdk-11
+  stage: build
+  needs: ["test_back"]
+  script:
+    - mvn -DskipTests package -B $PIPELINE_PROFILE
+  artifacts:
+    paths:
+      - target/*.jar
+  only:
+    - main
+
+#build_front:
+#  image: node:14.15.4
+#  stage: build
+#  needs: ["test_front"]
+#  script:
+#    - cd src/frontend
+#    - npm install --progress=false
+#    - npm run build
+#  artifacts:
+#    paths:
+#      - dist/
+#  only:
+#    - main

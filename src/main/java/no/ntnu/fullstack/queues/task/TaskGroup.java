@@ -1,8 +1,10 @@
 package no.ntnu.fullstack.queues.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.course.Course;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class TaskGroup {
@@ -11,8 +13,11 @@ public class TaskGroup {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private int required;
-    @ManyToOne(targetEntity = Course.class)
+    @JsonIgnore
+    @ManyToOne(targetEntity = Course.class, cascade = CascadeType.ALL)
     private Course course;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Task> tasks;
 
     protected TaskGroup() {}
 
@@ -43,5 +48,13 @@ public class TaskGroup {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 }

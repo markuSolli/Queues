@@ -1,30 +1,27 @@
 package no.ntnu.fullstack.queues.course;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.user.User;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
 @Entity
 public class UserCourse {
-    private enum Role{
-        STUDENT,
-        ASSISTANT,
-        TEACHER,
-        ADMIN
-    }
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     @ManyToOne
     private User user;
+    @JsonIgnore
     @ManyToOne
     private Course course;
-    private Role role;
+    private CourseRole role;
 
     protected UserCourse() {}
 
-    public UserCourse(User user, Course course, Role role) {
+    public UserCourse(User user, Course course, CourseRole role) {
         this.user = user;
         this.course = course;
         this.role = role;
@@ -54,11 +51,21 @@ public class UserCourse {
         this.course = course;
     }
 
-    public Role getRole() {
+    public CourseRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(CourseRole role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCourse{" +
+                "id=" + id +
+                ", user=" + user +
+                ", course=" + course +
+                ", role=" + role +
+                '}';
     }
 }
