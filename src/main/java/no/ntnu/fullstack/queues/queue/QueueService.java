@@ -1,20 +1,29 @@
 package no.ntnu.fullstack.queues.queue;
 
+import no.ntnu.fullstack.queues.course.CourseNotFoundException;
+import no.ntnu.fullstack.queues.course.CourseService;
 import no.ntnu.fullstack.queues.task.Approved;
 import no.ntnu.fullstack.queues.task.ApprovedService;
+import no.ntnu.fullstack.queues.task.TaskNotFoundException;
+import no.ntnu.fullstack.queues.task.TaskService;
 import no.ntnu.fullstack.queues.user.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Service
 public class QueueService {
     private final QueueRepository queueRepository;
     private final ApprovedService approvedService;
+    private final CourseService courseService;
+    private final TaskService taskService;
 
-    public QueueService(QueueRepository queueRepository, ApprovedService approvedService) {
+    public QueueService(QueueRepository queueRepository, ApprovedService approvedService, CourseService courseService, TaskService taskService) {
         this.queueRepository = queueRepository;
         this.approvedService = approvedService;
+        this.courseService = courseService;
+        this.taskService = taskService;
     }
 
     /**
@@ -32,10 +41,11 @@ public class QueueService {
      * @param user the user sending the request
      * @return the added queue
      */
-    public Queue addQueue(Queue queue, User user){
+    public Queue addQueue(Queue queue, User user, Long courseId, Long taskId) throws TaskNotFoundException, CourseNotFoundException {
         queue.setUser(user);
-        long now = new java.util.Date().getTime();
-        queue.setTime(new Date(now));
+        queue.setTime(Date.valueOf(LocalDate.now()));
+        queue.setCourse(courseService.getCourse(courseId));
+        queue.setTask(taskService.getTask(taskId));
         return queueRepository.save(queue);
     }
 

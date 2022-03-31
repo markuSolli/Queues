@@ -59,9 +59,9 @@ import PersonList from "../components/PersonList.vue";
 import TaskList from "../components/TaskList.vue";
 import router from "../router";
 import { useRoute } from "vue-router";
-import axios from "axios";
 import { useStore } from "vuex";
 import { onMounted } from "@vue/runtime-core";
+import http from "@/service/http-common";
 
 export default {
   components: { Button, PersonList, TaskList },
@@ -82,8 +82,9 @@ export default {
     // EDIT
     onMounted(() => {
       if (route.params.id) {
-        axios
-          .get("http://localhost:3000/courses/" + route.params.id)
+        console.log("Params!");
+        http
+          .get("/courses/" + route.params.id)
           .then((response) => {
             const course = response.data;
             title.value = course.title;
@@ -98,85 +99,108 @@ export default {
               if (course.users[user].role == "STUDENT")
                 listOfStudents.value.push(course.users[user].user);
             }
-
-            createCourse = () => {
-              // validate title, code and date
-              console.log(route.params.id);
-
-              if (
-                title.value == "" ||
-                code.value == "" ||
-                startDate.value == "" ||
-                endDate.value == ""
-              ) {
-                status.value = "Fields cant be empty";
-              } else {
-                axios
-                  .put("http://localhost:3000/courses", {
-                    code: title.value,
-                    title: code.value,
-                    startDate: startDate.value,
-                    endDate: endDate.value,
-                    taskGroups: tasks.value.taskgroups,
-                    students: listOfStudents.value,
-                    assistants: listOfStudAss.value,
-                    teachers: listOfTeachers.value,
-                    id: route.params.id,
-                  })
-                  .then((response) => {
-                    console.log(response.status);
-                    if (response.status == 201) {
-                      router.push("/management");
-                    } else {
-                      status.value = "Something went wrong";
-                    }
-                  });
-              }
-            };
           });
+        console.log("yo");
+
       } else {
+        console.log("No params");
         // if this course page is not edit, load current teacher first in teacher list
 
         const store = useStore();
-        if (store.state.role == 1)
+        if (store.state.role == 1) {
           listOfTeachers.value.push({
             email: store.state.email,
             firstname: store.state.firstname,
             lastname: store.state.lastname,
           });
+        }
+        createCourse = () => {
+          // validate title, code and date
+          if (
+              title.value == "" ||
+              code.value == "" ||
+              startDate.value == "" ||
+              endDate.value == ""
+          ) {
+            status.value = "Fields cant be empty";
+          } else {
+            http
+                .post("/courses", {
+                  code: title.value,
+                  title: code.value,
+                  startDate: startDate.value,
+                  endDate: endDate.value,
+                  taskGroups: tasks.value.taskgroups,
+                  students: listOfStudents.value,
+                  assistants: listOfStudAss.value,
+                  teachers: listOfTeachers.value,
+                })
+                .then((response) => {
+                  if (response.status == 201) {
+                    router.push("/management");
+                  } else {
+                    status.value = "Something went wrong";
+                  }
+                });
+          }
+        };
+
       }
     });
 
     let createCourse = () => {
       // validate title, code and date
       if (
-        title.value == "" ||
-        code.value == "" ||
-        startDate.value == "" ||
-        endDate.value == ""
+          title.value == "" ||
+          code.value == "" ||
+          startDate.value == "" ||
+          endDate.value == ""
       ) {
         status.value = "Fields cant be empty";
+        return;
+      }
+      if(route.params.id) {
+        http
+            .put("/courses/" + route.params.id, {
+              code: title.value,
+              title: code.value,
+              startDate: startDate.value,
+              endDate: endDate.value,
+              taskGroups: tasks.value.taskgroups,
+              students: listOfStudents.value,
+              assistants: listOfStudAss.value,
+              teachers: listOfTeachers.value
+            })
+            .then((response) => {
+              console.log(response.status);
+              if (response.status == 200) {
+                router.push("/management");
+              } else {
+                status.value = "Something went wrong";
+              }
+            });
       } else {
-        axios
-          .post("http://localhost:3000/courses", {
-            code: title.value,
-            title: code.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
-            taskGroups: tasks.value.taskgroups,
-            students: listOfStudents.value,
-            assistants: listOfStudAss.value,
-            teachers: listOfTeachers.value,
-          })
-          .then((response) => {
-            if (response.status == 201) {
-              router.push("/management");
-            } else {
-              status.value = "Something went wrong";
-            }
-          });
+        http
+            .post("/courses", {
+              code: title.value,
+              title: code.value,
+              startDate: startDate.value,
+              endDate: endDate.value,
+              taskGroups: tasks.value.taskgroups,
+              students: listOfStudents.value,
+              assistants: listOfStudAss.value,
+              teachers: listOfTeachers.value,
+            })
+            .then((response) => {
+              if (response.status == 201) {
+                router.push("/management");
+              } else {
+                status.value = "Something went wrong";
+              }
+            });
       }
     };
+
 
     return {
       status,

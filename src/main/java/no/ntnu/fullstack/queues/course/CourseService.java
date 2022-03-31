@@ -2,6 +2,7 @@ package no.ntnu.fullstack.queues.course;
 
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -65,10 +66,10 @@ public class CourseService {
     /**
      * Deletes the given course
      *
-     * @param course course to delete
+     * @param id course to delete
      */
-    public void deleteCourse(Course course) {
-        courseRepository.deleteById(course.getId());
+    public void deleteCourse(Long id) {
+        courseRepository.deleteById(id);
     }
 
 
@@ -108,10 +109,41 @@ public class CourseService {
         }
 
         for(TaskGroup taskGroup : courseDTO.getTaskGroups()) {
-            course.getTasks().add(taskGroup);
+            course.getTaskGroups().add(taskGroup);
         }
 
         return courseRepository.save(course);
+    }
+
+    /**
+     * Edits course based on the courseDTO object
+     *
+     * @param course new data for course
+     * @return the edited course
+     */
+    public Course editCourse(Long id, CourseDTO course) throws UsernameNotFoundException{
+        Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+        existingCourse.setCode(course.getCode());
+        existingCourse.setTitle(course.getTitle());
+        existingCourse.setStartDate(course.getStartDate());
+        existingCourse.setEndDate(course.getEndDate());
+        existingCourse.setTitle(course.getTitle());
+//        existingCourse.setRooms(course.getRooms());
+//        existingCourse.setTasks(Set.copyOf(course.getTaskGroups()));
+
+        // Add users
+        existingCourse.getUsers().clear();
+        for(User teacher : course.getTeachers()) {
+            existingCourse.addUser(teacher, CourseRole.TEACHER);
+        }
+        for(User assistant : course.getAssistants()) {
+            existingCourse.addUser(assistant, CourseRole.ASSISTANT);
+        }
+        for(User student : course.getAssistants()) {
+            existingCourse.addUser(student, CourseRole.STUDENT);
+        }
+
+        return courseRepository.save(existingCourse);
     }
 
 }

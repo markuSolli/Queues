@@ -8,3 +8,13 @@ import http from "@/service/http-common";
 export const refreshToken = () => {
     return http.post("/token", "", { withCredentials: true });
 }
+
+/**
+ * Tries to login the given user
+ *
+ * @param user to login
+ * @returns response from login
+ */
+export const login = (user) => {
+    return http.post("/login", user, {withCredentials: true});
+}

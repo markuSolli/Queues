@@ -3,14 +3,10 @@ package no.ntnu.fullstack.queues.course;
 import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.bytecode.enhance.spi.interceptor.AbstractLazyLoadInterceptor;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,11 +21,11 @@ public class Course {
     private Date endDate;
     private boolean archived = false;
     private boolean active = true;
+    @ManyToMany
+    private Set<Room> rooms;
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<TaskGroup> tasks = new HashSet<>();
-    @ManyToMany(targetEntity = Room.class)
-    private List<Room> rooms;
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private Set<TaskGroup> taskGroups = new HashSet<>();
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserCourse> users = new HashSet<>();
 
     protected Course(){}
@@ -97,19 +93,19 @@ public class Course {
         this.active = active;
     }
 
-    public Set<TaskGroup> getTasks() {
-        return tasks;
+    public Set<TaskGroup> getTaskGroups() {
+        return taskGroups;
     }
 
-    public void setTasks(Set<TaskGroup> tasks) {
-        this.tasks = tasks;
+    public void setTaskGroups(Set<TaskGroup> tasks) {
+        this.taskGroups = tasks;
     }
 
-    public List<Room> getRooms() {
+    public Set<Room> getRooms() {
         return rooms;
     }
 
-    public void setRooms(List<Room> rooms) {
+    public void setRooms(Set<Room> rooms) {
         this.rooms = rooms;
     }
 
@@ -160,9 +156,9 @@ public class Course {
                 ", endDate=" + endDate +
                 ", archived=" + archived +
                 ", active=" + active +
-                ", tasks=" + tasks +
+                ", tasks=" + taskGroups +
                 ", rooms=" + rooms +
-                ", users=" + users +
+                ", users=" + users+
                 '}';
     }
 }

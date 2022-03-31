@@ -3,7 +3,10 @@ package no.ntnu.fullstack.queues.authentication;
 import io.jsonwebtoken.JwtException;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtResponse;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtUtil;
+import no.ntnu.fullstack.queues.authentication.jwt.JwtValidationFilter;
 import no.ntnu.fullstack.queues.user.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@CrossOrigin
 public class AuthenticationController {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
@@ -55,6 +60,7 @@ public class AuthenticationController {
         if (request.getCookies() == null) {
             // If there is no cookie, the user is not trying to fetch a new accessToken anyway
             // TODO: Assess if this is needed
+            logger.error("No refresh token");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -73,6 +79,7 @@ public class AuthenticationController {
             String subject = jwtUtil.decode(refreshToken);
 
             // If we get here, the token has been validated
+            logger.info("Refresh token is valid, sending new access token...");
 
             // We create a new access token for the user
             String accessToken = jwtUtil.createAccessToken(subject);
@@ -90,6 +97,16 @@ public class AuthenticationController {
         } catch (JwtException e) {
             return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    /**
+     * Returns the currently logged on user and some information about them
+     *
+     * @return information about the currently loggen in user
+     */
+    @GetMapping("/me")
+    public ResponseEntity<User> fetchCurrentUser(Authentication authentication) {
+        return new ResponseEntity<>((User) authentication.getPrincipal(), HttpStatus.OK);
     }
 
 }

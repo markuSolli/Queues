@@ -11,15 +11,11 @@ public class Task {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private int number;
-    @JsonIgnore
-    @ManyToOne(targetEntity = TaskGroup.class)
-    private TaskGroup taskGroup;
 
     protected Task() {}
 
-    public Task(int number, TaskGroup taskGroup) {
+    public Task(int number) {
         this.number = number;
-        this.taskGroup = taskGroup;
     }
 
     public Long getId() {
@@ -38,11 +34,4 @@ public class Task {
         this.number = number;
     }
 
-    public TaskGroup getTaskGroup() {
-        return taskGroup;
-    }
-
-    public void setTaskGroup(TaskGroup taskGroup) {
-        this.taskGroup = taskGroup;
-    }
 }

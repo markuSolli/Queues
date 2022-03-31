@@ -23,9 +23,9 @@ public class Queue {
     @ManyToOne
     private Room room;
     private Integer desk;
-    @ManyToOne(targetEntity = Task.class)
+    @ManyToOne
     private Task task;
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne
     private User assistant;
 
     protected Queue() {}

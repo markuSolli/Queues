@@ -33,6 +33,7 @@ import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import { useStore } from "vuex";
 import router from "../router";
+import {login} from "@/service/AuthenticationService";
 
 export default {
   components: { Button },
@@ -42,9 +43,24 @@ export default {
     let username = ref("");
     let password = ref("");
 
-    const logIn = () => {
+    const logIn = async () => {
+      console.log({
+        username: username.value,
+        password: password.value,
+      })
+      try {
+        const response = await login({
+          email: username.value,
+          password: password.value,
+        });
+
+        store.commit("setAccessToken", response.data.accessToken);
+        router.push("/");
+      } catch(err) {
+        console.log(err);
+      }
+
       store.commit("updateLoggedin", true);
-      router.push("/");
     };
 
     return {

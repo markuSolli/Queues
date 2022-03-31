@@ -21,7 +21,6 @@ const fetchClient = () => {
 
     instance.interceptors.request.use(async (config) => {
         let token = store.state.accessToken;
-        console.log(token);
 
         // If the token is expired, a new one is fetched
         if (!isTokenValidOrUndefined(token)) {
@@ -31,7 +30,7 @@ const fetchClient = () => {
                     withCredentials: true,
                 });
                 token = response.data.accessToken;
-                store.state.accessToken = token;
+                store.commit("setAccessToken", token);
             } catch (err) {
                 console.log(err);
             }

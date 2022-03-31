@@ -8,7 +8,6 @@ import Profile from "@/views/Profile";
 import Management from "@/views/Management";
 import Course from "@/views/Course";
 import EnterQueue from "@/views/EnterQueue";
-import CourseTest from "@/views/CourseTest";
 
 const routes = [
   {
@@ -43,15 +42,10 @@ const routes = [
   },
 
   {
-    path: "/course:id",
+    path: "/course/:id",
     name: "courseEdit",
     component: Course,
     props: true,
-  },
-  {
-    path: "/coursetest",
-    name: "coursetest",
-    component: CourseTest,
   },
   {
     path: "/profile",
@@ -64,7 +58,7 @@ const routes = [
     component: Management,
   },
   {
-    path: "/enterQueue:id",
+    path: "/enterQueue/:id",
     name: "enterQueue",
     component: EnterQueue,
   },

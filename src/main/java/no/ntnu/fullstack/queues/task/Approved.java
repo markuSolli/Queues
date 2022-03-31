@@ -11,12 +11,12 @@ public class Approved {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    @ManyToOne(targetEntity = Task.class)
+    @ManyToOne
     private Task task;
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne
     private User user;
     private Date date;
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne
     private User assistant;
 
     protected Approved() {}

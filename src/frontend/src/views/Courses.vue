@@ -19,9 +19,9 @@
 
 <script>
 import CourseCard from "../components/CourseCard";
-import axios from "axios";
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
+import http from "@/service/http-common";
 
 export default {
   components: { CourseCard },
@@ -30,7 +30,7 @@ export default {
     let inActiveCourses = ref();
 
     onMounted(() => {
-      axios.get("http://localhost:3000/courses").then((response) => {
+      http.get("/courses").then((response) => {
         let active = [];
         let inactive = [];
 

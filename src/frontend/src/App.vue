@@ -1,15 +1,38 @@
 <template>
-  <div id="grid"><Navbar v-if="loggedIn" /> <router-view /></div>
+  <div id="grid" v-if="!isLoading"><Navbar v-if="loggedIn" /> <router-view /></div>
 </template>
 
 <script>
 import { computed, ref } from "@vue/reactivity";
 import Navbar from "./components/Navbar";
 import { useStore } from "vuex";
+import { refreshToken } from "@/service/AuthenticationService";
+import { onBeforeMount } from "vue";
 
 export default {
   components: { Navbar },
   setup() {
+    let isLoading = ref(true);
+
+    onBeforeMount(() => {
+      const fetchUser = async () => {
+        console.log("Fetching user");
+        try {
+          const response = await refreshToken();
+          if(!response.data.accessToken) {
+            //
+            return;
+          }
+          store.commit("setAccessToken", response.data.accessToken);
+        } catch (err) {
+          console.log(err);
+        } finally {
+          isLoading.value = false;
+        }
+      }
+      fetchUser();
+    })
+
     const store = useStore();
 
     let loggedIn = computed(() => {
@@ -21,6 +44,7 @@ export default {
     });
 
     return {
+      isLoading,
       loggedIn,
     };
   },
