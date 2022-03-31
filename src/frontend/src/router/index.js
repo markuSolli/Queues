@@ -58,7 +58,7 @@ const routes = [
     component: Management,
   },
   {
-    path: "/enterQueue:id",
+    path: "/enterQueue/:id",
     name: "enterQueue",
     component: EnterQueue,
   },

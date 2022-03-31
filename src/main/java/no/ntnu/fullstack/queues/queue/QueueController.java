@@ -1,17 +1,20 @@
 package no.ntnu.fullstack.queues.queue;
 
 import no.ntnu.fullstack.queues.course.CourseController;
+import no.ntnu.fullstack.queues.course.CourseNotFoundException;
 import no.ntnu.fullstack.queues.task.Approved;
+import no.ntnu.fullstack.queues.task.TaskNotFoundException;
 import no.ntnu.fullstack.queues.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/queues")
+@RequestMapping("/queue")
 public class QueueController {
     private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
@@ -32,12 +35,17 @@ public class QueueController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Queue> addQueue(@RequestBody Queue queue){
-        logger.info("Creating queue " + queue.toString() + "...");
-        User user = queue.getUser(); //TODO: Get logged in user
-        Queue addedQueue = queueService.addQueue(queue, user);
-        return new ResponseEntity<>(addedQueue, HttpStatus.CREATED);
+    @PostMapping("/{course_id}/{task_id}")
+    public ResponseEntity<Queue> addQueue(@PathVariable("course_id") Long courseId, @PathVariable("task_id") Long taskId, @RequestBody Queue queue, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        logger.info("Adding {} to course {} for {} on task {}", user.getFirstName(), courseId, queue.isHelp() ? "help" : "approval", taskId);
+        try {
+            Queue addedQueue = queueService.addQueue(queue, user, courseId, taskId);
+            return new ResponseEntity<>(addedQueue, HttpStatus.CREATED);
+        } catch (TaskNotFoundException | CourseNotFoundException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping

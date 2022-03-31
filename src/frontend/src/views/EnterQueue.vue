@@ -6,18 +6,18 @@
       <div id="list-of-tasks">
         <div
           id="taskgroup-grid"
-          v-for="taskgroup in taskgroups"
-          :key="taskgroup.id"
+          v-for="taskGroup in taskGroups"
+          :key="taskGroup.id"
         >
-          <div id="group-header">Group {{ taskgroup.number }}</div>
+          <div id="group-header">Group {{ taskGroup.number }}</div>
           <div id="taskgroup">
-            <div v-for="task in taskgroup.tasks" :key="task.id">
+            <div v-for="task in taskGroup.tasks" :key="task.id">
               <div @click="taskClick(task.number, task.id)" class="task-1">
                 {{ task.number }}
               </div>
             </div>
           </div>
-          <div id="group-status">Group status: / {{ taskgroup.required }}</div>
+          <div id="group-status">Group status: / {{ taskGroup.required }}</div>
         </div>
       </div>
       <div v-if="selectedTask != 0">
@@ -63,23 +63,22 @@ export default {
     let selectedTaskId = ref();
     let help = ref(false);
     let approval = ref(false);
-    let taskgroups = ref();
+    let taskGroups = ref();
 
     onMounted(() => {
       http
         .get("/courses/" + route.params.id)
         .then((response) => {
+          console.log(response.data);
           const course = response.data;
 
-          for (const taskgroup in course.tasks) {
-            course.tasks[taskgroup].tasks.sort(function (a, b) {
+          for (const taskGroup in course.taskGroups) {
+            course.taskGroups[taskGroup].tasks.sort(function (a, b) {
               return a.number - b.number;
             });
           }
 
-          taskgroups.value = course.tasks;
-
-          console.log(course.tasks);
+          taskGroups.value = course.taskGroups;
         });
     });
 
@@ -99,10 +98,8 @@ export default {
     };
     const enterQueue = () => {
       http
-        .post("/queue", {
+        .post("/queue/" + route.params.id + "/" + selectedTaskId.value, {
           help: help.value,
-          course: route.params.id,
-          task: selectedTaskId.value,
         })
         .then((response) => {});
     };
@@ -115,7 +112,7 @@ export default {
       enterQueue,
       help,
       approval,
-      taskgroups,
+      taskGroups,
     };
   },
 };
