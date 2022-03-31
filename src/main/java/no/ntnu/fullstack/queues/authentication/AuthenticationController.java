@@ -109,4 +109,18 @@ public class AuthenticationController {
         return new ResponseEntity<>((User) authentication.getPrincipal(), HttpStatus.OK);
     }
 
+    @GetMapping("/roger")
+    public void roger() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("roger@roger.no");
+        userDTO.setPassword("roger");
+        userDTO.setFirstName("Roger");
+        userDTO.setLastName("Rogersen");
+        try {
+            userService.signup(userDTO, Role.ADMIN);
+        } catch (Exception e) {
+            // Already signed up!
+        }
+    }
+
 }
