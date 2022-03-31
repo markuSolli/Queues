@@ -1,6 +1,8 @@
 <template>
   <div id="card">
-    <div class="queue-element-1"><h3>Name of course</h3></div>
+    <div class="queue-element-1">
+      <h3>{{ name }}</h3>
+    </div>
     <div class="queue-element-2" v-if="edit || archieved || inactive"></div>
     <div class="queue-element-2" v-else>
       <h4>
@@ -9,9 +11,7 @@
         >
       </h4>
     </div>
-    <div class="queue-element-3">
-      <h3>course description should be here</h3>
-    </div>
+    <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="!edit">
       <div id="prog-text"><h4>Course progress:</h4></div>
       <div class="loadingBar-1">1</div>
@@ -23,7 +23,7 @@
       <div class="loadingBar-2">7</div>
     </div>
     <div class="queue-element-4" v-if="edit">
-      <Button :title="'Edit'" :route="'course'" />
+      <Button :title="'Edit'" @click="editCourse" />
       <Button :title="'Archieve'" :route="'course'" />
       <Button :title="'Delete'" :route="'course'" />
     </div>
@@ -33,21 +33,35 @@
 <script>
 import { ref } from "@vue/reactivity";
 import Button from "./Button.vue";
+import router from "../router";
 
 export default {
-  props: ["edit", "archieved", "inactive"],
+  props: ["edit", "archieved", "inactive", "name", "id"],
   components: { Button },
   setup(props) {
     let edit = ref(props.edit);
     let archieved = ref(props.archieved);
     let inactive = ref(props.inactive);
+    let name = ref(props.name);
+    let id = props.id;
 
-    const editCourse = () => {};
+    const editCourse = () => {
+      router.push({
+        name: "courseEdit",
+        params: {
+          id: id,
+        },
+      });
+    };
+
+    const goToCourse = () => {};
 
     return {
       edit,
       archieved,
       inactive,
+      name,
+      editCourse,
     };
   },
 };

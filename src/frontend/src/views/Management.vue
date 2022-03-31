@@ -7,11 +7,8 @@
         <Button :title="'Add new course'" :route="'course'" />
       </div>
     </div>
-    <div id="course-list">
-      <CourseCard :edit="true" />
-      <CourseCard :edit="true" />
-      <CourseCard :edit="true" />
-      <CourseCard :edit="true" />
+    <div v-for="course in courses" :key="course.id" id="course-list">
+      <CourseCard :edit="true" :name="course.title" :id="course.id" />
     </div>
     <div id="management-bar">
       <div id="title"><h2>Users</h2></div>
@@ -49,11 +46,20 @@ import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import CourseCard from "../components/CourseCard.vue";
 import UserCard from "../components/UserCard.vue";
+import axios from "axios";
+import { computed, onMounted } from "@vue/runtime-core";
 
 export default {
   components: { Button, CourseCard, UserCard },
   setup() {
     let create = ref(false);
+    let courses = ref();
+
+    onMounted(() => {
+      axios.get("http://localhost:3000/courses").then((response) => {
+        courses.value = response.data;
+      });
+    });
 
     let listOfUsers = ref([
       {
@@ -85,6 +91,7 @@ export default {
     return {
       listOfUsers,
       create,
+      courses,
       addUserInterfaceOn,
       addUserInterfaceOff,
       addUser,
