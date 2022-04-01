@@ -93,7 +93,7 @@ public class CourseService {
         }
         for(User assistant : courseDTO.getAssistants()) {
             try {
-                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.STUDENT);
+                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.ASSISTANT);
             } catch (UserAlreadyExistsException e) {
                 // good
             }

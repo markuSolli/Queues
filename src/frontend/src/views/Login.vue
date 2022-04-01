@@ -33,7 +33,7 @@ import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import { useStore } from "vuex";
 import router from "../router";
-import {login} from "@/service/AuthenticationService";
+import { login } from "@/service/AuthenticationService";
 
 export default {
   components: { Button },

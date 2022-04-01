@@ -16,5 +16,12 @@ export const refreshToken = () => {
  * @returns response from login
  */
 export const login = (user) => {
-    return http.post("/login", user, {withCredentials: true});
+    return http.post("/login", user, { withCredentials: true });
+}
+
+/**
+ * Logs out the user
+ */
+export const logout = () => {
+    return http.post("/logout", "", { withCredentials: true })
 }

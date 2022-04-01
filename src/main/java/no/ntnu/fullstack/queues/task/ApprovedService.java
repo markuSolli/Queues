@@ -5,6 +5,7 @@ import no.ntnu.fullstack.queues.user.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Service
 public class ApprovedService {
@@ -24,8 +25,7 @@ public class ApprovedService {
         Approved approval = new Approved();
         approval.setTask(queue.getTask());
         approval.setUser(queue.getUser());
-        long now = new java.util.Date().getTime();
-        approval.setDate(new Date(now));
+        approval.setDate(Date.valueOf(LocalDate.now()));
         approval.setAssistant(assistant);
         return approvedRepository.save(approval);
     }

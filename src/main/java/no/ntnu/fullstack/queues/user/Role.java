@@ -6,5 +6,6 @@ package no.ntnu.fullstack.queues.user;
 public enum Role {
     ADMIN,
     TEACHER,
+    ASSISTANT,
     STUDENT
 }
