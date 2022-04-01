@@ -20,7 +20,7 @@ public class Course {
     private Date startDate;
     private Date endDate;
     private boolean archived = false;
-    private boolean active = true;
+    private boolean active = false;
     @ManyToMany
     private Set<Room> rooms;
     @OneToMany(cascade = CascadeType.ALL)

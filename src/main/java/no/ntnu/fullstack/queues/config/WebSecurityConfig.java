@@ -7,6 +7,7 @@ import no.ntnu.fullstack.queues.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +42,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtil))
-                .addFilterAfter(new JwtValidationFilter(jwtUtil, userService), CustomUsernamePasswordAuthenticationFilter.class)
+                    .addFilterAfter(new JwtValidationFilter(jwtUtil, userService), CustomUsernamePasswordAuthenticationFilter.class)
+                .logout()
+                    .addLogoutHandler(new CookieClearingLogoutHandler(jwtUtil.cookieName()))
+                    .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                .and()
                 .authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .antMatchers("/signup").permitAll()

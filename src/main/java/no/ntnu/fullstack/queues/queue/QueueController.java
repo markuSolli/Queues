@@ -55,10 +55,11 @@ public class QueueController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/approved")
-    public ResponseEntity<Approved> approveQueue(@RequestBody Queue queue){
+    @PostMapping("/approve")
+    public ResponseEntity<Approved> approveQueue(@RequestBody Queue queue, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
         logger.info("Approving queue " + queue.toString() + "...");
-        Approved addedApproval = queueService.approveQueue(queue, queue.getAssistant());
+        Approved addedApproval = queueService.approveQueue(queue, user);
         return new ResponseEntity<>(addedApproval, HttpStatus.CREATED);
     }
 
