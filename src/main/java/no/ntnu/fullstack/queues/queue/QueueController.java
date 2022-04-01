@@ -63,9 +63,9 @@ public class QueueController {
     }
 
     @PutMapping
-    public ResponseEntity<Queue> assistQueue(@RequestBody Queue queue){
+    public ResponseEntity<Queue> assistQueue(@RequestBody Queue queue, Authentication authentication){
         logger.info("Attaching assistant to queue " + queue + "...");
-        User assistant = queue.getAssistant(); //TODO: Get logged in user
-        return new ResponseEntity<>(queueService.assistQueue(queue, assistant), HttpStatus.OK);
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(queueService.assistQueue(queue, user), HttpStatus.OK);
     }
 }
