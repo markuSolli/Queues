@@ -1,14 +1,21 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.user.Role;
+import no.ntnu.fullstack.queues.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * The controller layer for Courses
+ *
  */
 @RestController
 @RequestMapping("/courses")
@@ -22,13 +29,34 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    /**
+     * Gets all courses
+     *
+     * @return list of all courses
+     */
     @GetMapping
-    public ResponseEntity<Iterable<Course>> getAllCourses() {
+    public ResponseEntity<Iterable<Course>> getAllCourses(@RequestParam("archived") Optional<Boolean> archived, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        if(archived.isPresent()) {
+            logger.info("Retrieving all courses based on archived...");
+            if(user.getRole() == Role.ADMIN) {
+                return new ResponseEntity<>(courseService.getCoursesByArchived(archived.get()), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(courseService.getCoursesByArchived(archived.get(), user), HttpStatus.OK);
+        }
         logger.info("Retrieving all courses...");
-        Iterable<Course> courses = courseService.getAll();
-        return new ResponseEntity<>(courses, HttpStatus.OK);
+        if(user.getRole() == Role.ADMIN) {
+            return new ResponseEntity<>(courseService.getAll(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(courseService.getAll(user), HttpStatus.OK);
     }
 
+    /**
+     * Gets course with the given id
+     *
+     * @param id id of course to get
+     * @return course with the given id, if there is one.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourse(@PathVariable Long id) {
         try {
