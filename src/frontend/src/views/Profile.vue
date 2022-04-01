@@ -20,6 +20,7 @@ import http from "@/service/http-common";
 import { useStore } from "vuex";
 import { ref } from "@vue/reactivity";
 import { onBeforeMount } from "vue";
+import { logout } from "@/service/AuthenticationService.js";
 
 export default {
   components: { Button },
@@ -39,10 +40,16 @@ export default {
 
     })
 
-    const logOut = () => {
-      store.commit("updateLoggedin", false);
-      router.push("logIn");
-    };
+    const logOut = async () => {
+      try {
+        await logout();
+        store.commit("setAccessToken", null)
+        store.commit("updateLoggedin", false);
+        router.push("logIn");
+      } catch(err) {
+        console.log(err);
+      }
+       };
 
     const resetPassword = () => {};
 

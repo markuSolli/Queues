@@ -1,8 +1,9 @@
+import { faListSquares } from "@fortawesome/free-solid-svg-icons";
 import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    loggedIn: true,
+    loggedIn: false,
     accessToken: null,
     role: 1,
     email: "Smith@ntnu.no",

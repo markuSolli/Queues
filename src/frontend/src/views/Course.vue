@@ -126,8 +126,8 @@ export default {
           } else {
             http
                 .post("/courses", {
-                  code: title.value,
-                  title: code.value,
+                  code: code.value,
+                  title: title.value,
                   startDate: startDate.value,
                   endDate: endDate.value,
                   taskGroups: tasks.value.taskgroups,
@@ -182,8 +182,8 @@ export default {
       } else {
         http
             .post("/courses", {
-              code: title.value,
-              title: code.value,
+              code: code.value,
+              title: title.value,
               startDate: startDate.value,
               endDate: endDate.value,
               taskGroups: tasks.value.taskgroups,
