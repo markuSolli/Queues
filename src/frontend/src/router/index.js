@@ -8,6 +8,7 @@ import Profile from "@/views/Profile";
 import Management from "@/views/Management";
 import Course from "@/views/Course";
 import EnterQueue from "@/views/EnterQueue";
+import ActivateUser from "@/views/ActivateUser";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/courseQueue",
     name: "courseQueue",
     component: CourseQueue,
+  },
+  {
+    path: "/activateUser/:id",
+    name: "activateUser",
+    component: ActivateUser,
   },
   {
     path: "/login",
