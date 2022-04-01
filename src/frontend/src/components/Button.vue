@@ -39,8 +39,9 @@ export default {
   font-size: 15px;
 }
 
-#button:hover ~ .button-text {
-  color: grey;
+#button:hover ~ .button-text, #button:hover {
+  color: rgb(255, 255, 255);
+  background: rgb(14, 7, 54);;
 }
 
 .button-text {
