@@ -9,9 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Properties;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -50,6 +52,7 @@ public class UserService implements UserDetailsService {
             User user = new User(userDTO.getEmail(), null, userDTO.getFirstName(), userDTO.getLastName());
             user.setRole(role);
             user.setEnabled(false);
+            sendActivationMail(user);
             return userRepository.save(user);
         }
 
@@ -91,5 +94,37 @@ public class UserService implements UserDetailsService {
 
     public boolean userExists(String email) {
         return userRepository.existsById(email);
+    }
+
+    /*
+    Note − Please switch ON 'allow less secure apps' in your Gmail account settings before sending an email.
+     */
+    private void sendActivationMail(User user){
+        String serverEmail = "";    //TODO: Create GMail account
+        String serverPassword = "";
+        try {
+            Properties properties = new Properties();
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.host", "smtp.gmail.com");
+            properties.put("mail.smtp.port", "587");
+
+            Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(serverEmail, serverPassword);
+                }
+            });
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(serverEmail, false));
+
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
+            msg.setSubject("Activate your Queues profile");
+            msg.setSentDate(new Date());
+            msg.setContent("Tutorials point email", "text/html"); //TODO: Set content
+
+            Transport.send(msg);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
