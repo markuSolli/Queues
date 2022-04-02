@@ -6,13 +6,12 @@
       <div id="buttons">
         <Button :title="'Add new course'" :route="'course'" />
         <Button :title="'Manage users'" :route="'manageUsers'" />
-        <Button :title="'Manage rooms'" :route="'manageUsers'" />
+        <Button :title="'Manage rooms'" :route="'manageRooms'" />
       </div>
     </div>
     <div v-for="course in courses" :key="course.id" id="course-list">
       <CourseCard :course="course" />
     </div>
-    
   </div>
 </template>
 
@@ -22,7 +21,7 @@ import Button from "../components/Button.vue";
 import CourseCard from "../components/CourseCard.vue";
 import UserCard from "../components/UserCard.vue";
 import { computed, onMounted } from "@vue/runtime-core";
-import http from "@/service/http-common"
+import http from "@/service/http-common";
 
 export default {
   components: { Button, CourseCard, UserCard },
@@ -41,8 +40,6 @@ export default {
         courses.value = notArchived;
       });
     });
-
- 
 
     return {
       courses,

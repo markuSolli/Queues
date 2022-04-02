@@ -170,6 +170,7 @@ export default {
   display: flex;
   grid-column: 3/4;
   justify-self: end;
+  align-self: center;
 }
 
 #header {
