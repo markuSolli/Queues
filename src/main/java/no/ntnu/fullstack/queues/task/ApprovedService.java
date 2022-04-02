@@ -15,6 +15,10 @@ public class ApprovedService {
         this.approvedRepository = approvedRepository;
     }
 
+    public Iterable<Approved> getAllApproved(User user) {
+        return approvedRepository.findAllByUser(user);
+    }
+
     /**
      * Creates a new Approved object from the approval of a queue
      * @param queue the queue to approve

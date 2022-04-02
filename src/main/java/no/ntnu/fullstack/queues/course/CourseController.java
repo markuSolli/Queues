@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -95,6 +94,13 @@ public class CourseController {
         logger.info("Deleting course {} ...", id);
         courseService.deleteCourse(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}/approved")
+    public ResponseEntity<String> getApproved(@PathVariable Long id, Authentication authentication) {
+        logger.info("Retrieving all approved courses");
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
 }

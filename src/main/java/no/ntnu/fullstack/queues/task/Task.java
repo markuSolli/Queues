@@ -11,6 +11,9 @@ public class Task {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private int number;
+    @JsonIgnore
+    @ManyToOne
+    private TaskGroup taskGroup;
 
     protected Task() {}
 
@@ -34,4 +37,11 @@ public class Task {
         this.number = number;
     }
 
+    public TaskGroup getTaskGroup() {
+        return taskGroup;
+    }
+
+    public void setTaskGroup(TaskGroup taskGroup) {
+        this.taskGroup = taskGroup;
+    }
 }
