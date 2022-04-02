@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;

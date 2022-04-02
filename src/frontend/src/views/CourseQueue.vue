@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Course title</h1>
+<!--    <h1>{{queue[0].course.title}}</h1>-->
 
     <div id="topbar">
       <h2 id="queue-header">Students in queue</h2>
@@ -31,7 +31,10 @@ import StudentCard from "../components/StudentCard.vue";
 import Button from "../components/Button.vue";
 import { useRoute } from "vue-router";
 import router from "../router";
-import { computed } from "@vue/runtime-core";
+import {computed, onMounted} from "@vue/runtime-core";
+import { onBeforeMount } from "vue";
+import http from "@/service/http-common";
+import { ref } from "@vue/reactivity";
 
 export default {
   components: {
@@ -40,9 +43,21 @@ export default {
   },
   setup() {
     const route = useRoute();
+    const queue = ref([]);
     let isStudAss = computed(() => {
       return true;
     });
+
+    onBeforeMount(() => {
+      http
+          .get("/queue/" + route.params.id)
+          .then(response => {
+            console.log(response.data);
+            queue.value = response.data;
+          })
+          .catch(err => console.log(err));
+      ;
+    })
 
     const goToQueue = () => {
       router.push({
@@ -51,7 +66,7 @@ export default {
       });
     };
 
-    return { goToQueue, isStudAss };
+    return { goToQueue, isStudAss, queue };
   },
 };
 </script>

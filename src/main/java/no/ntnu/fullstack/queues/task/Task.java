@@ -1,6 +1,7 @@
 package no.ntnu.fullstack.queues.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ public class Task {
     private Long id;
     private int number;
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private TaskGroup taskGroup;
 
     protected Task() {}
