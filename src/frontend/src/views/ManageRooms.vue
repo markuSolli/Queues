@@ -132,6 +132,7 @@
 <script>
 import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
+import { onMounted } from "@vue/runtime-core";
 
 export default {
   components: { Button },
@@ -154,11 +155,19 @@ export default {
       ],
     });
 
+    onMounted(() => {
+      // get locations and update locations list
+    });
+
     const addLocation = (location, locations) => {
+      // add to database
+
       locations.push(location);
     };
 
     const removeLocation = (location, index) => {
+      // remove from database
+
       location.splice(index, 1);
     };
 
@@ -166,6 +175,8 @@ export default {
       location.edit = true;
     };
     const doneEditName = (name, location) => {
+      // put to database
+
       location.name = name;
       location.edit = false;
     };
