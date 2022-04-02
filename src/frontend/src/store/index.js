@@ -15,6 +15,15 @@ export default createStore({
     updateLoggedin(state, val) {
       state.loggedIn = val;
     },
+    updateEmail(state, val) {
+      state.email = val;
+    },
+    updateFirstname(state, val) {
+      state.firstname = val;
+    },
+    updateLastname(state, val) {
+      state.lastname = val;
+    },
     setAccessToken(state, val) {
       state.accessToken = val;
     },

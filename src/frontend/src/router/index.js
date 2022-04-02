@@ -11,6 +11,7 @@ import EnterQueue from "@/views/EnterQueue";
 import ActivateUser from "@/views/ActivateUser";
 import ManageRooms from "@/views/ManageRooms";
 import ManageUsers from "@/views/ManageUsers";
+import ViewCourse from "@/views/ViewCourse";
 
 const routes = [
   {
@@ -24,9 +25,14 @@ const routes = [
     component: About,
   },
   {
-    path: "/courseQueue",
+    path: "/courseQueue/:id",
     name: "courseQueue",
     component: CourseQueue,
+  },
+  {
+    path: "/viewCourse/:id",
+    name: "viewCourse",
+    component: ViewCourse,
   },
   {
     path: "/activateUser/:id",

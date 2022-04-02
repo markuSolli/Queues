@@ -1,12 +1,10 @@
 <template>
-  <div id="card">
+  <div id="card" @click="clickCardFunc">
     <div class="queue-element-1">
       <h3>{{ title }}</h3>
     </div>
 
-    <div class="queue-element-2" v-if="cardInQueue && active">
-      <div @click="goToQueue">Go to queue -></div>
-    </div>
+    <div class="queue-element-2"></div>
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
       <div id="prog-text"><h4>Course progress:</h4></div>
@@ -51,7 +49,7 @@ import { computed } from "@vue/runtime-core";
 import http from "@/service/http-common";
 
 export default {
-  props: ["course", "cardInQueue"],
+  props: ["course", "cardInQueue", "clickCardFunc"],
   components: { Button },
   setup(props) {
     const store = useStore();
@@ -74,9 +72,7 @@ export default {
     });
 
     const deleteCourse = () => {
-      http
-        .delete("/courses/" + id)
-        .then((response) => {});
+      http.delete("/courses/" + id).then((response) => {});
     };
 
     const editCourse = () => {
@@ -88,13 +84,22 @@ export default {
       });
     };
 
-    const goToQueue = () => {
-      router.push({
-        name: "enterQueue",
-        params: {
-          id: id,
-        },
-      });
+    const clickCardFunc = () => {
+      if (active.value) {
+        router.push({
+          name: "courseQueue",
+          params: {
+            id: id,
+          },
+        });
+      } else {
+        router.push({
+          name: "viewCourse",
+          params: {
+            id: id,
+          },
+        });
+      }
     };
 
     const goToCourse = () => {};
@@ -111,7 +116,7 @@ export default {
       cardInQueue,
       editCourse,
       deleteCourse,
-      goToQueue,
+      clickCardFunc,
     };
   },
 };
@@ -132,6 +137,11 @@ export default {
   margin: 0px 0px 10px 0px;
   display: grid;
   grid-template-areas: "element-1 element-2" "element-3 element-4";
+}
+
+#card:hover {
+  cursor: pointer;
+  background: rgb(13, 6, 53);
 }
 
 #prog-text {
