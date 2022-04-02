@@ -9,6 +9,8 @@ import Management from "@/views/Management";
 import Course from "@/views/Course";
 import EnterQueue from "@/views/EnterQueue";
 import ActivateUser from "@/views/ActivateUser";
+import ManageRooms from "@/views/ManageRooms";
+import ManageUsers from "@/views/ManageUsers";
 
 const routes = [
   {
@@ -62,6 +64,16 @@ const routes = [
     path: "/management",
     name: "management",
     component: Management,
+  },
+  {
+    path: "/manageUsers",
+    name: "manageUsers",
+    component: ManageUsers,
+  },
+  {
+    path: "/manageRooms",
+    name: "manageRooms",
+    component: ManageRooms,
   },
   {
     path: "/enterQueue/:id",

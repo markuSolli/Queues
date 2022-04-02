@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    loggedIn: false,
+    loggedIn: true,
     accessToken: null,
     role: 1,
     email: "Smith@ntnu.no",

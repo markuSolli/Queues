@@ -161,6 +161,7 @@ export default {
 #element-4 {
   display: flex;
   justify-self: end;
+  align-self: center;
 }
 
 #input-field {
