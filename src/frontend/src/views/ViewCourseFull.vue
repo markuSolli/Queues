@@ -1,12 +1,56 @@
 <template>
   <div>
-    <h1>Course name</h1>
-    <div id="teachers">
-      <h2>Teachers</h2>
+    <h1>{{ code }}: {{ title }}</h1>
+    <div id="list">
+      <div id="headline"><h2>Teachers</h2></div>
+      <div Id="user-list">
+        <div id="element-1">Email</div>
+        <div id="element-2">Firstname</div>
+        <div id="element-3">Lastname</div>
+      </div>
       <div id="user-list" v-for="teacher in teachers" :key="teacher.id">
         <div id="element-1">{{ teacher.email }}</div>
         <div id="element-2">{{ teacher.firstName }}</div>
         <div id="element-3">{{ teacher.lastName }}</div>
+      </div>
+    </div>
+    <div id="list">
+      <div id="headline"><h2>Student assistants</h2></div>
+      <div Id="user-list">
+        <div id="element-1">Email</div>
+        <div id="element-2">Firstname</div>
+        <div id="element-3">Lastname</div>
+      </div>
+      <div id="user-list" v-for="assistant in assistants" :key="assistant.id">
+        <div id="element-1">{{ assistant.email }}</div>
+        <div id="element-2">{{ assistant.firstName }}</div>
+        <div id="element-3">{{ assistant.lastName }}</div>
+      </div>
+    </div>
+    <div id="list">
+      <div id="headline"><h2>Students</h2></div>
+      <div Id="student-list">
+        <div id="element-1">Email</div>
+        <div id="element-2">Firstname</div>
+        <div id="element-3">Lastname</div>
+        <div id="element-4">Passed</div>
+      </div>
+      <div
+        id="student-list"
+        v-for="student in students"
+        :key="student.id"
+        @click="clickStudent(student)"
+      >
+        <div id="element-1">{{ student.email }}</div>
+        <div id="element-2">{{ student.firstName }}</div>
+        <div id="element-3">{{ student.lastName }}</div>
+        <div id="element-4">true</div>
+        <div id="element-5" v-if="student.active">
+          <h2>Task status</h2>
+          <div v-for="task in taskList" :key="task.id">
+            {{ task.id }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -25,11 +69,13 @@ export default {
     let teachers = ref([]);
     let assistants = ref([]);
     let taskGroups = ref();
+    let code = ref();
+    let title = ref();
 
-    onMounted(() => {
+    onBeforeMount(() => {
       http.get("/courses/" + route.params.id).then((response) => {
         const course = response.data;
-        console.log(course);
+
         // add users to lists
         for (const user in course.users) {
           if (course.users[user].role == "TEACHER")
@@ -52,32 +98,101 @@ export default {
           });
         }
 
+        console.log(course);
+
+        code.value = course.code;
+        title.value = course.title;
         taskGroups.value = course.taskGroups;
       });
     });
 
-    return { taskGroups, students, teachers, assistants };
+    const clickStudent = (student) => {
+      student.active = !student.active;
+    };
+
+    return {
+      taskGroups,
+      students,
+      teachers,
+      assistants,
+      code,
+      title,
+      clickStudent,
+    };
   },
 };
 </script>
 
 <style>
-#teachers {
-  justify-content: start;
+#list {
+  margin: 50px 0px;
+}
+
+#headline {
+  display: flex;
 }
 
 #user-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  background: rgb(7, 3, 29);
+  padding: 5px 20px;
+  border-radius: 10px;
+  margin-top: 2px;
+}
+
+#student-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 30px 1fr;
+  background: rgb(7, 3, 29);
+  padding: 5px 20px;
+  border-radius: 10px;
+  margin-top: 2px;
+}
+
+#student-list:hover {
+  cursor: pointer;
+  background: rgb(13, 6, 53);
 }
 
 #element-1 {
   grid-column: 1/2;
+  grid-row: 1/2;
+
+  justify-self: start;
 }
 #element-2 {
   grid-column: 2/3;
+  grid-row: 1/2;
+
+  justify-self: center;
 }
 #element-3 {
   grid-column: 3/4;
+  grid-row: 1/2;
+
+  justify-self: end;
+}
+
+#student-list,
+#element-3 {
+  grid-column: 3/4;
+  grid-row: 1/2;
+
+  justify-self: end;
+}
+
+#element-4 {
+  grid-column: 4/5;
+  grid-row: 1/2;
+
+  justify-self: end;
+}
+#element-5 {
+  grid-column: 1/5;
+  grid-row: 2/3;
+  justify-self: start;
+  margin: 20px;
 }
 </style>
