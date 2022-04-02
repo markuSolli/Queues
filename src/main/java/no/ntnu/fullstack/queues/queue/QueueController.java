@@ -55,17 +55,18 @@ public class QueueController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/approved")
-    public ResponseEntity<Approved> approveQueue(@RequestBody Queue queue){
+    @PostMapping("/approve")
+    public ResponseEntity<Approved> approveQueue(@RequestBody Queue queue, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
         logger.info("Approving queue " + queue.toString() + "...");
-        Approved addedApproval = queueService.approveQueue(queue, queue.getAssistant());
+        Approved addedApproval = queueService.approveQueue(queue, user);
         return new ResponseEntity<>(addedApproval, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Queue> assistQueue(@RequestBody Queue queue){
+    public ResponseEntity<Queue> assistQueue(@RequestBody Queue queue, Authentication authentication){
         logger.info("Attaching assistant to queue " + queue + "...");
-        User assistant = queue.getAssistant(); //TODO: Get logged in user
-        return new ResponseEntity<>(queueService.assistQueue(queue, assistant), HttpStatus.OK);
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(queueService.assistQueue(queue, user), HttpStatus.OK);
     }
 }

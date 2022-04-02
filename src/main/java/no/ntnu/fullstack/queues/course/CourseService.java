@@ -5,6 +5,8 @@ import no.ntnu.fullstack.queues.user.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
@@ -23,6 +25,16 @@ public class CourseService {
     public Iterable<Course> getAll() {
         return courseRepository.findAll();
     }
+
+    /**
+     * Returns a list of all courses
+     *
+     * @return list of all courses
+     */
+    public Iterable<Course> getAll(User user) {
+        return courseRepository.findAllByUsers_User(user);
+    }
+
 
     /**
      * Returns the course with the given id
@@ -93,7 +105,7 @@ public class CourseService {
         }
         for(User assistant : courseDTO.getAssistants()) {
             try {
-                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.STUDENT);
+                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.ASSISTANT);
             } catch (UserAlreadyExistsException e) {
                 // good
             }
@@ -128,8 +140,8 @@ public class CourseService {
         existingCourse.setStartDate(course.getStartDate());
         existingCourse.setEndDate(course.getEndDate());
         existingCourse.setTitle(course.getTitle());
-//        existingCourse.setRooms(course.getRooms());
-//        existingCourse.setTasks(Set.copyOf(course.getTaskGroups()));
+        existingCourse.setRooms(course.getRooms());
+        existingCourse.setTaskGroups(Set.copyOf(course.getTaskGroups()));
 
         // Add users
         existingCourse.getUsers().clear();
@@ -144,6 +156,26 @@ public class CourseService {
         }
 
         return courseRepository.save(existingCourse);
+    }
+
+    /**
+     * Gets all items from the database with the given archived status
+     *
+     * @param archived get archived or non archived
+     * @return list of all items with the given archived status
+     */
+    public Iterable<Course> getCoursesByArchived(boolean archived) {
+        return courseRepository.findAllByArchived(archived);
+    }
+
+    /**
+     * Gets all items from the database with the given archived status
+     *
+     * @param archived get archived or non archived
+     * @return list of all items with the given archived status
+     */
+    public Iterable<Course> getCoursesByArchived(boolean archived, User user) {
+        return courseRepository.findAllByArchivedAndUsers_User(archived, user);
     }
 
 }
