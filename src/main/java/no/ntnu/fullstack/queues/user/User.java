@@ -2,6 +2,7 @@ package no.ntnu.fullstack.queues.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.course.UserCourse;
+import no.ntnu.fullstack.queues.task.Approved;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,9 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<UserCourse> courses = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Approved> approved = new HashSet<>();
 
     protected User() {}
 
@@ -78,6 +82,14 @@ public class User implements UserDetails {
 
     public void setCourses(Set<UserCourse> courses) {
         this.courses = courses;
+    }
+
+    public Set<Approved> getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Set<Approved> approved) {
+        this.approved = approved;
     }
 
     @JsonIgnore

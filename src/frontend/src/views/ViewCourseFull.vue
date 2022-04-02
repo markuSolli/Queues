@@ -47,8 +47,11 @@
         <div id="element-4">true</div>
         <div id="element-5" v-if="student.active">
           <h2>Task status</h2>
-          <div v-for="task in taskList" :key="task.id">
-            {{ task.id }}
+          <div v-for="taskGroup in taskGroups" :key="taskGroup.id">
+            <div v-for="task in taskGroup.tasks" :key="task.id">
+              {{ task.number }}
+              <span v-if="taskIsApproved(task, student)">approved</span>
+            </div>
           </div>
         </div>
       </div>
@@ -57,10 +60,10 @@
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
-import { onBeforeMount, onMounted } from "@vue/runtime-core";
+import {ref} from "@vue/reactivity";
+import {onBeforeMount} from "@vue/runtime-core";
 import http from "../service/http-common";
-import { useRoute } from "vue-router";
+import {useRoute} from "vue-router";
 
 export default {
   setup() {
@@ -110,6 +113,19 @@ export default {
       student.active = !student.active;
     };
 
+    const taskIsApproved = (task, student) => {
+      let isApproved =  student.approved.map(approvedItem => {
+        console.log("Approved task: " + approvedItem.task.id);
+        console.log("Task: " + task.id);
+        if (approvedItem.task.id === task.id) {
+          console.log("equal");
+          return true;
+        }
+        return false;
+      });
+      return isApproved[0];
+    }
+
     return {
       taskGroups,
       students,
@@ -118,6 +134,7 @@ export default {
       code,
       title,
       clickStudent,
+      taskIsApproved
     };
   },
 };
