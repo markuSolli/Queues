@@ -11,16 +11,16 @@
     </div>
     <PersonCard
       :email="'Email'"
-      :firstname="'Firstname'"
-      :lastname="'Lastname'"
+      :firstName="'Firstname'"
+      :lastName="'Lastname'"
     />
     <div v-for="person in list" :key="person.email" class="person-list">
       <div v-if="person.create == null">
         <PersonCard
           :ListToPostTo="list"
           :email="person.email"
-          :firstname="person.firstname"
-          :lastname="person.lastname"
+          :firstName="person.firstName"
+          :lastName="person.lastName"
           :edit="true"
         />
       </div>
@@ -29,8 +29,8 @@
           :create="true"
           :ListToPostTo="list"
           :email="person.email"
-          :firstname="person.firstname"
-          :lastname="person.lastname"
+          :firstName="person.firstName"
+          :lastName="person.lastName"
         />
       </div>
     </div>
@@ -56,8 +56,8 @@ export default {
       }
       list.unshift({
         email: "",
-        firstname: "",
-        lastname: "",
+        firstName: "",
+        lastName: "",
         create: true,
       });
     };
