@@ -5,19 +5,19 @@
     <div id="topbar">
       <h2 id="queue-header">Students in queue</h2>
       <div id="button-position">
-        <Button :title="'Go to queue'" :route="'enterQueue'" />
+        <Button :title="'Enter queue'" @click="goToQueue" />
       </div>
     </div>
 
     <div id="list">
       <StudentCard
         :guide="true"
-        :firstname="'Name'"
+        :firstname="'Student'"
         :studentAssistant="'Student assistant'"
         :type="'Type'"
         :time="'Time'"
       />
-      <StudentCard />
+      <StudentCard :isStudAss="isStudAss" :studentAssistant="'ererer'" />
       <StudentCard />
       <StudentCard />
       <StudentCard />
@@ -29,15 +29,29 @@
 <script>
 import StudentCard from "../components/StudentCard.vue";
 import Button from "../components/Button.vue";
+import { useRoute } from "vue-router";
+import router from "../router";
+import { computed } from "@vue/runtime-core";
 
 export default {
   components: {
     StudentCard,
     Button,
   },
-  props: ["course"],
   setup() {
-    return {};
+    const route = useRoute();
+    let isStudAss = computed(() => {
+      return true;
+    });
+
+    const goToQueue = () => {
+      router.push({
+        name: "enterQueue",
+        params: { id: route.params.id },
+      });
+    };
+
+    return { goToQueue, isStudAss };
   },
 };
 </script>

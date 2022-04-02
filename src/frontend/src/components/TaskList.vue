@@ -20,7 +20,7 @@
         <div id="group-description">
           <h4>Tasks required to pass:</h4>
           <input
-            v-model="number"
+            v-model="taskgroup.required"
             placeholder="Number"
             id="amount-input"
             type="number"

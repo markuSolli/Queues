@@ -19,23 +19,23 @@
 
     <div class="queue-element-4" v-if="edit && !cardInQueue && !archived">
       <Button :title="'Edit'" @click="editCourse" />
-      <Button :title="'Archieve'" :route="'course'" />
+      <Button :title="'Archieve'" @click="clickArchieve" />
       <Button :title="'Delete'" @click="deleteCourse" />
     </div>
     <div class="queue-element-4" v-if="assistant && active && !cardInQueue">
-      <Button :title="'Stop queue'" @click="editCourse" />
+      <Button :title="'Stop queue'" @click="stopQueue" />
     </div>
     <div
       class="queue-element-4"
       v-if="assistant && !active && !cardInQueue && !archived"
     >
-      <Button :title="'Start queue'" @click="editCourse" />
+      <Button :title="'Start queue'" @click="startQueue" />
     </div>
     <div
       class="queue-element-4"
       v-if="archived && !assistant && !student && !cardInQueue && archived"
     >
-      <Button :title="'Restore course'" @click="editCourse" />
+      <Button :title="'Restore course'" @click="restoreFromArchieve" />
     </div>
   </div>
 </template>
@@ -60,6 +60,7 @@ export default {
     let title = ref(course.title);
     let id = course.id;
     let cardInQueue = props.cardInQueue;
+    let clickedButton = false;
 
     let assistant = computed(() => {
       if (store.state.role == 2) return true;
@@ -76,6 +77,8 @@ export default {
     };
 
     const editCourse = () => {
+      clickedButton = true;
+
       router.push({
         name: "courseEdit",
         params: {
@@ -84,27 +87,42 @@ export default {
       });
     };
 
+    const clickArchieve = () => {};
+    const restoreFromArchieve = () => {};
+
     const clickCardFunc = () => {
-      if (active.value) {
-        router.push({
-          name: "courseQueue",
-          params: {
-            id: id,
-          },
-        });
+      if (cardInQueue) {
+        // CARD IS IN QUEUE
+        if (active.value) {
+          router.push({
+            name: "courseQueue",
+            params: {
+              id: id,
+            },
+          });
+        } else {
+          router.push({
+            name: "viewCourse",
+            params: {
+              id: id,
+            },
+          });
+        }
       } else {
-        router.push({
-          name: "viewCourse",
-          params: {
-            id: id,
-          },
-        });
+        // CARD IS IN MANAGEMENT PAGE
+        if (!clickedButton) {
+          router.push({
+            name: "viewCourseFull",
+            params: {
+              id: id,
+            },
+          });
+        }
       }
     };
 
-    const goToCourse = () => {};
-
     const startQueue = () => {};
+    const stopQueue = () => {};
 
     return {
       edit,
@@ -116,7 +134,11 @@ export default {
       cardInQueue,
       editCourse,
       deleteCourse,
+      clickArchieve,
       clickCardFunc,
+      stopQueue,
+      startQueue,
+      restoreFromArchieve,
     };
   },
 };

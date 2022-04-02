@@ -12,6 +12,7 @@ import ActivateUser from "@/views/ActivateUser";
 import ManageRooms from "@/views/ManageRooms";
 import ManageUsers from "@/views/ManageUsers";
 import ViewCourse from "@/views/ViewCourse";
+import ViewCourseFull from "@/views/ViewCourseFull";
 
 const routes = [
   {
@@ -28,16 +29,25 @@ const routes = [
     path: "/courseQueue/:id",
     name: "courseQueue",
     component: CourseQueue,
+    props: true,
+  },
+  {
+    path: "/viewCourseFull/:id",
+    name: "viewCourseFull",
+    component: ViewCourseFull,
+    props: true,
   },
   {
     path: "/viewCourse/:id",
     name: "viewCourse",
     component: ViewCourse,
+    props: true,
   },
   {
     path: "/activateUser/:id",
     name: "activateUser",
     component: ActivateUser,
+    props: true,
   },
   {
     path: "/login",
@@ -54,7 +64,6 @@ const routes = [
     name: "course",
     component: Course,
   },
-
   {
     path: "/course/:id",
     name: "courseEdit",
@@ -85,6 +94,7 @@ const routes = [
     path: "/enterQueue/:id",
     name: "enterQueue",
     component: EnterQueue,
+    props: true,
   },
 ];
 

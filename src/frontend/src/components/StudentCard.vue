@@ -7,14 +7,30 @@
         {{ time }}
       </div>
       <div class="element-4">{{ studass }}</div>
+      <div class="element-5" v-if="!guide">
+        <Button
+          v-if="!beingApproved"
+          :title="'Supervise'"
+          @click="superviseStudent"
+        />
+        <Button v-else :title="'Approve'" @click="approveStudent" />
+      </div>
     </div>
-    <div id="being-approved" v-if="!guide"></div>
+    <div
+      v-if="!guide"
+      class="being-approved"
+      v-bind:class="{ beingapprovedcolor: beingApproved }"
+    ></div>
   </div>
 </template>
 
 <script>
 import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
+import Button from "../components/Button.vue";
+
 export default {
+  components: { Button },
   props: [
     "email",
     "firstname",
@@ -23,6 +39,7 @@ export default {
     "type",
     "studentAssistant",
     "guide",
+    "isStudAss",
   ],
   setup(props) {
     const email = ref(props.email);
@@ -32,6 +49,20 @@ export default {
     const type = ref(props.type);
     const studass = ref(props.studentAssistant);
     const guide = ref(props.guide);
+    const isStudAss = ref(props.isStudAss);
+    const beingApproved = computed(() => {
+      if (studass.value) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    const superviseStudent = () => {
+      // put name of studass into this queue in database
+    };
+
+    const approveStudent = () => {};
 
     return {
       email,
@@ -41,6 +72,10 @@ export default {
       type,
       studass,
       guide,
+      beingApproved,
+      isStudAss,
+      superviseStudent,
+      approveStudent,
     };
   },
 };
@@ -61,10 +96,10 @@ export default {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   text-align: left;
-  padding: 25px;
+  padding: 10px;
   margin: 0px 0px 10px 0px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   flex: 1 1 auto;
   font-size: 16px;
 }
@@ -75,13 +110,17 @@ export default {
   border-bottom-right-radius: 10px;
 }
 
-#being-approved {
+.being-approved {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   background-color: red;
   max-width: 10px;
   min-width: 10px;
   margin: 0px 0px 10px 0px;
+}
+
+.beingapprovedcolor {
+  background-color: green;
 }
 
 #studentcard-container:hover {
@@ -95,21 +134,27 @@ export default {
 
 .element-1 {
   grid-column: 1 / 2;
+  justify-self: start;
 }
 
 .element-2 {
   grid-column: 2 / 3;
-  justify-self: start;
+  justify-self: center;
 }
 
 .element-3 {
   grid-column: 3 / 4;
-  justify-self: start;
+  justify-self: center;
   font-size: 16px;
 }
 
 .element-4 {
   grid-column: 4 / 5;
-  justify-self: start;
+  justify-self: center;
+}
+
+.element-5 {
+  grid-column: 5 / 6;
+  justify-self: end;
 }
 </style>
