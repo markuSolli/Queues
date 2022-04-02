@@ -1,5 +1,7 @@
 package no.ntnu.fullstack.queues.queue;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.ntnu.fullstack.queues.course.Course;
 import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.task.Task;
@@ -14,6 +16,7 @@ public class Queue {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+    @JsonIgnoreProperties({"users", "taskGroups"})
     @ManyToOne
     private Course course;
     @ManyToOne

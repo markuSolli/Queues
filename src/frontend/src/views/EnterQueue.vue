@@ -69,6 +69,7 @@ export default {
     onMounted(() => {
       http.get("/courses/" + route.params.id).then((response) => {
         const course = response.data;
+        console.log(course);
 
         for (const taskGroup in course.taskGroups) {
           course.taskGroups[taskGroup].tasks.sort(function (a, b) {
