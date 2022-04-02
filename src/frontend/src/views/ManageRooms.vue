@@ -165,10 +165,9 @@ export default {
     const editName = (location) => {
       location.edit = true;
     };
-    const doneEditName = (name, location, input) => {
+    const doneEditName = (name, location) => {
       location.name = name;
       location.edit = false;
-      input = "";
     };
 
     return {
