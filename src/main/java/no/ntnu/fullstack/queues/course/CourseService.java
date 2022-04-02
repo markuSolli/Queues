@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -95,30 +96,7 @@ public class CourseService {
         Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getStartDate(), courseDTO.getEndDate());
 
         // Adding all the users to the course with their respective roles
-        for(User teacher : courseDTO.getTeachers()) {
-            try {
-                userService.signup(new UserDTO(teacher.getEmail(), teacher.getFirstName(), teacher.getLastName()), Role.TEACHER);
-            } catch (UserAlreadyExistsException e) {
-                // good
-            }
-            course.addUser(teacher, CourseRole.TEACHER);
-        }
-        for(User assistant : courseDTO.getAssistants()) {
-            try {
-                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.ASSISTANT);
-            } catch (UserAlreadyExistsException e) {
-                // good
-            }
-            course.addUser(assistant, CourseRole.ASSISTANT);
-        }
-        for(User student : courseDTO.getStudents()) {
-            try {
-                userService.signup(new UserDTO(student.getEmail(), student.getFirstName(), student.getLastName()), Role.STUDENT);
-            } catch (UserAlreadyExistsException e) {
-                // good
-            }
-            course.addUser(student, CourseRole.STUDENT);
-        }
+        setUsers(courseDTO, course);
 
         for(TaskGroup taskGroup : courseDTO.getTaskGroups()) {
             course.getTaskGroups().add(taskGroup);
@@ -130,32 +108,56 @@ public class CourseService {
     /**
      * Edits course based on the courseDTO object
      *
-     * @param course new data for course
+     * @param courseDTO new data for course
      * @return the edited course
      */
-    public Course editCourse(Long id, CourseDTO course) throws UsernameNotFoundException{
+    public Course editCourse(Long id, CourseDTO courseDTO) throws UsernameNotFoundException{
         Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
-        existingCourse.setCode(course.getCode());
-        existingCourse.setTitle(course.getTitle());
-        existingCourse.setStartDate(course.getStartDate());
-        existingCourse.setEndDate(course.getEndDate());
-        existingCourse.setTitle(course.getTitle());
-        existingCourse.setRooms(course.getRooms());
-        existingCourse.setTaskGroups(Set.copyOf(course.getTaskGroups()));
+        existingCourse.setCode(courseDTO.getCode());
+        existingCourse.setTitle(courseDTO.getTitle());
+        existingCourse.setStartDate(courseDTO.getStartDate());
+        existingCourse.setEndDate(courseDTO.getEndDate());
+        existingCourse.setTitle(courseDTO.getTitle());
+        existingCourse.setTaskGroups(courseDTO.getTaskGroups());
+        existingCourse.setRooms(courseDTO.getRooms());
 
-        // Add users
+        // Edit users
         existingCourse.getUsers().clear();
-        for(User teacher : course.getTeachers()) {
+        setUsers(courseDTO, existingCourse);
+        return courseRepository.save(existingCourse);
+    }
+
+    /**
+     * Makes sure all users are signed up and adds them to the course
+     *
+     * @param courseDTO data about the users
+     * @param existingCourse course to add to
+     */
+    private void setUsers(CourseDTO courseDTO, Course existingCourse) {
+        for(User teacher : courseDTO.getTeachers()) {
+            try {
+                userService.signup(new UserDTO(teacher.getEmail(), teacher.getFirstName(), teacher.getLastName()), Role.TEACHER);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             existingCourse.addUser(teacher, CourseRole.TEACHER);
         }
-        for(User assistant : course.getAssistants()) {
+        for(User assistant : courseDTO.getAssistants()) {
+            try {
+                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.ASSISTANT);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             existingCourse.addUser(assistant, CourseRole.ASSISTANT);
         }
-        for(User student : course.getAssistants()) {
+        for(User student : courseDTO.getStudents()) {
+            try {
+                userService.signup(new UserDTO(student.getEmail(), student.getFirstName(), student.getLastName()), Role.STUDENT);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             existingCourse.addUser(student, CourseRole.STUDENT);
         }
-
-        return courseRepository.save(existingCourse);
     }
 
     /**

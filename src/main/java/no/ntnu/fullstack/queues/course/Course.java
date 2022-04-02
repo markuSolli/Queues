@@ -22,7 +22,7 @@ public class Course {
     private boolean archived = false;
     private boolean active = false;
     @ManyToMany
-    private Set<Room> rooms;
+    private Set<Room> rooms = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL)
     private Set<TaskGroup> taskGroups = new HashSet<>();
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -97,8 +97,12 @@ public class Course {
         return taskGroups;
     }
 
-    public void setTaskGroups(Set<TaskGroup> tasks) {
-        this.taskGroups = tasks;
+    public void setTaskGroups(Set<TaskGroup> taskGroups) {
+        if(taskGroups == null) {
+            return;
+        }
+        this.taskGroups.clear();
+        this.taskGroups.addAll(taskGroups);
     }
 
     public Set<Room> getRooms() {
@@ -106,7 +110,11 @@ public class Course {
     }
 
     public void setRooms(Set<Room> rooms) {
-        this.rooms = rooms;
+        if(rooms == null) {
+            return;
+        }
+        this.rooms.clear();
+        this.rooms.addAll(rooms);
     }
 
     public Set<UserCourse> getUsers() {
