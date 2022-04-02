@@ -54,6 +54,7 @@ import Button from "../components/Button.vue";
 import { useRoute } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
 import http from "@/service/http-common";
+import router from "../router";
 
 export default {
   components: { Button },
@@ -62,24 +63,21 @@ export default {
     let selectedTask = ref(0);
     let selectedTaskId = ref();
     let help = ref(false);
-    let approval = ref(false);
+    let approval = ref(true);
     let taskGroups = ref();
 
     onMounted(() => {
-      http
-        .get("/courses/" + route.params.id)
-        .then((response) => {
-          console.log(response.data);
-          const course = response.data;
+      http.get("/courses/" + route.params.id).then((response) => {
+        const course = response.data;
 
-          for (const taskGroup in course.taskGroups) {
-            course.taskGroups[taskGroup].tasks.sort(function (a, b) {
-              return a.number - b.number;
-            });
-          }
+        for (const taskGroup in course.taskGroups) {
+          course.taskGroups[taskGroup].tasks.sort(function (a, b) {
+            return a.number - b.number;
+          });
+        }
 
-          taskGroups.value = course.taskGroups;
-        });
+        taskGroups.value = course.taskGroups;
+      });
     });
 
     const taskClick = (taskNumber, taskId) => {
@@ -101,7 +99,17 @@ export default {
         .post("/queue/" + route.params.id + "/" + selectedTaskId.value, {
           help: help.value,
         })
-        .then((response) => {});
+        .then((response) => {
+          console.log(response.data);
+
+          // redirect to queue in successfull
+          router.push({
+            name: "courseQueue",
+            params: {
+              id: route.params.id,
+            },
+          });
+        });
     };
 
     return {
@@ -133,8 +141,8 @@ export default {
 
 #taskgroup-grid {
   display: grid;
-  background: rgb(187, 187, 187);
-  color: black;
+  font-weight: 200;
+  color: white;
   padding: 0px 10px;
   border-radius: 20px;
   grid-template-rows: 1fr 1fr 1fr;
@@ -170,11 +178,10 @@ export default {
 }
 
 #list-of-tasks {
+  color: white;
   justify-content: space-around;
-  background: rgb(255, 255, 255);
   display: flex;
   margin: 25px 0px;
-  border: 2px black solid;
   padding: 20px;
   border-radius: 20px;
 }
@@ -182,7 +189,7 @@ export default {
 .task-1,
 .task-2 {
   background: green;
-  border-radius: 20px;
+  border-radius: 10px;
 
   font-size: 30px;
   padding: 5px 40px;

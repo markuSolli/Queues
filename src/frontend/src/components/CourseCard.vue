@@ -1,12 +1,10 @@
 <template>
-  <div id="card">
+  <div id="card" @click="clickCardFunc">
     <div class="queue-element-1">
       <h3>{{ title }}</h3>
     </div>
 
-    <div class="queue-element-2" v-if="cardInQueue && active">
-      <div @click="goToQueue">Go to queue -></div>
-    </div>
+    <div class="queue-element-2"></div>
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
       <div id="prog-text"><h4>Course progress:</h4></div>
@@ -21,23 +19,23 @@
 
     <div class="queue-element-4" v-if="edit && !cardInQueue && !archived">
       <Button :title="'Edit'" @click="editCourse" />
-      <Button :title="'Archieve'" :route="'course'" />
+      <Button :title="'Archieve'" @click="clickArchieve" />
       <Button :title="'Delete'" @click="deleteCourse" />
     </div>
     <div class="queue-element-4" v-if="assistant && active && !cardInQueue">
-      <Button :title="'Stop queue'" @click="editCourse" />
+      <Button :title="'Stop queue'" @click="stopQueue" />
     </div>
     <div
       class="queue-element-4"
       v-if="assistant && !active && !cardInQueue && !archived"
     >
-      <Button :title="'Start queue'" @click="editCourse" />
+      <Button :title="'Start queue'" @click="startQueue" />
     </div>
     <div
       class="queue-element-4"
       v-if="archived && !assistant && !student && !cardInQueue && archived"
     >
-      <Button :title="'Restore course'" @click="editCourse" />
+      <Button :title="'Restore course'" @click="restoreFromArchieve" />
     </div>
   </div>
 </template>
@@ -51,7 +49,7 @@ import { computed } from "@vue/runtime-core";
 import http from "@/service/http-common";
 
 export default {
-  props: ["course", "cardInQueue"],
+  props: ["course", "cardInQueue", "clickCardFunc"],
   components: { Button },
   setup(props) {
     const store = useStore();
@@ -62,6 +60,7 @@ export default {
     let title = ref(course.title);
     let id = course.id;
     let cardInQueue = props.cardInQueue;
+    let clickedButton = false;
 
     let assistant = computed(() => {
       if (store.state.role == 2) return true;
@@ -74,12 +73,12 @@ export default {
     });
 
     const deleteCourse = () => {
-      http
-        .delete("/courses/" + id)
-        .then((response) => {});
+      http.delete("/courses/" + id).then((response) => {});
     };
 
     const editCourse = () => {
+      clickedButton = true;
+
       router.push({
         name: "courseEdit",
         params: {
@@ -88,18 +87,42 @@ export default {
       });
     };
 
-    const goToQueue = () => {
-      router.push({
-        name: "enterQueue",
-        params: {
-          id: id,
-        },
-      });
+    const clickArchieve = () => {};
+    const restoreFromArchieve = () => {};
+
+    const clickCardFunc = () => {
+      if (cardInQueue) {
+        // CARD IS IN QUEUE
+        if (active.value) {
+          router.push({
+            name: "courseQueue",
+            params: {
+              id: id,
+            },
+          });
+        } else {
+          router.push({
+            name: "viewCourse",
+            params: {
+              id: id,
+            },
+          });
+        }
+      } else {
+        // CARD IS IN MANAGEMENT PAGE
+        if (!clickedButton) {
+          router.push({
+            name: "viewCourseFull",
+            params: {
+              id: id,
+            },
+          });
+        }
+      }
     };
 
-    const goToCourse = () => {};
-
     const startQueue = () => {};
+    const stopQueue = () => {};
 
     return {
       edit,
@@ -111,7 +134,11 @@ export default {
       cardInQueue,
       editCourse,
       deleteCourse,
-      goToQueue,
+      clickArchieve,
+      clickCardFunc,
+      stopQueue,
+      startQueue,
+      restoreFromArchieve,
     };
   },
 };
@@ -132,6 +159,11 @@ export default {
   margin: 0px 0px 10px 0px;
   display: grid;
   grid-template-areas: "element-1 element-2" "element-3 element-4";
+}
+
+#card:hover {
+  cursor: pointer;
+  background: rgb(13, 6, 53);
 }
 
 #prog-text {

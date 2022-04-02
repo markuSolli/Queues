@@ -7,13 +7,22 @@ export default createStore({
     accessToken: null,
     role: 1,
     email: "Smith@ntnu.no",
-    firstname: "smith",
-    lastname: "hansen",
+    firstName: "smith",
+    lastName: "hansen",
   },
   getters: {},
   mutations: {
     updateLoggedin(state, val) {
       state.loggedIn = val;
+    },
+    updateEmail(state, val) {
+      state.email = val;
+    },
+    updateFirstname(state, val) {
+      state.firstName = val;
+    },
+    updateLastname(state, val) {
+      state.lastName = val;
     },
     setAccessToken(state, val) {
       state.accessToken = val;
