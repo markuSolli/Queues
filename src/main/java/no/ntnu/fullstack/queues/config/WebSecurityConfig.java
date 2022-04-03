@@ -52,6 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/token").permitAll()
                     .antMatchers("/example").permitAll()
+                    .antMatchers("/activation/**").permitAll()
+                    .antMatchers("/activate").permitAll()
                     .antMatchers("/swagger-ui/**").permitAll()
                     .antMatchers("/v3/api-docs/**").permitAll()
                     .antMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
