@@ -128,8 +128,8 @@ export default {
 
     const toggleQueue = () => {
       http
-          .patch("/courses/" + id + "/active", !active.value)
-          .then((response) => {});
+        .patch("/courses/" + id + "/active", !active.value)
+        .then((response) => {});
     };
 
     return {
@@ -144,11 +144,8 @@ export default {
       deleteCourse,
       clickArchive,
       clickCardFunc,
-      stopQueue,
-      startQueue,
-      restoreFromArchieve,
       code,
-      toggleQueue
+      toggleQueue,
     };
   },
 };
