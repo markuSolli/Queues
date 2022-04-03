@@ -90,10 +90,6 @@ public class UserService implements UserDetailsService {
         return roleHierarchy;
     }
 
-    public boolean userExists(String email) {
-        return userRepository.existsById(email);
-    }
-
     /**
      * Send an e-mail from the applications account to the given users e-mail account with its
      * activation link.
@@ -151,30 +147,25 @@ public class UserService implements UserDetailsService {
 
     /**
      * Get the user object with the given activation code
+     *
      * @param activation the activation code generated for the user.
      * @return the matching user object.
      * @throws NoSuchElementException
      */
     public User getUserByActivationCode(String activation) throws NoSuchElementException{
-        Optional<User> user = userRepository.findByActivation(activation);
-        if(user.isPresent()){
-            return user.get();
-        }else{
-            throw new NoSuchElementException();
-        }
+        return userRepository.findByActivation(activation).orElseThrow(() -> new ActivationCodeNotFoundException(activation));
     }
 
     /**
      * Activate an existing user, assigning a password
+     *
      * @param userDTO user object with activation code instead of email
      * @return the new User object
      * @throws NoSuchElementException
      */
-    public User activateUser(UserDTO userDTO) throws NoSuchElementException{
-        Optional<User> optionalUser = userRepository.findByActivation(userDTO.getEmail());
-        if(optionalUser.isEmpty()) throw new NoSuchElementException();
+    public User activateUser(UserDTO userDTO) throws NoSuchElementException {
+        User existingUser = userRepository.findByActivation(userDTO.getEmail()).orElseThrow(() -> new ActivationCodeNotFoundException(userDTO.getEmail()));
 
-        User existingUser = optionalUser.get();
         String encodedPassword = bCrypt.encode(userDTO.getPassword());
         User user = new User(existingUser.getEmail(), encodedPassword, existingUser.getFirstName(), existingUser.getLastName());
         user.setRole(existingUser.getRole());
