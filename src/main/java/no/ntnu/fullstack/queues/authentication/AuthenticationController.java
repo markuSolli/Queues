@@ -124,11 +124,11 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/{activation}")
-    public ResponseEntity<User> getUserByActivationCode(@PathVariable String activation){
-        logger.info("Sending user info for activation code " + activation + "...");
+    @GetMapping("/activation/{code}")
+    public ResponseEntity<User> getUserByActivationCode(@PathVariable String code){
+        logger.info("Sending user info for activation code " + code + "...");
         try{
-            User user = userService.getUserByActivationCode(activation);
+            User user = userService.getUserByActivationCode(code);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }catch(NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.net.InetAddress;
 import java.util.*;
 
 @Service
@@ -114,14 +115,17 @@ public class UserService implements UserDetailsService {
                     return new PasswordAuthentication(serverEmail, serverPassword);
                 }
             });
+
+            String link = "http://localhost:8080/activation/" + user.getActivation();
+
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(serverEmail, false));
-
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
             msg.setSubject("Activate your Queues profile");
             msg.setSentDate(new Date());
-            msg.setContent("<p>An account has been made for you, visit the following link to set a password:</p>" +
-                    "<a href=http://localhost:3000/" + user.getActivation() + "</a>", "text/html");
+            msg.setContent("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "!" + "</p>" +
+                    "<p>An account has been made for you, visit the following link to set a password:</p>" +
+                    "<a href=" + link + ">" + link + "</a>", "text/html");
 
             Transport.send(msg);
         } catch (MessagingException e) {
