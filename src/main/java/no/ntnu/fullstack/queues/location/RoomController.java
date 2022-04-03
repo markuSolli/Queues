@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.util.NoSuchElementException;
 
+@Deprecated
 @RestController
 @CrossOrigin
 @RequestMapping("/room")

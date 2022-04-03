@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.NoSuchElementException;
 
+@Deprecated
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 
+@Deprecated
 @Service
 public class BuildingService {
     private final BuildingRepository buildingRepository;

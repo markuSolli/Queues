@@ -3,6 +3,7 @@ package no.ntnu.fullstack.queues.location;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+@Deprecated
 @Entity
 public class Campus {
 
