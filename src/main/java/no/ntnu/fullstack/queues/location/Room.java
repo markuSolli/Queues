@@ -3,6 +3,7 @@ package no.ntnu.fullstack.queues.location;
 import javax.persistence.*;
 import java.io.File;
 
+@Deprecated
 @Entity
 public class Room {
 

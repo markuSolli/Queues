@@ -2,6 +2,7 @@ package no.ntnu.fullstack.queues.location;
 
 import javax.persistence.*;
 
+@Deprecated
 @Entity
 public class Building {
 
