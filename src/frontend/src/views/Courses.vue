@@ -1,5 +1,5 @@
 <template>
-  <div id="main">
+  <div>
     <div id="queue-container">
       <div id="queue-container-header"><h1>Active</h1></div>
 

@@ -1,17 +1,16 @@
-import { createApp } from "vue";
+import { createApp, Vue } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
 // fontawesome - fix this
+/* import the fontawesome core */
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-library.add(fas);
 
-createApp(App)
-  //.component("font-awesome-icon", FontAwesomeIcon)
-  .use(store)
-  .use(router)
+/* import specific icons */
+import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 
-  .mount("#app");
+/* add icons to the library */
+library.add(faUserSecret);
+
+createApp(App).use(store).use(router).mount("#app");

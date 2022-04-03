@@ -254,6 +254,7 @@ export default {
 #year {
   border-radius: 20px;
   padding: 5px;
+  width: 50px;
 }
 
 #done-text {

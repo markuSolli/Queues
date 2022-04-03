@@ -71,8 +71,13 @@ export default {
         const course = response.data;
         console.log(course);
 
-        for (const taskGroup in course.taskGroups) {
-          course.taskGroups[taskGroup].tasks.sort(function (a, b) {
+        // sort groups
+        course.taskGroups.sort(function (a, b) {
+          return a.number - b.number;
+        });
+        // sort tasks
+        for (let groupNumber in course.taskGroups) {
+          course.taskGroups[groupNumber].tasks.sort(function (a, b) {
             return a.number - b.number;
           });
         }
@@ -180,6 +185,7 @@ export default {
 
 #list-of-tasks {
   color: white;
+  flex-flow: row wrap;
   justify-content: space-around;
   display: flex;
   margin: 25px 0px;

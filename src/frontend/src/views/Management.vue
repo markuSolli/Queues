@@ -63,6 +63,7 @@ export default {
 
 #buttons {
   justify-self: end;
+  align-self: center;
   grid-column: 2 / 3;
   display: flex;
 }
