@@ -129,8 +129,8 @@ public class AuthenticationController {
         UserDTO teacher = new UserDTO("teacher@teacher.no", "Lærer", "Vekkesen");
         teacher.setPassword("lærer");
 
-        UserDTO assistant = new UserDTO("assistant@assistant.no", "Assistant", "Hjelpersen");
-        assistant.setPassword("assistant");
+        UserDTO assistant = new UserDTO("assistant@assistant.no", "Assistent", "Hjelpersen");
+        assistant.setPassword("assistent");
 
         UserDTO student = new UserDTO("student@student.no", "Student", "Øvesen");
         student.setPassword("student");
