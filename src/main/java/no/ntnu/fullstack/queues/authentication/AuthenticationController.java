@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin
@@ -28,6 +27,18 @@ public class AuthenticationController {
     public AuthenticationController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user, Authentication authentication){
+        try{
+            User caller = (User) authentication.getPrincipal();
+            User newUser = userService.register(user, caller);
+            return new ResponseEntity<>(newUser.getEmail(), HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+
+        }
     }
 
     /**
@@ -165,6 +176,17 @@ public class AuthenticationController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<Iterable<UserInfo>> getAllUsers(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        logger.info("Fetching all users...");
+        try {
+            return new ResponseEntity<>(userService.getAllUsers(user), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }
