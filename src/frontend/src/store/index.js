@@ -1,9 +1,8 @@
-import { faListSquares } from "@fortawesome/free-solid-svg-icons";
 import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    loggedIn: true,
+    loggedIn: false,
     accessToken: null,
     role: 1,
     email: "",
@@ -14,6 +13,12 @@ export default createStore({
   mutations: {
     updateLoggedin(state, val) {
       state.loggedIn = val;
+    },
+    setUser(state, val) {
+      state.email = val.email;
+      state.firstName = val.firstName;
+      state.lastName = val.lastName;
+      state.role = val.role;
     },
     updateEmail(state, val) {
       state.email = val;

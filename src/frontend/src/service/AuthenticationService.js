@@ -25,3 +25,10 @@ export const login = (user) => {
 export const logout = () => {
     return http.post("/logout", "", { withCredentials: true })
 }
+
+/**
+ * Returns the currently loggen in user
+ */
+export const whoAmI = () => {
+    return http.get("/me");
+}
