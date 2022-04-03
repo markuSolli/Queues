@@ -9,8 +9,7 @@ import no.ntnu.fullstack.queues.task.TaskService;
 import no.ntnu.fullstack.queues.user.User;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Service
 public class QueueService {
@@ -53,7 +52,8 @@ public class QueueService {
      */
     public Queue addQueue(Queue queue, User user, Long courseId, Long taskId) throws TaskNotFoundException, CourseNotFoundException {
         queue.setUser(user);
-        queue.setTime(Date.valueOf(LocalDate.now()));
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        queue.setTime(now);
         queue.setCourse(courseService.getCourse(courseId));
         queue.setTask(taskService.getTask(taskId));
         return queueRepository.save(queue);

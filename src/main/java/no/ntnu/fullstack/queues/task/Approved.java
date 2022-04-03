@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 public class Approved {
@@ -18,17 +18,17 @@ public class Approved {
     @JsonIgnore
     @ManyToOne
     private User user;
-    private Date date;
+    private Timestamp time;
     @JsonIgnoreProperties("approved")
     @ManyToOne
     private User assistant;
 
     protected Approved() {}
 
-    public Approved(Task task, User user, Date date, User assistant) {
+    public Approved(Task task, User user, Timestamp time, User assistant) {
         this.task = task;
         this.user = user;
-        this.date = date;
+        this.time = time;
         this.assistant = assistant;
     }
 
@@ -56,12 +56,12 @@ public class Approved {
         this.user = user;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getTime() {
+        return time;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
     public User getAssistant() {

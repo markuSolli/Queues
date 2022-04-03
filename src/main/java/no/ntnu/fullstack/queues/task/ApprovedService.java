@@ -4,8 +4,7 @@ import no.ntnu.fullstack.queues.queue.Queue;
 import no.ntnu.fullstack.queues.user.User;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Service
 public class ApprovedService {
@@ -29,7 +28,8 @@ public class ApprovedService {
         Approved approval = new Approved();
         approval.setTask(queue.getTask());
         approval.setUser(queue.getUser());
-        approval.setDate(Date.valueOf(LocalDate.now()));
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        approval.setTime(now);
         approval.setAssistant(assistant);
         return approvedRepository.save(approval);
     }
