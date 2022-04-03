@@ -3,7 +3,7 @@
     <!--    <h1>{{queue[0].course.title}}</h1>-->
 
     <div id="topbar">
-      <h2 id="queue-header">Students in queue</h2>
+      <h2 id="queue-header">Queue: {{ code }} {{ title }}</h2>
       <div id="button-position">
         <Button :title="'Enter queue'" @click="goToQueue" />
       </div>
@@ -39,6 +39,7 @@ import { computed, onMounted } from "@vue/runtime-core";
 import { onBeforeMount } from "vue";
 import http from "@/service/http-common";
 import { ref } from "@vue/reactivity";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -47,22 +48,31 @@ export default {
   },
   setup() {
     const route = useRoute();
+    const store = useStore();
+
     const queue = ref([]);
     let isStudAss = ref(false);
     const user = ref();
+    const code = ref();
+    const title = ref();
 
     onBeforeMount(() => {
       http
         .get("/queue/" + route.params.id)
         .then((response) => {
-          console.log(response.data);
           queue.value = response.data;
+          code.value = response.data[0].course.code;
+          title.value = response.data[0].course.title;
         })
         .catch((err) => console.log(err));
 
+      if (store.state.role < 3) {
+        console.log(store.state.role);
+        isStudAss.value = true;
+      }
       // check if logged in student is student assistant for this course
       // first get user email
-      let currentUser = "";
+      /* let currentUser = "";
       http
         .get("/me")
         .then((response) => {
@@ -81,12 +91,13 @@ export default {
               currentUser.email === response.data.users[user].user.email &&
               response.data.users[user].role === "ASSISTANT"
             ) {
-              console.log("passed");
+              //console.log("passed");
               isStudAss.value = true;
             }
           }
         })
         .catch((err) => console.log(err));
+        */
     });
 
     const goToQueue = () => {
@@ -96,7 +107,7 @@ export default {
       });
     };
 
-    return { goToQueue, isStudAss, queue };
+    return { goToQueue, isStudAss, queue, code, title };
   },
 };
 </script>
