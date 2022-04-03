@@ -74,8 +74,6 @@ export default {
     const status = ref("");
     const title = ref("");
     const code = ref("");
-    const startDate = ref("");
-    const endDate = ref("");
     const season = ref("");
     const year = ref(new Date().getFullYear());
     let listOfTeachers = ref([]);
@@ -93,8 +91,6 @@ export default {
           const course = response.data;
           title.value = course.title;
           code.value = course.code;
-          startDate.value = course.startDate;
-          endDate.value = course.endDate;
           for (const user in course.users) {
             if (course.users[user].role == "TEACHER")
               listOfTeachers.value.push(course.users[user].user);
@@ -122,9 +118,7 @@ export default {
           // validate title, code and date
           if (
             title.value == "" ||
-            code.value == "" ||
-            startDate.value == "" ||
-            endDate.value == ""
+            code.value == ""
           ) {
             status.value = "Fields cant be empty";
           } else {
@@ -132,8 +126,8 @@ export default {
               .post("/courses", {
                 code: code.value,
                 title: title.value,
-                startDate: startDate.value,
-                endDate: endDate.value,
+                season: season.value,
+                year: year.value,
                 taskGroups: tasks.value.taskgroups,
                 students: listOfStudents.value,
                 assistants: listOfStudAss.value,
@@ -155,9 +149,7 @@ export default {
       // validate title, code and date
       if (
         title.value == "" ||
-        code.value == "" ||
-        startDate.value == "" ||
-        endDate.value == ""
+        code.value == ""
       ) {
         status.value = "Fields cant be empty";
         return;
@@ -165,10 +157,10 @@ export default {
       if (route.params.id) {
         http
           .put("/courses/" + route.params.id, {
-            code: title.value,
-            title: code.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
+            code: code.value,
+            title: title.value,
+            season: season.value,
+            year: year.value,
             taskGroups: tasks.value.taskgroups,
             students: listOfStudents.value,
             assistants: listOfStudAss.value,
@@ -187,8 +179,8 @@ export default {
           .post("/courses", {
             code: code.value,
             title: title.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
+            season: season.value,
+            year: year.value,
             taskGroups: tasks.value.taskgroups,
             students: listOfStudents.value,
             assistants: listOfStudAss.value,
@@ -205,16 +197,15 @@ export default {
     };
 
     const changeSeason = (val) => {
-      if (val === "Vår") season.value = 0;
-      if (val === "Høst") season.value = 1;
+      if (val === "Vår") season.value = "SPRING";
+      if (val === "Høst") season.value = "AUTUMN";
+      console.log(season.value);
     };
 
     return {
       status,
       title,
       code,
-      startDate,
-      endDate,
       listOfTeachers,
       listOfStudents,
       listOfStudAss,

@@ -1,12 +1,9 @@
 package no.ntnu.fullstack.queues.course;
 
-import no.ntnu.fullstack.queues.location.Room;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class CourseService {
@@ -67,8 +64,8 @@ public class CourseService {
         existingCourse.setId(course.getId());
         existingCourse.setCode(course.getCode());
         existingCourse.setTitle(course.getTitle());
-        existingCourse.setStartDate(course.getStartDate());
-        existingCourse.setEndDate(course.getEndDate());
+        existingCourse.setSeason(course.getSeason());
+        existingCourse.setYear(course.getYear());
         existingCourse.setTitle(course.getTitle());
         existingCourse.setActive(course.isActive());
         existingCourse.setArchived(course.isArchived());
@@ -93,7 +90,7 @@ public class CourseService {
      * @return the course that was created from the data
      */
     public Course createCourse(CourseDTO courseDTO) {
-        Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getStartDate(), courseDTO.getEndDate());
+        Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getSeason(), courseDTO.getYear());
 
         // Adding all the users to the course with their respective roles
         setUsers(courseDTO, course);
@@ -115,8 +112,8 @@ public class CourseService {
         Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
         existingCourse.setCode(courseDTO.getCode());
         existingCourse.setTitle(courseDTO.getTitle());
-        existingCourse.setStartDate(courseDTO.getStartDate());
-        existingCourse.setEndDate(courseDTO.getEndDate());
+        existingCourse.setSeason(courseDTO.getSeason());
+        existingCourse.setYear(courseDTO.getYear());
         existingCourse.setTitle(courseDTO.getTitle());
         existingCourse.setTaskGroups(courseDTO.getTaskGroups());
         existingCourse.setRooms(courseDTO.getRooms());
