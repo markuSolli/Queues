@@ -1,13 +1,8 @@
 package no.ntnu.fullstack.queues.course;
 
-import no.ntnu.fullstack.queues.task.Task;
-import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Set;
 
 @Service
 public class CourseService {
