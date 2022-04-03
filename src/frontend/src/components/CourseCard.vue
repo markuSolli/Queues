@@ -108,6 +108,8 @@ export default {
     };
 
     const clickArchive = () => {
+      clickedButton = true;
+
       http
         .patch("/courses/" + id + "/archived", !archived.value)
         .then((response) => {});
