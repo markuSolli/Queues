@@ -96,11 +96,25 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //TODO: This method is not complete
     @GetMapping("/{id}/approved")
     public ResponseEntity<String> getApproved(@PathVariable Long id, Authentication authentication) {
         logger.info("Retrieving all approved courses");
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>("", HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}/archived")
+    public ResponseEntity<Course> toggleArchived(@PathVariable Long id, @RequestBody Boolean archived){
+        logger.info(archived ? "Archiving course {}..." : "Restoring course {}...", id);
+        return new ResponseEntity<>(courseService.toggleArchived(id, archived), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<Course> toggleActive(@PathVariable Long id, @RequestBody Boolean active){
+        logger.info(active ? "Activating course {}..." : "Deactivating course {}...", id);
+        return new ResponseEntity<>(courseService.toggleActive(id, active), HttpStatus.OK);
+    }
+
 
 }

@@ -179,4 +179,30 @@ public class CourseService {
         return courseRepository.findAllByArchivedAndUsers_User(archived, user);
     }
 
+
+    /**
+     * Changes the state flag of a course into the given value
+     *
+     * @param id id of course to update
+     * @param archived new state
+     * @return edited course
+     */
+    public Course toggleArchived(Long id, boolean archived) {
+        Course course = getCourse(id);
+        course.setArchived(archived);
+        return courseRepository.save(course);
+    }
+
+    /**
+     * Changes the active state of a course into the given value
+     * @param id id of course to update
+     * @param active new state
+     * @return edited course
+     */
+    public Course toggleActive(Long id, boolean active) {
+        Course course = getCourse(id);
+        course.setActive(active);
+        return courseRepository.save(course);
+    }
+
 }

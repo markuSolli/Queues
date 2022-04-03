@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <h1>{{queue[0].course.title}}</h1>-->
+    <!--    <h1>{{queue[0].course.title}}</h1>-->
 
     <div id="topbar">
       <h2 id="queue-header">Students in queue</h2>
@@ -22,6 +22,13 @@
       <StudentCard />
       <StudentCard />
       <StudentCard />
+      <div v-for="queueItem in queue" :key="queueItem.id">
+        <StudentCard
+          :firstname="queueItem.user.firstName"
+          :lastname="queueItem.user.lastName"
+          :type="queueItem.help ? 'help' : 'approval'"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -31,7 +38,7 @@ import StudentCard from "../components/StudentCard.vue";
 import Button from "../components/Button.vue";
 import { useRoute } from "vue-router";
 import router from "../router";
-import {computed, onMounted} from "@vue/runtime-core";
+import { computed, onMounted } from "@vue/runtime-core";
 import { onBeforeMount } from "vue";
 import http from "@/service/http-common";
 import { ref } from "@vue/reactivity";
@@ -50,14 +57,13 @@ export default {
 
     onBeforeMount(() => {
       http
-          .get("/queue/" + route.params.id)
-          .then(response => {
-            console.log(response.data);
-            queue.value = response.data;
-          })
-          .catch(err => console.log(err));
-      ;
-    })
+        .get("/queue/" + route.params.id)
+        .then((response) => {
+          console.log(response.data);
+          queue.value = response.data;
+        })
+        .catch((err) => console.log(err));
+    });
 
     const goToQueue = () => {
       router.push({
