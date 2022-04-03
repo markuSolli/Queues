@@ -5,7 +5,6 @@ import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,12 +16,12 @@ public class Course {
     private Long id;
     private String code;
     private String title;
-    private Date startDate;
-    private Date endDate;
+    private Season season;
+    private int year;
     private boolean archived = false;
     private boolean active = false;
     @ManyToMany
-    private Set<Room> rooms;
+    private Set<Room> rooms = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL)
     private Set<TaskGroup> taskGroups = new HashSet<>();
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -30,11 +29,11 @@ public class Course {
 
     protected Course(){}
 
-    public Course(String code, String title, Date startDate, Date endDate) {
+    public Course(String code, String title, Season season, int year) {
         this.code = code;
         this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.season = season;
+        this.year = year;
     }
 
     public Long getId() {
@@ -61,20 +60,20 @@ public class Course {
         this.title = title;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Season getSeason() {
+        return season;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setSeason(Season season) {
+        this.season = season;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public int getYear() {
+        return year;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public boolean isArchived() {
@@ -97,8 +96,12 @@ public class Course {
         return taskGroups;
     }
 
-    public void setTaskGroups(Set<TaskGroup> tasks) {
-        this.taskGroups = tasks;
+    public void setTaskGroups(Set<TaskGroup> taskGroups) {
+        if(taskGroups == null) {
+            return;
+        }
+        this.taskGroups.clear();
+        this.taskGroups.addAll(taskGroups);
     }
 
     public Set<Room> getRooms() {
@@ -106,7 +109,11 @@ public class Course {
     }
 
     public void setRooms(Set<Room> rooms) {
-        this.rooms = rooms;
+        if(rooms == null) {
+            return;
+        }
+        this.rooms.clear();
+        this.rooms.addAll(rooms);
     }
 
     public Set<UserCourse> getUsers() {
@@ -152,8 +159,8 @@ public class Course {
                 "id=" + id +
                 ", code='" + code + '\'' +
                 ", title='" + title + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", season=" + season+
+                ", year=" + year+
                 ", archived=" + archived +
                 ", active=" + active +
                 ", tasks=" + taskGroups +

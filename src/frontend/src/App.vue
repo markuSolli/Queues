@@ -24,6 +24,7 @@ export default {
             return;
           }
           store.commit("setAccessToken", response.data.accessToken);
+          store.commit("updateLoggedin", true);
         } catch (err) {
           console.log(err);
         } finally {

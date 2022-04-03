@@ -2,6 +2,7 @@ package no.ntnu.fullstack.queues.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.ntnu.fullstack.queues.course.UserCourse;
+import no.ntnu.fullstack.queues.task.Approved;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,13 +20,16 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     @JsonIgnore
-    private String activation;
+    private boolean enabled = true;
     @JsonIgnore
     private Role role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<UserCourse> courses = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Approved> approved = new HashSet<>();
 
     protected User() {}
 
@@ -60,6 +64,10 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -76,12 +84,12 @@ public class User implements UserDetails {
         this.courses = courses;
     }
 
-    public String getActivation(){
-        return activation;
+    public Set<Approved> getApproved() {
+        return approved;
     }
 
-    public void setActivation(String activationCode){
-        this.activation = activationCode;
+    public void setApproved(Set<Approved> approved) {
+        this.approved = approved;
     }
 
     @JsonIgnore
@@ -121,7 +129,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return activation == null;
+        return enabled;
     }
 
     @Override

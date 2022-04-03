@@ -106,8 +106,9 @@ public class AuthenticationController {
      * @return information about the currently loggen in user
      */
     @GetMapping("/me")
-    public ResponseEntity<User> fetchCurrentUser(Authentication authentication) {
-        return new ResponseEntity<>((User) authentication.getPrincipal(), HttpStatus.OK);
+    public ResponseEntity<UserInfo> fetchCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
     }
 
     @GetMapping("/roger")

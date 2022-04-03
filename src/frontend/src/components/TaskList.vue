@@ -9,7 +9,7 @@
       </div>
     </div>
     <div
-      v-for="taskgroup in list.taskgroups"
+      v-for="(taskgroup, index) in list.taskgroups"
       :key="taskgroup.number"
       class="person-list"
     >
@@ -20,7 +20,7 @@
         <div id="group-description">
           <h4>Tasks required to pass:</h4>
           <input
-            v-model="number"
+            v-model="taskgroup.required"
             placeholder="Number"
             id="amount-input"
             type="number"
@@ -32,10 +32,7 @@
           </h4>
         </div>
         <div id="group-buttons">
-          <Button
-            :title="'Add Task'"
-            @click="addTask(list, taskgroup.number)"
-          />
+          <Button :title="'Add Task'" @click="addTask(list, index)" />
 
           <Button
             :title="'Remove group'"
@@ -60,6 +57,7 @@
 import { ref } from "@vue/reactivity";
 
 import Button from "./Button.vue";
+import { onBeforeMount, onMounted } from "@vue/runtime-core";
 
 export default {
   components: { Button },
@@ -84,26 +82,36 @@ export default {
         tasks: [],
       });
     };
+
     const removeGroup = (list, number) => {
       list.taskgroups.splice(number - 1, 1);
+      for (let i = 0; i < list.value.taskgroups.length; i++) {
+        list.value.taskgroups[i].number = i + 1;
+      }
+      updateTaskCount();
+    };
 
-      for (let i = 0; i < list.taskgroups.length; i++) {
-        list.taskgroups[i].number = i + 1;
+    const updateTaskCount = () => {
+      let count = 1;
+      for (let groupNumber in list.value.taskgroups) {
+        let taskgroup = list.value.taskgroups[groupNumber];
+
+        for (let taskNumber in taskgroup.tasks) {
+          taskgroup.tasks[taskNumber].number = count;
+          count++;
+        }
+
+        taskgroup.total = taskgroup.tasks.length;
       }
     };
 
-    const addTask = (list, number) => {
-      for (const groupNumber in list.taskgroups) {
-        const taskgroup = list.taskgroups[groupNumber];
+    const addTask = (list, index) => {
+      console.log(list.taskgroups[index]);
 
-        if (taskgroup.number == number) {
-          const length = taskgroup.tasks.length + 1;
+      let taskgroup = list.taskgroups[index];
 
-          taskgroup.tasks.push({ number: length });
-
-          taskgroup.total = taskgroup.tasks.length;
-        }
-      }
+      taskgroup.tasks.push({});
+      updateTaskCount();
     };
     const removeTask = (list, number) => {
       for (const groupNumber in list.taskgroups) {
@@ -170,6 +178,7 @@ export default {
   display: flex;
   grid-column: 3/4;
   justify-self: end;
+  align-self: center;
 }
 
 #header {

@@ -23,16 +23,8 @@ export default {
     let archivedCourses = ref();
 
     onMounted(() => {
-      http.get("http://localhost:3000/courses").then((response) => {
-        let archived = [];
-
-        for (const course in response.data) {
-          if (response.data[course].archived) {
-            archived.push(response.data[course]);
-          }
-        }
-
-        archivedCourses.value = archived;
+      http.get("/courses?archived=true").then((response) => {
+        archivedCourses.value = response.data;
       });
     });
 

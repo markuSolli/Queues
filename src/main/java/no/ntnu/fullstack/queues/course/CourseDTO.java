@@ -11,14 +11,14 @@ import java.util.Set;
 public class CourseDTO {
     private String code;
     private String title;
-    private Date startDate;
-    private Date endDate;
+    private Season season;
+    private int year;
     private boolean archived;
     private boolean active;
     private List<User> students;
     private List<User> assistants;
     private List<User> teachers;
-    private List<TaskGroup> taskGroups;
+    private Set<TaskGroup> taskGroups;
     private Set<Room> rooms;
 
     public CourseDTO() {
@@ -40,20 +40,20 @@ public class CourseDTO {
         this.title = title;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Season getSeason() {
+        return season;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setSeason(Season season) {
+        this.season = season;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public int getYear() {
+        return year;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public boolean isArchived() {
@@ -96,11 +96,11 @@ public class CourseDTO {
         this.teachers = teachers;
     }
 
-    public List<TaskGroup> getTaskGroups() {
+    public Set<TaskGroup> getTaskGroups() {
         return taskGroups;
     }
 
-    public void setTaskGroups(List<TaskGroup> taskGroups) {
+    public void setTaskGroups(Set<TaskGroup> taskGroups) {
         this.taskGroups = taskGroups;
     }
 

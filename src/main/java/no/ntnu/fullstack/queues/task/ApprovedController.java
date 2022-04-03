@@ -1,13 +1,12 @@
 package no.ntnu.fullstack.queues.task;
 
-import no.ntnu.fullstack.queues.course.CourseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/approvals")
 public class ApprovedController {
     private static final Logger logger = LoggerFactory.getLogger(ApprovedController.class);
 
@@ -16,4 +15,5 @@ public class ApprovedController {
     public ApprovedController(ApprovedService approvedService) {
         this.approvedService = approvedService;
     }
+
 }

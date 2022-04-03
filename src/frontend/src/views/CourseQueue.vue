@@ -1,23 +1,23 @@
 <template>
   <div>
-    <h1>Course title</h1>
+<!--    <h1>{{queue[0].course.title}}</h1>-->
 
     <div id="topbar">
       <h2 id="queue-header">Students in queue</h2>
       <div id="button-position">
-        <Button :title="'Go to queue'" :route="'enterQueue'" />
+        <Button :title="'Enter queue'" @click="goToQueue" />
       </div>
     </div>
 
     <div id="list">
       <StudentCard
         :guide="true"
-        :firstname="'Name'"
+        :firstname="'Student'"
         :studentAssistant="'Student assistant'"
         :type="'Type'"
         :time="'Time'"
       />
-      <StudentCard />
+      <StudentCard :isStudAss="isStudAss" :studentAssistant="'ererer'" />
       <StudentCard />
       <StudentCard />
       <StudentCard />
@@ -29,15 +29,44 @@
 <script>
 import StudentCard from "../components/StudentCard.vue";
 import Button from "../components/Button.vue";
+import { useRoute } from "vue-router";
+import router from "../router";
+import {computed, onMounted} from "@vue/runtime-core";
+import { onBeforeMount } from "vue";
+import http from "@/service/http-common";
+import { ref } from "@vue/reactivity";
 
 export default {
   components: {
     StudentCard,
     Button,
   },
-  props: ["course"],
   setup() {
-    return {};
+    const route = useRoute();
+    const queue = ref([]);
+    let isStudAss = computed(() => {
+      return true;
+    });
+
+    onBeforeMount(() => {
+      http
+          .get("/queue/" + route.params.id)
+          .then(response => {
+            console.log(response.data);
+            queue.value = response.data;
+          })
+          .catch(err => console.log(err));
+      ;
+    })
+
+    const goToQueue = () => {
+      router.push({
+        name: "enterQueue",
+        params: { id: route.params.id },
+      });
+    };
+
+    return { goToQueue, isStudAss, queue };
   },
 };
 </script>

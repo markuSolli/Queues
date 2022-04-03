@@ -34,6 +34,7 @@ import Button from "../components/Button.vue";
 import { useStore } from "vuex";
 import router from "../router";
 import { login } from "@/service/AuthenticationService";
+import http from "../service/http-common";
 
 export default {
   components: { Button },
@@ -44,10 +45,6 @@ export default {
     let password = ref("");
 
     const logIn = async () => {
-      console.log({
-        username: username.value,
-        password: password.value,
-      })
       try {
         const response = await login({
           email: username.value,
@@ -55,12 +52,25 @@ export default {
         });
 
         store.commit("setAccessToken", response.data.accessToken);
+
+        // SET LOGGED IN USER IN STATE
+        http
+          .get("/me")
+          .then((response) => {
+            store.commit("updateLoggedin", true);
+            store.commit("updateEmail", response.data.email);
+            store.commit("updateFirstname", response.data.firstName);
+            store.commit("updateLastname", response.data.lastName);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        // ----------------------------
+
         router.push("/");
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
-
-      store.commit("updateLoggedin", true);
     };
 
     return {

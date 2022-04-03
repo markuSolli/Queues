@@ -25,6 +25,16 @@ public class CourseService {
     }
 
     /**
+     * Returns a list of all courses
+     *
+     * @return list of all courses
+     */
+    public Iterable<Course> getAll(User user) {
+        return courseRepository.findAllByUsers_User(user);
+    }
+
+
+    /**
      * Returns the course with the given id
      *
      * @param id id of the course
@@ -54,8 +64,8 @@ public class CourseService {
         existingCourse.setId(course.getId());
         existingCourse.setCode(course.getCode());
         existingCourse.setTitle(course.getTitle());
-        existingCourse.setStartDate(course.getStartDate());
-        existingCourse.setEndDate(course.getEndDate());
+        existingCourse.setSeason(course.getSeason());
+        existingCourse.setYear(course.getYear());
         existingCourse.setTitle(course.getTitle());
         existingCourse.setActive(course.isActive());
         existingCourse.setArchived(course.isArchived());
@@ -80,33 +90,10 @@ public class CourseService {
      * @return the course that was created from the data
      */
     public Course createCourse(CourseDTO courseDTO) {
-        Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getStartDate(), courseDTO.getEndDate());
+        Course course = new Course(courseDTO.getCode(), courseDTO.getTitle(), courseDTO.getSeason(), courseDTO.getYear());
 
         // Adding all the users to the course with their respective roles
-        for(User teacher : courseDTO.getTeachers()) {
-            try {
-                userService.signup(new UserDTO(teacher.getEmail(), teacher.getFirstName(), teacher.getLastName()), Role.TEACHER);
-            } catch (UserAlreadyExistsException e) {
-                // good
-            }
-            course.addUser(teacher, CourseRole.TEACHER);
-        }
-        for(User assistant : courseDTO.getAssistants()) {
-            try {
-                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.ASSISTANT);
-            } catch (UserAlreadyExistsException e) {
-                // good
-            }
-            course.addUser(assistant, CourseRole.ASSISTANT);
-        }
-        for(User student : courseDTO.getStudents()) {
-            try {
-                userService.signup(new UserDTO(student.getEmail(), student.getFirstName(), student.getLastName()), Role.STUDENT);
-            } catch (UserAlreadyExistsException e) {
-                // good
-            }
-            course.addUser(student, CourseRole.STUDENT);
-        }
+        setUsers(courseDTO, course);
 
         for(TaskGroup taskGroup : courseDTO.getTaskGroups()) {
             course.getTaskGroups().add(taskGroup);
@@ -118,32 +105,76 @@ public class CourseService {
     /**
      * Edits course based on the courseDTO object
      *
-     * @param course new data for course
+     * @param courseDTO new data for course
      * @return the edited course
      */
-    public Course editCourse(Long id, CourseDTO course) throws UsernameNotFoundException{
+    public Course editCourse(Long id, CourseDTO courseDTO) throws UsernameNotFoundException{
         Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
-        existingCourse.setCode(course.getCode());
-        existingCourse.setTitle(course.getTitle());
-        existingCourse.setStartDate(course.getStartDate());
-        existingCourse.setEndDate(course.getEndDate());
-        existingCourse.setTitle(course.getTitle());
-//        existingCourse.setRooms(course.getRooms());
-//        existingCourse.setTasks(Set.copyOf(course.getTaskGroups()));
+        existingCourse.setCode(courseDTO.getCode());
+        existingCourse.setTitle(courseDTO.getTitle());
+        existingCourse.setSeason(courseDTO.getSeason());
+        existingCourse.setYear(courseDTO.getYear());
+        existingCourse.setTitle(courseDTO.getTitle());
+        existingCourse.setTaskGroups(courseDTO.getTaskGroups());
+        existingCourse.setRooms(courseDTO.getRooms());
 
-        // Add users
+        // Edit users
         existingCourse.getUsers().clear();
-        for(User teacher : course.getTeachers()) {
+        setUsers(courseDTO, existingCourse);
+        return courseRepository.save(existingCourse);
+    }
+
+    /**
+     * Makes sure all users are signed up and adds them to the course
+     *
+     * @param courseDTO data about the users
+     * @param existingCourse course to add to
+     */
+    private void setUsers(CourseDTO courseDTO, Course existingCourse) {
+        for(User teacher : courseDTO.getTeachers()) {
+            try {
+                userService.signup(new UserDTO(teacher.getEmail(), teacher.getFirstName(), teacher.getLastName()), Role.TEACHER);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             existingCourse.addUser(teacher, CourseRole.TEACHER);
         }
-        for(User assistant : course.getAssistants()) {
+        for(User assistant : courseDTO.getAssistants()) {
+            try {
+                userService.signup(new UserDTO(assistant.getEmail(), assistant.getFirstName(), assistant.getLastName()), Role.ASSISTANT);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             existingCourse.addUser(assistant, CourseRole.ASSISTANT);
         }
-        for(User student : course.getAssistants()) {
+        for(User student : courseDTO.getStudents()) {
+            try {
+                userService.signup(new UserDTO(student.getEmail(), student.getFirstName(), student.getLastName()), Role.STUDENT);
+            } catch (UserAlreadyExistsException e) {
+                // good
+            }
             existingCourse.addUser(student, CourseRole.STUDENT);
         }
+    }
 
-        return courseRepository.save(existingCourse);
+    /**
+     * Gets all items from the database with the given archived status
+     *
+     * @param archived get archived or non archived
+     * @return list of all items with the given archived status
+     */
+    public Iterable<Course> getCoursesByArchived(boolean archived) {
+        return courseRepository.findAllByArchived(archived);
+    }
+
+    /**
+     * Gets all items from the database with the given archived status
+     *
+     * @param archived get archived or non archived
+     * @return list of all items with the given archived status
+     */
+    public Iterable<Course> getCoursesByArchived(boolean archived, User user) {
+        return courseRepository.findAllByArchivedAndUsers_User(archived, user);
     }
 
 }

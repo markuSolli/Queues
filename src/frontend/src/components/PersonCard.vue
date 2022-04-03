@@ -7,26 +7,26 @@
       {{ email }}
     </div>
     <div v-if="currentlyEditing || create" id="element-2">
-      Firstname<input id="input-field" v-model="firstname" type="text" />
+      Firstname<input id="input-field" v-model="firstName" type="text" />
     </div>
     <div v-else id="element-2">
-      {{ firstname }}
+      {{ firstName }}
     </div>
     <div v-if="currentlyEditing || create" id="element-3">
-      Lastname<input id="input-field" v-model="lastname" type="text" />
+      Lastname<input id="input-field" v-model="lastName" type="text" />
     </div>
     <div v-else id="element-3">
-      {{ lastname }}
+      {{ lastName }}
     </div>
     <div v-if="create" id="element-4">
       <Button :title="'Done'" @click="doneCreatePerson" />
-      <Button :title="'Cancel'" @click="cancelAddPerson" />
+      <Button :title="'Cancel'" @click="cancelFunc" />
     </div>
     <div v-if="currentlyEditing" id="element-4">
       <Button :title="'Edit'" @click="doneEditPerson" />
       <Button :title="'Cancel'" @click="cancelEditPerson" />
     </div>
-    <div v-if="edit" id="element-4">
+    <div v-if="edit && !currentlyEditing" id="element-4">
       <Button :title="'Edit'" @click="editPerson" />
       <Button :title="'Delete'" @click="deletePerson" />
     </div>
@@ -39,18 +39,27 @@ import Button from "../components/Button.vue";
 
 export default {
   components: { Button },
-  props: ["ListToPostTo", "edit", "create", "email", "firstname", "lastname"],
+  props: [
+    "ListToPostTo",
+    "edit",
+    "create",
+    "email",
+    "firstName",
+    "lastName",
+    "cancelFunc",
+  ],
   setup(props) {
     let listToPostTo = ref(props.ListToPostTo);
     let email = ref(props.email);
-    let firstname = ref(props.firstname);
-    let lastname = ref(props.lastname);
+    let firstName = ref(props.firstName);
+    let lastName = ref(props.lastName);
     let edit = ref(props.edit);
-    let currentlyEditing = false;
+    let currentlyEditing = ref(false);
     let create = ref(props.create);
+    let cancelFunc = ref(props.cancelFunc);
     let editEmail = ref(props.email);
-    let editFirstname = ref(props.firstname);
-    let editLastname = ref(props.lastname);
+    let editFirstName = ref(props.firstName);
+    let editLastName = ref(props.lastName);
 
     // validate
     const validate = () => {
@@ -58,8 +67,8 @@ export default {
         if (
           listToPostTo.value[person].email == email.value ||
           email.value == "" ||
-          firstname.value == "" ||
-          lastname.value == ""
+          firstName.value == "" ||
+          lastName.value == ""
         )
           return false;
       }
@@ -68,29 +77,26 @@ export default {
 
     // add
     const doneCreatePerson = () => {
-      console.log(email.value + firstname.value + lastname.value);
+      console.log(email.value + firstName.value + lastName.value);
 
       // do some validaiton check here
       if (validate()) {
         listToPostTo.value.push({
           email: email.value,
-          firstname: firstname.value,
-          lastname: lastname.value,
+          firstName: firstName.value,
+          lastName: lastName.value,
         });
       }
-    };
-    const cancelAddPerson = () => {
-      listToPostTo.value.shift();
     };
 
     // edit
     const editPerson = () => {
-      edit.value = true;
+      currentlyEditing.value = true;
     };
     const cancelEditPerson = () => {
       email.value = editEmail.value;
-      firstname.value = editFirstname.value;
-      lastname.value = editLastname.value;
+      firstName.value = editFirstName.value;
+      lastName.value = editLastName.value;
       currentlyEditing.value = false;
     };
     const doneEditPerson = () => {
@@ -124,13 +130,13 @@ export default {
       cancelEditPerson,
       doneEditPerson,
       deletePerson,
-      cancelAddPerson,
       email,
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       edit,
       currentlyEditing,
       create,
+      cancelFunc,
     };
   },
 };
@@ -161,6 +167,7 @@ export default {
 #element-4 {
   display: flex;
   justify-self: end;
+  align-self: center;
 }
 
 #input-field {

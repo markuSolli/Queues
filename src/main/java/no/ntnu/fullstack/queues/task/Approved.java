@@ -1,5 +1,7 @@
 package no.ntnu.fullstack.queues.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;
@@ -13,9 +15,11 @@ public class Approved {
     private Long id;
     @ManyToOne
     private Task task;
+    @JsonIgnore
     @ManyToOne
     private User user;
     private Date date;
+    @JsonIgnoreProperties("approved")
     @ManyToOne
     private User assistant;
 

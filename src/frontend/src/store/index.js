@@ -3,17 +3,26 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    loggedIn: false,
+    loggedIn: true,
     accessToken: null,
     role: 1,
-    email: "Smith@ntnu.no",
-    firstname: "smith",
-    lastname: "hansen",
+    email: "",
+    firstName: "",
+    lastName: "",
   },
   getters: {},
   mutations: {
     updateLoggedin(state, val) {
       state.loggedIn = val;
+    },
+    updateEmail(state, val) {
+      state.email = val;
+    },
+    updateFirstname(state, val) {
+      state.firstName = val;
+    },
+    updateLastname(state, val) {
+      state.lastName = val;
     },
     setAccessToken(state, val) {
       state.accessToken = val;

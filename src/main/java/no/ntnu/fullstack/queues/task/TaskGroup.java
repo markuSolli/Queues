@@ -12,6 +12,7 @@ public class TaskGroup {
     private int required;
     private int number;
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_group_id")
     private Set<Task> tasks;
 
     protected TaskGroup() {}
