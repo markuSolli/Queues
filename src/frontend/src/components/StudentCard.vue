@@ -24,6 +24,7 @@
       v-bind:class="{ beingapprovedcolor: beingApproved }"
     ></div>
   </div>
+  </div>
 </template>
 
 <script>
