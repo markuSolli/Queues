@@ -67,7 +67,6 @@ export default {
       http
         .get("/queue/" + route.params.id)
         .then((response) => {
-          console.log(response.data);
           queue.value = response.data;
           code.value = response.data[0].course.code;
           title.value = response.data[0].course.title;

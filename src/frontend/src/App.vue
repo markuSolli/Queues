@@ -8,8 +8,9 @@
 import { computed, ref } from "@vue/reactivity";
 import Navbar from "./components/Navbar";
 import { useStore } from "vuex";
-import { refreshToken } from "@/service/AuthenticationService";
+import { refreshToken, whoAmI } from "@/service/AuthenticationService";
 import { onBeforeMount } from "vue";
+import router from "./router";
 
 export default {
   components: { Navbar },
@@ -17,23 +18,26 @@ export default {
     let isLoading = ref(true);
 
     onBeforeMount(() => {
-      const fetchUser = async () => {
+      const fetchToken = async () => {
         console.log("Fetching user");
         try {
-          const response = await refreshToken();
+          let response = await refreshToken();
           if (!response.data.accessToken) {
             //
             return;
           }
           store.commit("setAccessToken", response.data.accessToken);
           store.commit("updateLoggedin", true);
+          response = await whoAmI();
+          store.commit("setUser", response.data);
         } catch (err) {
+          router.push("/login");
           console.log(err);
         } finally {
           isLoading.value = false;
         }
       };
-      fetchUser();
+      fetchToken();
     });
 
     const store = useStore();
