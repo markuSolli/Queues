@@ -78,7 +78,18 @@ export default {
     let id = course.id;
     let cardInQueue = props.cardInQueue;
     let clickedButton = false;
-    let taskProgress = ref(course.taskProgress);
+    let taskGroupProgress = ref(course.taskGroupProgress);
+    let taskProgress = computed(() => {
+      let taskProgressArr = [];
+      for (const taskGroup in taskGroupProgress.value) {
+        for (const task in taskGroupProgress.value[taskGroup].taskProgress) {
+          taskProgressArr.push(
+            taskGroupProgress.value[taskGroup].taskProgress[task]
+          );
+        }
+      }
+      return taskProgressArr;
+    });
 
     let assistant = computed(() => {
       if (store.state.role == 2) return true;

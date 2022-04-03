@@ -66,11 +66,11 @@ public class CourseProgress {
         this.year = year;
     }
 
-    public List<TaskGroupProgress> getProgress() {
+    public List<TaskGroupProgress> getTaskGroupProgress() {
         return taskGroupProgress;
     }
 
-    public void setProgress(List<TaskGroupProgress> taskGroupProgress) {
+    public void setTaskGroupProgress(List<TaskGroupProgress> taskGroupProgress) {
         this.taskGroupProgress = taskGroupProgress;
     }
 }

@@ -11,6 +11,11 @@ public class TaskGroupProgress {
     public TaskGroupProgress() {
     }
 
+    public TaskGroupProgress(int number, int required) {
+        this.number = number;
+        this.required = required;
+    }
+
     public int getNumber() {
         return number;
     }

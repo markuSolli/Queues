@@ -224,7 +224,7 @@ public class CourseService {
             courseProgress.setSeason(course.getSeason());
             courseProgress.setYear(course.getYear());
             courseProgress.setActive(course.isActive());
-            courseProgress.setProgress(calculateProgress(course, allApproved));
+            courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
             progress.add(courseProgress);
         }
         return progress;
@@ -247,7 +247,7 @@ public class CourseService {
         courseProgress.setSeason(course.getSeason());
         courseProgress.setYear(course.getYear());
         courseProgress.setActive(course.isActive());
-        courseProgress.setProgress(calculateProgress(course, allApproved));
+        courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
         return courseProgress;
     }
 
@@ -258,23 +258,30 @@ public class CourseService {
      * @param approvals approved tasks
      * @return list of all tasks in the course, with a boolean indication whether they are approved or not
      */
-    private List<TaskProgress> calculateProgress(Course course, Iterable<Approved> approvals) {
-        List<TaskProgress> taskProgress = new ArrayList<>();
+    private List<TaskGroupProgress> calculateProgress(Course course, Iterable<Approved> approvals) {
+        List<TaskGroupProgress> taskGroupProgress = new ArrayList<>();
         for(TaskGroup taskGroup : course.getTaskGroups()) {
+            int completed = 0;
+            TaskGroupProgress taskGroupProgressItem = new TaskGroupProgress(taskGroup.getNumber(), taskGroup.getRequired());
+            List<TaskProgress> taskProgress = new ArrayList<>();
             for(Task task: taskGroup.getTasks()) {
                 for(Approved approved : approvals) {
                     if(task.getId() == approved.getTask().getId()) {
                         // Task is approved!
                         taskProgress.add(new TaskProgress(task.getNumber(), true));
+                        completed++;
                     } else {
                         taskProgress.add(new TaskProgress(task.getNumber(), false));
                     }
                 }
-
             }
+            taskGroupProgressItem.setCompleted(completed);
+            taskProgress.sort(Comparator.comparingInt(TaskProgress::getNumber));
+            taskGroupProgressItem.setTaskProgress(taskProgress);
+            taskGroupProgress.add(taskGroupProgressItem);
         }
-        taskProgress.sort(Comparator.comparingInt(TaskProgress::getNumber));
-        return taskProgress;
+        taskGroupProgress.sort(Comparator.comparingInt(TaskGroupProgress::getNumber));
+        return taskGroupProgress;
     }
 
 }

@@ -34,7 +34,7 @@ export default {
     let inActiveCourses = ref();
 
     onMounted(() => {
-      http.get("/courses/taskProgress").then((response) => {
+      http.get("/courses/progress").then((response) => {
         console.log(response.data);
         let active = [];
         let inactive = [];
