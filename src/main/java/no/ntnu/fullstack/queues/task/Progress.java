@@ -1,0 +1,32 @@
+package no.ntnu.fullstack.queues.task;
+
+/**
+ * DTO that can be attached to indicate progress at a task
+ */
+public class Progress {
+    private int number;
+    private boolean approved;
+
+    public Progress(int task, boolean approved) {
+        this.number = task;
+        this.approved = approved;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+}
+

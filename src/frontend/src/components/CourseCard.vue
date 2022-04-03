@@ -8,13 +8,11 @@
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
       <div id="prog-text"><h4>Progress:</h4></div>
-      <div class="loadingBar-1">1</div>
-      <div class="loadingBar-1">2</div>
-      <div class="loadingBar-1">3</div>
-      <div class="loadingBar-1">4</div>
-      <div class="loadingBar-2">5</div>
-      <div class="loadingBar-2">6</div>
-      <div class="loadingBar-2">7</div>
+      <div v-for="task in progress" :key="task.number">
+        <div :class="task.approved ? 'loadingBar-2' : 'loadingBar-1'">
+          {{ task.number }}
+        </div>
+      </div>
     </div>
 
     <!-- ADMIN / TEACHER -->
@@ -80,6 +78,7 @@ export default {
     let id = course.id;
     let cardInQueue = props.cardInQueue;
     let clickedButton = false;
+    let progress = ref(course.progress);
 
     let assistant = computed(() => {
       if (store.state.role == 2) return true;
@@ -162,6 +161,7 @@ export default {
       assistant,
       student,
       cardInQueue,
+      progress,
       editCourse,
       deleteCourse,
       clickArchive,
