@@ -97,6 +97,7 @@ export default {
 
     // EDIT
     onMounted(() => {
+      // id is sent, we know this is for edit
       if (route.params.id) {
         console.log("Params!" + route.params.id);
         http.get("/courses/" + route.params.id).then((response) => {
@@ -112,26 +113,44 @@ export default {
               listOfStudents.value.push(course.users[user].user);
           }
           tasks.value.taskgroups = course.taskGroups;
+          // sort groups
+          tasks.value.taskgroups.sort(function (a, b) {
+            return a.number - b.number;
+          });
+          // sort tasks
+          for (let groupNumber in tasks.value.taskgroups) {
+            tasks.value.taskgroups[groupNumber].tasks.sort(function (a, b) {
+              return a.number - b.number;
+            });
+          }
         });
         console.log("yo");
       } else {
         console.log("No params");
-        // if this course page is not edit, load current teacher first in teacher list
 
-        const store = useStore();
-        if (store.state.role == 1) {
-          listOfTeachers.value.push({
-            email: store.state.email,
-            firstName: store.state.firstName,
-            lastName: store.state.lastName,
+        // add current user to top of teachers list
+        http
+          .get("/me")
+          .then((response) => {
+            if (
+              response.data.role == "ADMIN" ||
+              response.data.role == "TEACHER"
+            ) {
+              listOfTeachers.value.push({
+                email: response.data.email,
+                firstName: response.data.firstName,
+                lastName: response.data.lastName,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
           });
-        }
+
+        // set function for DONE button when edit
         createCourse = () => {
           // validate title, code and date
-          if (
-            title.value == "" ||
-            code.value == ""
-          ) {
+          if (title.value == "" || code.value == "") {
             status.value = "Fields cant be empty";
           } else {
             http
@@ -157,12 +176,10 @@ export default {
       }
     });
 
+    // set function for DONE button when no parameters
     let createCourse = () => {
       // validate title, code and date
-      if (
-        title.value == "" ||
-        code.value == ""
-      ) {
+      if (title.value == "" || code.value == "") {
         status.value = "Fields cant be empty";
         return;
       }

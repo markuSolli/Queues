@@ -21,6 +21,15 @@
       :firstName="'Firstname'"
       :lastName="'Lastname'"
     />
+    <PersonCard
+      v-if="create"
+      :cancelFunc="cancelAddPerson"
+      :ListToPostTo="list"
+      :email="''"
+      :firstName="''"
+      :lastName="''"
+      :create="true"
+    />
     <div v-for="person in list" :key="person.email" class="person-list">
       <div v-if="person.create == null">
         <PersonCard
@@ -29,15 +38,6 @@
           :firstName="person.firstName"
           :lastName="person.lastName"
           :edit="true"
-        />
-      </div>
-      <div v-else>
-        <PersonCard
-          :create="true"
-          :ListToPostTo="list"
-          :email="person.email"
-          :firstName="person.firstName"
-          :lastName="person.lastName"
         />
       </div>
     </div>
@@ -57,19 +57,14 @@ export default {
     let title = ref(props.title);
     let list = ref(props.list);
     let idName = ref(props.idName);
+    let create = ref(false);
     let csvFile;
 
     const addPerson = () => {
-      // if a person is already being created, cancel add menu
-      for (const person in list.value) {
-        if (list[person].create != null) return;
-      }
-      list.value.unshift({
-        email: "",
-        firstName: "",
-        lastName: "",
-        create: true,
-      });
+      create.value = true;
+    };
+    const cancelAddPerson = () => {
+      create.value = false;
     };
 
     const addFromCSV = () => {
@@ -124,6 +119,8 @@ export default {
       addPerson,
       addFromCSV,
       filePicked,
+      create,
+      cancelAddPerson,
     };
   },
 };

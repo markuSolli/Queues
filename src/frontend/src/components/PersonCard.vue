@@ -20,7 +20,7 @@
     </div>
     <div v-if="create" id="element-4">
       <Button :title="'Done'" @click="doneCreatePerson" />
-      <Button :title="'Cancel'" @click="cancelAddPerson" />
+      <Button :title="'Cancel'" @click="cancelFunc" />
     </div>
     <div v-if="currentlyEditing" id="element-4">
       <Button :title="'Edit'" @click="doneEditPerson" />
@@ -39,7 +39,15 @@ import Button from "../components/Button.vue";
 
 export default {
   components: { Button },
-  props: ["ListToPostTo", "edit", "create", "email", "firstName", "lastName"],
+  props: [
+    "ListToPostTo",
+    "edit",
+    "create",
+    "email",
+    "firstName",
+    "lastName",
+    "cancelFunc",
+  ],
   setup(props) {
     let listToPostTo = ref(props.ListToPostTo);
     let email = ref(props.email);
@@ -48,6 +56,7 @@ export default {
     let edit = ref(props.edit);
     let currentlyEditing = ref(false);
     let create = ref(props.create);
+    let cancelFunc = ref(props.cancelFunc);
     let editEmail = ref(props.email);
     let editFirstName = ref(props.firstName);
     let editLastName = ref(props.lastName);
@@ -78,9 +87,6 @@ export default {
           lastName: lastName.value,
         });
       }
-    };
-    const cancelAddPerson = () => {
-      listToPostTo.value.shift();
     };
 
     // edit
@@ -124,13 +130,13 @@ export default {
       cancelEditPerson,
       doneEditPerson,
       deletePerson,
-      cancelAddPerson,
       email,
       firstName,
       lastName,
       edit,
       currentlyEditing,
       create,
+      cancelFunc,
     };
   },
 };
