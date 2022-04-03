@@ -28,7 +28,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private Set<UserCourse> courses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Approved> approved = new HashSet<>();
 
     protected User() {}

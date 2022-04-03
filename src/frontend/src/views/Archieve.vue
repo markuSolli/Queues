@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>Archieve</h1>
+    <h1>Archive</h1>
     <div id="management-bar">
-      <div id="title"><h2>Archieved courses</h2></div>
+      <div id="title"><h2>Archived courses</h2></div>
     </div>
 
     <div v-for="course in archivedCourses" :key="course.id" id="course-list">

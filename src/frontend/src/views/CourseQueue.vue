@@ -22,6 +22,13 @@
       <StudentCard />
       <StudentCard />
       <StudentCard />
+      <div v-for="queueItem in queue" :key="queueItem.id">
+        <StudentCard
+          :firstname="queueItem.user.firstName"
+          :lastname="queueItem.user.lastName"
+          :type="queueItem.help ? 'help' : 'approval'"
+        />
+      </div>
     </div>
   </div>
 </template>

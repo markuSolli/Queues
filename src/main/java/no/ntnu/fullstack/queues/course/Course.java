@@ -1,10 +1,12 @@
 package no.ntnu.fullstack.queues.course;
 
 import no.ntnu.fullstack.queues.location.Room;
+import no.ntnu.fullstack.queues.task.Task;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ public class Course {
     private boolean active = false;
     @ManyToMany
     private Set<Room> rooms = new HashSet<>();
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TaskGroup> taskGroups = new HashSet<>();
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserCourse> users = new HashSet<>();
@@ -101,6 +103,12 @@ public class Course {
             return;
         }
         this.taskGroups.clear();
+        for(TaskGroup taskGroup : taskGroups) {
+            taskGroup.setCourse(this);
+            for(Task task : taskGroup.getTasks()) {
+                task.setTaskGroup(taskGroup);
+            }
+        }
         this.taskGroups.addAll(taskGroups);
     }
 

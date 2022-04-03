@@ -30,14 +30,7 @@ export default {
 
     onMounted(() => {
       http.get("/courses").then((response) => {
-        let notArchived = [];
-
-        for (const course in response.data) {
-          if (!response.data[course].archived) {
-            notArchived.push(response.data[course]);
-          }
-        }
-        courses.value = notArchived;
+        courses.value = response.data;
       });
     });
 

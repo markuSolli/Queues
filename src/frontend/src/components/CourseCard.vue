@@ -19,23 +19,23 @@
 
     <div class="queue-element-4" v-if="edit && !cardInQueue && !archived">
       <Button :title="'Edit'" @click="editCourse" />
-      <Button :title="'Archieve'" @click="clickArchieve" />
+      <Button :title="'Archive'" @click="clickArchive" />
       <Button :title="'Delete'" @click="deleteCourse" />
     </div>
     <div class="queue-element-4" v-if="assistant && active && !cardInQueue">
-      <Button :title="'Stop queue'" @click="stopQueue" />
+      <Button :title="'Stop queue'" @click="toggleQueue" />
     </div>
     <div
       class="queue-element-4"
       v-if="assistant && !active && !cardInQueue && !archived"
     >
-      <Button :title="'Start queue'" @click="startQueue" />
+      <Button :title="'Start queue'" @click="toggleQueue" />
     </div>
     <div
       class="queue-element-4"
       v-if="archived && !assistant && !student && !cardInQueue && archived"
     >
-      <Button :title="'Restore course'" @click="restoreFromArchieve" />
+      <Button :title="'Restore course'" @click="clickArchive" />
     </div>
   </div>
 </template>
@@ -89,14 +89,10 @@ export default {
       });
     };
 
-    const clickArchieve = () => {
-      clickedButton = true;
-      console.log("click archieve");
-      http.put("/courses/" + id, { archived: true }).then((response) => {});
-    };
-    const restoreFromArchieve = () => {
-      clickedButton = true;
-      http.put("/courses/" + id, { archived: false }).then((response) => {});
+    const clickArchive = () => {
+      http
+        .patch("/courses/" + id + "/archived", !archived.value)
+        .then((response) => {});
     };
 
     const clickCardFunc = () => {
@@ -130,8 +126,11 @@ export default {
       }
     };
 
-    const startQueue = () => {};
-    const stopQueue = () => {};
+    const toggleQueue = () => {
+      http
+          .patch("/courses/" + id + "/active", !active.value)
+          .then((response) => {});
+    };
 
     return {
       edit,
@@ -143,12 +142,13 @@ export default {
       cardInQueue,
       editCourse,
       deleteCourse,
-      clickArchieve,
+      clickArchive,
       clickCardFunc,
       stopQueue,
       startQueue,
       restoreFromArchieve,
       code,
+      toggleQueue
     };
   },
 };

@@ -34,7 +34,7 @@ export default {
     let inActiveCourses = ref();
 
     onMounted(() => {
-      http.get("/courses").then((response) => {
+      http.get("/courses?archived=false").then((response) => {
         let active = [];
         let inactive = [];
 
