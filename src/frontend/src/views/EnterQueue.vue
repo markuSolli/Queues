@@ -6,18 +6,28 @@
       <div id="list-of-tasks">
         <div
           id="taskgroup-grid"
-          v-for="taskGroup in taskGroups"
+          v-for="taskGroup in taskGroupProgress"
           :key="taskGroup.id"
         >
           <div id="group-header">Group {{ taskGroup.number }}</div>
           <div id="taskgroup">
-            <div v-for="task in taskGroup.tasks" :key="task.id">
-              <div @click="taskClick(task.number, task.id)" class="task-1">
+            <div v-for="task in taskGroup.taskProgress" :key="task.id">
+              <div
+                :class="[
+                  task.approved ? 'task-1' : 'task-2',
+                  task.number === selectedTask ? 'selected-task' : null,
+                ]"
+                @click="taskClick(task.number, task.id)"
+                class="task-1"
+              >
                 {{ task.number }}
               </div>
             </div>
           </div>
-          <div id="group-status">Group status: / {{ taskGroup.required }}</div>
+          <div id="group-status">
+            {{ taskGroup.completed }} completed / {{ taskGroup.required }}
+            required
+          </div>
         </div>
       </div>
       <div v-if="selectedTask != 0">
@@ -69,9 +79,10 @@ export default {
     let selectedTaskId = ref();
     let help = ref(false);
     let approval = ref(true);
-    let taskGroups = ref();
     let mapRef = ref();
     let selectedRoom = ref({});
+    let course = ref({});
+    let taskGroupProgress = ref([]);
 
     onMounted(() => {
       //--------- MAZEMAP ----------//
@@ -154,22 +165,10 @@ export default {
       }
       //---------------------------------//
 
-      http.get("/courses/" + route.params.id).then((response) => {
-        const course = response.data;
-        console.log(course);
-
-        // sort groups
-        course.taskGroups.sort(function (a, b) {
-          return a.number - b.number;
-        });
-        // sort tasks
-        for (let groupNumber in course.taskGroups) {
-          course.taskGroups[groupNumber].tasks.sort(function (a, b) {
-            return a.number - b.number;
-          });
-        }
-
-        taskGroups.value = course.taskGroups;
+      http.get("/courses/progress/" + route.params.id).then((response) => {
+        console.log(response.data.taskGroupProgress);
+        course.value = response.data;
+        taskGroupProgress.value = response.data.taskGroupProgress;
       });
     });
 
@@ -213,7 +212,8 @@ export default {
       enterQueue,
       help,
       approval,
-      taskGroups,
+      course,
+      taskGroupProgress,
       mapRef,
       selectedRoom,
     };
@@ -300,6 +300,10 @@ export default {
 .task-2:hover {
   background: rgb(212, 145, 0);
   cursor: pointer;
+}
+
+.selected-task {
+  background: rgb(212, 145, 0);
 }
 
 #map {

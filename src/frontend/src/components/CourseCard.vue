@@ -8,7 +8,7 @@
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
       <div id="prog-text"><h4>Progress:</h4></div>
-      <div v-for="task in taskProgress" :key="task.number">
+      <div v-for="task in taskProgress" :key="task.id">
         <div :class="task.approved ? 'loadingBar-2' : 'loadingBar-1'">
           {{ task.number }}
         </div>

@@ -262,16 +262,16 @@ public class CourseService {
         List<TaskGroupProgress> taskGroupProgress = new ArrayList<>();
         for(TaskGroup taskGroup : course.getTaskGroups()) {
             int completed = 0;
-            TaskGroupProgress taskGroupProgressItem = new TaskGroupProgress(taskGroup.getNumber(), taskGroup.getRequired());
+            TaskGroupProgress taskGroupProgressItem = new TaskGroupProgress(taskGroup.getId(),taskGroup.getNumber(), taskGroup.getRequired());
             List<TaskProgress> taskProgress = new ArrayList<>();
             for(Task task: taskGroup.getTasks()) {
                 for(Approved approved : approvals) {
                     if(task.getId() == approved.getTask().getId()) {
                         // Task is approved!
-                        taskProgress.add(new TaskProgress(task.getNumber(), true));
+                        taskProgress.add(new TaskProgress(task.getId(), task.getNumber(), true));
                         completed++;
                     } else {
-                        taskProgress.add(new TaskProgress(task.getNumber(), false));
+                        taskProgress.add(new TaskProgress(task.getId(), task.getNumber(), false));
                     }
                 }
             }

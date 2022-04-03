@@ -3,6 +3,7 @@ package no.ntnu.fullstack.queues.task;
 import java.util.List;
 
 public class TaskGroupProgress {
+    private Long id;
     private int number;
     private int required;
     private int completed;
@@ -11,9 +12,18 @@ public class TaskGroupProgress {
     public TaskGroupProgress() {
     }
 
-    public TaskGroupProgress(int number, int required) {
+    public TaskGroupProgress(Long id, int number, int required) {
+        this.id = id;
         this.number = number;
         this.required = required;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getNumber() {
