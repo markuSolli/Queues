@@ -2,37 +2,65 @@
   <div id="activate-user-grid">
     <div id="activate-user-box">
       <div class="row"><h1>Activate user</h1></div>
-      <div class="row"><h3>exampleuser@ntnu.no</h3></div>
-      <div class="row"><input class="input-field" type="password" placeholder="Password" v-model="user.password"/></div>
-      <div class="row"><input class="input-field" type="password" placeholder="Repeat password" v-model="user.repeatPassword"/></div>
+      <div class="row"><h3>{{ e_mail }}</h3></div>
+      <div class="row"><input class="input-field" type="password" placeholder="Password" v-model="password"/></div>
+      <div class="row"><input class="input-field" type="password" placeholder="Repeat password" v-model="repeatPassword"/></div>
       <div class="row"><div id="button-row"><Button :title="'Activate'" @click="activateUser" /></div></div>
+      <div class="row"><h5 id="error_field">{{ error_msg }}</h5></div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from '@vue/reactivity';
 import Button from "../components/Button";
 import { useRoute } from "vue-router";
+import http from "@/service/http-common";
+import router from "@/router";
 
 export default {
-    components: { Button },
-    setup(){
-        const route = useRoute();
-        let user = ref({ id: route.params.id});
-
-        console.log(route.params.id);
-
-        const activateUser = () => {
-
-        }
-
-        return {
-            user,
-            activateUser
-        }
+  components: {Button},
+  data() {
+    return {
+      e_mail: "",
+      password: "",
+      repeatPassword: "",
+      error_msg: ""
     }
-};
+  },
+  methods: {
+    activateUser() {
+      this.error_msg = "";
+      if (this.password === this.repeatPassword) {
+        http.put("/activate", {
+          email: this.e_mail,
+          password: this.password
+        })
+            .catch((err) => {
+              console.log(err);
+            })
+        router.push("/");
+      } else {
+        this.error_msg = "The two passwords do not match!"
+      }
+    }
+  },
+  setup() {
+    const route = useRoute();
+    let code = route.params.id;
+    const user = {
+      email: "",
+      password: ""
+    }
+
+    http.get("/activation/" + code)
+        .then((response) => {
+          user.email = response.data.email;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  }
+}
 </script>
 
 <style>
@@ -56,6 +84,10 @@ export default {
 #button-row {
     display:flex;
     justify-content: center;
+}
+
+#error_field {
+  color: red;
 }
 
 </style>

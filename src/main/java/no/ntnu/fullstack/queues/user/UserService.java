@@ -166,17 +166,16 @@ public class UserService implements UserDetailsService {
 
     /**
      * Activate an existing user, assigning a password
-     * @param code the activation code sent to user email
-     * @param password the new password
+     * @param userDTO user object with activation code instead of email
      * @return the new User object
      * @throws NoSuchElementException
      */
-    public User activateUser(String code, String password) throws NoSuchElementException{
-        Optional<User> optionalUser = userRepository.findByActivation(code);
+    public User activateUser(UserDTO userDTO) throws NoSuchElementException{
+        Optional<User> optionalUser = userRepository.findByActivation(userDTO.getEmail());
         if(optionalUser.isEmpty()) throw new NoSuchElementException();
 
         User existingUser = optionalUser.get();
-        String encodedPassword = bCrypt.encode(password);
+        String encodedPassword = bCrypt.encode(userDTO.getPassword());
         User user = new User(existingUser.getEmail(), encodedPassword, existingUser.getFirstName(), existingUser.getLastName());
         user.setRole(existingUser.getRole());
 
