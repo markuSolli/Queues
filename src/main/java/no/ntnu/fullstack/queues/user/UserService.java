@@ -150,9 +150,9 @@ public class UserService implements UserDetailsService {
      *
      * @param activation the activation code generated for the user.
      * @return the matching user object.
-     * @throws NoSuchElementException
+     * @throws ActivationCodeNotFoundException
      */
-    public User getUserByActivationCode(String activation) throws NoSuchElementException{
+    public User getUserByActivationCode(String activation) throws ActivationCodeNotFoundException{
         return userRepository.findByActivation(activation).orElseThrow(() -> new ActivationCodeNotFoundException(activation));
     }
 
@@ -161,9 +161,9 @@ public class UserService implements UserDetailsService {
      *
      * @param userDTO user object with activation code instead of email
      * @return the new User object
-     * @throws NoSuchElementException
+     * @throws ActivationCodeNotFoundException
      */
-    public User activateUser(UserDTO userDTO) throws NoSuchElementException {
+    public User activateUser(UserDTO userDTO) throws ActivationCodeNotFoundException {
         User existingUser = userRepository.findByActivation(userDTO.getEmail()).orElseThrow(() -> new ActivationCodeNotFoundException(userDTO.getEmail()));
 
         String encodedPassword = bCrypt.encode(userDTO.getPassword());

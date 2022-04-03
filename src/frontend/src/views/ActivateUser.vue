@@ -56,15 +56,13 @@ export default {
       .get("/activation/" + code)
       .then((response) => {
         user.value = response.data;
+        console.log(user.value);
       })
       .catch((err) => {
         console.log(err);
       });
 
     const activateUser = () => {
-      console.log("Activate user called!");
-      console.log(user.value.password);
-      console.log(repeatPassword.value);
       if (
         user.value.password !== "" &&
         user.value.password === repeatPassword.value
