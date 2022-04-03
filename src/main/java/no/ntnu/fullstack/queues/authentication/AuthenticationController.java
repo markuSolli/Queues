@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin
@@ -143,4 +144,27 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/activation/{code}")
+    public ResponseEntity<UserInfo> getUserByActivationCode(@PathVariable String code){
+        logger.info("Sending user info for activation code " + code + "...");
+        try {
+            User user = userService.getUserByActivationCode(code);
+            return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/activate")
+    public ResponseEntity<UserInfo> activateUser(@RequestBody UserDTO userDTO){
+        logger.info("Activating user {} from code...", userDTO.getEmail());
+        try {
+            User user = userService.activateUser(userDTO);
+            return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
