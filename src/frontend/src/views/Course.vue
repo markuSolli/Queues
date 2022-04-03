@@ -17,10 +17,16 @@
       />
       <div id="date-row">
         <div id="datepicker">
-          <!--<Datepicker range v-model="date"></Datepicker>-->
-          <div>Start date: <input type="date" v-model="startDate" /></div>
-
-          <div>End date: <input type="date" v-model="endDate" /></div>
+          Select season:
+          <select
+            v-model="season"
+            @change="changeSeason(season)"
+            id="season-dropdown"
+          >
+            <option>Vår</option>
+            <option>Høst</option>
+          </select>
+          <input id="year" placeholder="Year" v-model="year" />
         </div>
       </div>
     </div>
@@ -51,8 +57,6 @@
 </template>
 
 <script>
-//import Datepicker from "@vuepic/vue-datepicker";
-//import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import PersonList from "../components/PersonList.vue";
@@ -72,6 +76,8 @@ export default {
     const code = ref("");
     const startDate = ref("");
     const endDate = ref("");
+    const season = ref("");
+    const year = ref(new Date().getFullYear());
     let listOfTeachers = ref([]);
     let listOfStudents = ref([]);
     let listOfStudAss = ref([]);
@@ -198,6 +204,11 @@ export default {
       }
     };
 
+    const changeSeason = (val) => {
+      if (val === "Vår") season.value = 0;
+      if (val === "Høst") season.value = 1;
+    };
+
     return {
       status,
       title,
@@ -208,13 +219,26 @@ export default {
       listOfStudents,
       listOfStudAss,
       tasks,
+      year,
       createCourse,
+      changeSeason,
     };
   },
 };
 </script>
 
 <style>
+#season-dropdown {
+  padding: 5px;
+  border-radius: 20px;
+  width: 100px;
+}
+
+#year {
+  border-radius: 20px;
+  padding: 5px;
+}
+
 #done-text {
   color: red;
 }
@@ -225,9 +249,7 @@ export default {
 }
 
 #datepicker {
-  width: 350px;
-  margin-left: 10px;
-  display: inline-block;
+  display: flex;
 }
 
 #date-row {
