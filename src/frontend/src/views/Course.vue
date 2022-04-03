@@ -18,13 +18,9 @@
       <div id="date-row">
         <div id="datepicker">
           Select season:
-          <select
-            v-model="season"
-            @change="changeSeason(season)"
-            id="season-dropdown"
-          >
-            <option>Vår</option>
-            <option>Høst</option>
+          <select v-model="season" id="season-dropdown">
+            <option>Spring</option>
+            <option>Autumn</option>
           </select>
           <input id="year" placeholder="Year" v-model="year" />
         </div>
@@ -86,7 +82,7 @@ export default {
     const status = ref("");
     const title = ref("");
     const code = ref("");
-    const season = ref("");
+    const season = ref("Spring");
     const year = ref(new Date().getFullYear());
     let listOfTeachers = ref([]);
     let listOfStudents = ref([]);
@@ -104,6 +100,8 @@ export default {
           const course = response.data;
           title.value = course.title;
           code.value = course.code;
+          season.value = course.season;
+          year.value = course.year;
           for (const user in course.users) {
             if (course.users[user].role == "TEACHER")
               listOfTeachers.value.push(course.users[user].user);
@@ -157,7 +155,7 @@ export default {
               .post("/courses", {
                 code: code.value,
                 title: title.value,
-                season: season.value,
+                season: getSeasonRightFormat(season.value),
                 year: year.value,
                 taskGroups: tasks.value.taskgroups,
                 students: listOfStudents.value,
@@ -188,7 +186,7 @@ export default {
           .put("/courses/" + route.params.id, {
             code: code.value,
             title: title.value,
-            season: season.value,
+            season: getSeasonRightFormat(season.value),
             year: year.value,
             taskGroups: tasks.value.taskgroups,
             students: listOfStudents.value,
@@ -208,7 +206,7 @@ export default {
           .post("/courses", {
             code: code.value,
             title: title.value,
-            season: season.value,
+            season: getSeasonRightFormat(season.value),
             year: year.value,
             taskGroups: tasks.value.taskgroups,
             students: listOfStudents.value,
@@ -225,10 +223,9 @@ export default {
       }
     };
 
-    const changeSeason = (val) => {
-      if (val === "Vår") season.value = "SPRING";
-      if (val === "Høst") season.value = "AUTUMN";
-      console.log(season.value);
+    const getSeasonRightFormat = (season) => {
+      if (season === "Spring") return "SPRING";
+      if (season === "Autumn") return "AUTUMN";
     };
 
     return {
@@ -239,9 +236,9 @@ export default {
       listOfStudents,
       listOfStudAss,
       tasks,
+      season,
       year,
       createCourse,
-      changeSeason,
     };
   },
 };
@@ -251,7 +248,7 @@ export default {
 #season-dropdown {
   padding: 5px;
   border-radius: 20px;
-  width: 100px;
+  width: 150px;
 }
 
 #year {
