@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.net.InetAddress;
 import java.util.*;
 
 @Service

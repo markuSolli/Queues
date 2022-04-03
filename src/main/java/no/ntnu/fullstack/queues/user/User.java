@@ -20,7 +20,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     @JsonIgnore
-    private boolean enabled = true;
+    private String activation;
     @JsonIgnore
     private Role role;
 
@@ -64,8 +64,16 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public String getActivation(){
+        return activation;
+    }
+
+    public void setActivation(String activation){
+        this.activation = activation;
+    }
+
+    public void setEnabled(boolean value){
+        if(value) activation = null;
     }
 
     public Role getRole() {
@@ -129,7 +137,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return activation == null;
     }
 
     @Override
