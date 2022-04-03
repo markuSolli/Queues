@@ -2,8 +2,8 @@
   <div id="activate-user-grid">
     <div id="activate-user-box">
       <div class="row"><h1>Activate user</h1></div>
-      <div class="row"><h3>{{ e_mail }}</h3></div>
-      <div class="row"><input class="input-field" type="password" placeholder="Password" v-model="password"/></div>
+      <div class="row"><h3>{{ user.email }}</h3></div>
+      <div class="row"><input class="input-field" type="password" placeholder="Password" v-model="user.password"/></div>
       <div class="row"><input class="input-field" type="password" placeholder="Repeat password" v-model="repeatPassword"/></div>
       <div class="row"><div id="button-row"><Button :title="'Activate'" @click="activateUser" /></div></div>
       <div class="row"><h5 id="error_field">{{ error_msg }}</h5></div>
@@ -19,31 +19,6 @@ import router from "@/router";
 
 export default {
   components: {Button},
-  data() {
-    return {
-      e_mail: "",
-      password: "",
-      repeatPassword: "",
-      error_msg: ""
-    }
-  },
-  methods: {
-    activateUser() {
-      this.error_msg = "";
-      if (this.password === this.repeatPassword) {
-        http.put("/activate", {
-          email: this.e_mail,
-          password: this.password
-        })
-            .catch((err) => {
-              console.log(err);
-            })
-        router.push("/");
-      } else {
-        this.error_msg = "The two passwords do not match!"
-      }
-    }
-  },
   setup() {
     const route = useRoute();
     let code = route.params.id;
@@ -51,6 +26,8 @@ export default {
       email: "",
       password: ""
     }
+    const repeatPassword = "";
+    let error_msg = "";
 
     http.get("/activation/" + code)
         .then((response) => {
@@ -59,6 +36,25 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+
+    const activateUser = () => {
+      if(user.password === repeatPassword){
+        http.put("/activate", user)
+            .catch((err) => {
+              console.log(err);
+            })
+        router.push("/");
+      }else{
+        error_msg = "Passwords do not match!";
+      }
+    }
+
+    return {
+      user,
+      repeatPassword,
+      error_msg,
+      activateUser
+    }
   }
 }
 </script>
