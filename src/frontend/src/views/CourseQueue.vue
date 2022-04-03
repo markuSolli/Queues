@@ -17,16 +17,17 @@
         :type="'Type'"
         :time="'Time'"
       />
-      <StudentCard :isStudAss="isStudAss" :studentAssistant="'ererer'" />
-      <StudentCard />
-      <StudentCard />
-      <StudentCard />
-      <StudentCard />
       <div v-for="queueItem in queue" :key="queueItem.id">
         <StudentCard
+          :id="queueItem.id"
           :firstname="queueItem.user.firstName"
           :lastname="queueItem.user.lastName"
           :type="queueItem.help ? 'help' : 'approval'"
+          :studentAssistant="
+            queueItem.assistant
+              ? queueItem.assistant.firstName + queueItem.assistant.lastName
+              : null
+          "
         />
       </div>
     </div>

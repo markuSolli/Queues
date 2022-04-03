@@ -66,10 +66,10 @@ public class QueueController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Queue> assistQueue(@RequestBody Queue queue, Authentication authentication){
-        logger.info("Attaching assistant to queue " + queue + "...");
+    @PutMapping("/{id}/assist")
+    public ResponseEntity<Queue> assistQueue(@PathVariable Long id, Authentication authentication){
+        logger.info("Attaching assistant to queue {}...", id);
         User user = (User) authentication.getPrincipal();
-        return new ResponseEntity<>(queueService.assistQueue(queue, user), HttpStatus.OK);
+        return new ResponseEntity<>(queueService.assistQueue(id, user), HttpStatus.OK);
     }
 }

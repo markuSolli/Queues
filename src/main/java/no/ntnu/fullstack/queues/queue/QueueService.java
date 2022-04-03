@@ -81,14 +81,14 @@ public class QueueService {
 
     /**
      * Attach an assistant to a queue
-     * @param queue the queue that gets an assistant
+     * @param id id of the queue that gets an assistant
      * @param assistant the assistant to attach
      * @return the edited queue object
      */
-    public Queue assistQueue(Queue queue, User assistant){
-        Queue existingQueue = queueRepository.findById(queue.getId()).orElse(new Queue());
+    public Queue assistQueue(Long id, User assistant){
+        Queue existingQueue = queueRepository.findById(id).orElseThrow(() -> new QueueNotFoundException(id));
         existingQueue.setAssistant(assistant);
-        return queueRepository.save(queue);
+        return queueRepository.save(existingQueue);
     }
 }
 
