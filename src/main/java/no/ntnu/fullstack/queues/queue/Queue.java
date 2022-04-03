@@ -7,7 +7,7 @@ import no.ntnu.fullstack.queues.task.Task;
 import no.ntnu.fullstack.queues.user.User;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 public class Queue {
@@ -20,7 +20,7 @@ public class Queue {
     private Course course;
     @ManyToOne
     private User user;
-    private Date time;
+    private Timestamp time;
     private boolean help;
     @ManyToOne
     private Location room;
@@ -32,7 +32,7 @@ public class Queue {
 
     protected Queue() {}
 
-    public Queue(Course course, User user, Date time, boolean help, Location room, Integer desk, Task task) {
+    public Queue(Course course, User user, Timestamp time, boolean help, Location room, Integer desk, Task task) {
         this.course = course;
         this.user = user;
         this.time = time;
@@ -66,11 +66,11 @@ public class Queue {
         this.user = user;
     }
 
-    public Date getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 
