@@ -67,7 +67,7 @@ export default {
     let taskGroups = ref();
 
     onMounted(() => {
-      http.get("/courses/progress" + route.params.id).then((response) => {
+      http.get("/courses/progress/" + route.params.id).then((response) => {
         const course = response.data;
         console.log(course);
 
