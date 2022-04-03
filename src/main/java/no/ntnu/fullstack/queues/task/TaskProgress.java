@@ -3,11 +3,11 @@ package no.ntnu.fullstack.queues.task;
 /**
  * DTO that can be attached to indicate progress at a task
  */
-public class Progress {
+public class TaskProgress {
     private int number;
     private boolean approved;
 
-    public Progress(int task, boolean approved) {
+    public TaskProgress(int task, boolean approved) {
         this.number = task;
         this.approved = approved;
     }

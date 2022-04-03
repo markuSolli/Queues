@@ -258,23 +258,23 @@ public class CourseService {
      * @param approvals approved tasks
      * @return list of all tasks in the course, with a boolean indication whether they are approved or not
      */
-    private List<Progress> calculateProgress(Course course, Iterable<Approved> approvals) {
-        List<Progress> progress = new ArrayList<>();
+    private List<TaskProgress> calculateProgress(Course course, Iterable<Approved> approvals) {
+        List<TaskProgress> taskProgress = new ArrayList<>();
         for(TaskGroup taskGroup : course.getTaskGroups()) {
             for(Task task: taskGroup.getTasks()) {
                 for(Approved approved : approvals) {
                     if(task.getId() == approved.getTask().getId()) {
                         // Task is approved!
-                        progress.add(new Progress(task.getNumber(), true));
+                        taskProgress.add(new TaskProgress(task.getNumber(), true));
                     } else {
-                        progress.add(new Progress(task.getNumber(), false));
+                        taskProgress.add(new TaskProgress(task.getNumber(), false));
                     }
                 }
 
             }
         }
-        progress.sort(Comparator.comparingInt(Progress::getNumber));
-        return progress;
+        taskProgress.sort(Comparator.comparingInt(TaskProgress::getNumber));
+        return taskProgress;
     }
 
 }

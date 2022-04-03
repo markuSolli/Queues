@@ -1,6 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
-import no.ntnu.fullstack.queues.task.Progress;
+import no.ntnu.fullstack.queues.task.TaskGroupProgress;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class CourseProgress {
     private boolean active;
     private Season season;
     private int year;
-    private List<Progress> progress;
+    private List<TaskGroupProgress> taskGroupProgress;
     public CourseProgress(){}
 
     public Long getId() {
@@ -66,11 +66,11 @@ public class CourseProgress {
         this.year = year;
     }
 
-    public List<Progress> getProgress() {
-        return progress;
+    public List<TaskGroupProgress> getProgress() {
+        return taskGroupProgress;
     }
 
-    public void setProgress(List<Progress> progress) {
-        this.progress = progress;
+    public void setProgress(List<TaskGroupProgress> taskGroupProgress) {
+        this.taskGroupProgress = taskGroupProgress;
     }
 }
