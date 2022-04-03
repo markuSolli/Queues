@@ -8,6 +8,8 @@
         {{ studass }}
       </div>
       <div class="element-5" v-if="!guide">
+      <div class="element-4">{{ studass }}</div>
+      <div class="element-5" v-if="!guide && isStudAss">
         <Button
           v-if="!beingApproved"
           :title="'Supervise'"
@@ -145,26 +147,31 @@ export default {
 .element-1 {
   grid-column: 1 / 2;
   justify-self: start;
+  align-self: center;
 }
 
 .element-2 {
   grid-column: 2 / 3;
   justify-self: center;
+  align-self: center;
 }
 
 .element-3 {
   grid-column: 3 / 4;
   justify-self: center;
   font-size: 16px;
+  align-self: center;
 }
 
 .element-4 {
   grid-column: 4 / 5;
   justify-self: center;
+  align-self: center;
 }
 
 .element-5 {
   grid-column: 5 / 6;
   justify-self: end;
+  align-self: center;
 }
 </style>

@@ -52,9 +52,8 @@ export default {
   setup() {
     const route = useRoute();
     const queue = ref([]);
-    let isStudAss = computed(() => {
-      return true;
-    });
+    let isStudAss = ref(false);
+    const user = ref();
 
     onBeforeMount(() => {
       http
@@ -62,6 +61,34 @@ export default {
         .then((response) => {
           console.log(response.data);
           queue.value = response.data;
+        })
+        .catch((err) => console.log(err));
+
+      // check if logged in student is student assistant for this course
+      // first get user email
+      let currentUser = "";
+      http
+        .get("/me")
+        .then((response) => {
+          currentUser = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // then check if role of current user is assistant in this course
+      http
+        .get("/courses/" + route.params.id)
+        .then((response) => {
+          for (const user in response.data.users) {
+            if (
+              currentUser.email === response.data.users[user].user.email &&
+              response.data.users[user].role === "ASSISTANT"
+            ) {
+              console.log("passed");
+              isStudAss.value = true;
+            }
+          }
         })
         .catch((err) => console.log(err));
     });
