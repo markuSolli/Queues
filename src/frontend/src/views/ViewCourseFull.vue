@@ -44,13 +44,27 @@
         <div id="element-1">{{ student.email }}</div>
         <div id="element-2">{{ student.firstName }}</div>
         <div id="element-3">{{ student.lastName }}</div>
-        <div id="element-4">true</div>
+        <div id="element-4">
+          <div v-if="coursePassed(taskGroups, student)">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div v-else><i class="fa-solid fa-xmark"></i></div>
+        </div>
         <div id="element-5" v-if="student.active">
           <h2>Task status</h2>
           <div v-for="taskGroup in taskGroups" :key="taskGroup.id">
-            <div v-for="task in taskGroup.tasks" :key="task.id">
-              {{ task.number }}
-              <span v-if="taskIsApproved(task, student)">approved</span>
+            <div
+              id="task-status"
+              v-for="task in taskGroup.tasks"
+              :key="task.id"
+            >
+              <div id="task-number-left">{{ task.number }}</div>
+              <div id="task-status-right">
+                <div v-if="taskIsApproved(task, student)">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <div v-else><i class="fa-solid fa-xmark"></i></div>
+              </div>
             </div>
           </div>
         </div>
@@ -60,10 +74,10 @@
 </template>
 
 <script>
-import {ref} from "@vue/reactivity";
-import {onBeforeMount} from "@vue/runtime-core";
+import { ref } from "@vue/reactivity";
+import { onBeforeMount } from "@vue/runtime-core";
 import http from "../service/http-common";
-import {useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 
 export default {
   setup() {
@@ -114,7 +128,7 @@ export default {
     };
 
     const taskIsApproved = (task, student) => {
-      let isApproved =  student.approved.map(approvedItem => {
+      let isApproved = student.approved.map((approvedItem) => {
         console.log("Approved task: " + approvedItem.task.id);
         console.log("Task: " + task.id);
         if (approvedItem.task.id === task.id) {
@@ -124,7 +138,13 @@ export default {
         return false;
       });
       return isApproved[0];
-    }
+    };
+
+    const coursePassed = (taskGroups, student) => {
+      console.log(taskGroups);
+      console.log(student.approved);
+      return false;
+    };
 
     return {
       taskGroups,
@@ -134,13 +154,32 @@ export default {
       code,
       title,
       clickStudent,
-      taskIsApproved
+      taskIsApproved,
+      coursePassed,
     };
   },
 };
 </script>
 
 <style>
+#task-number-left {
+  grid-column: 1/2;
+  justify-self: start;
+}
+
+#task-status-right {
+  grid-column: 2/3;
+
+  justify-self: end;
+}
+
+#task-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid white;
+  padding: 5px 10px;
+}
+
 #list {
   margin: 50px 0px;
 }
@@ -209,7 +248,6 @@ export default {
 #element-5 {
   grid-column: 1/5;
   grid-row: 2/3;
-  justify-self: start;
   margin: 20px;
 }
 </style>

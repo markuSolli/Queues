@@ -127,6 +127,8 @@ export default {
     };
 
     const toggleQueue = () => {
+      clickedButton = true;
+
       http
         .patch("/courses/" + id + "/active", !active.value)
         .then((response) => {});
