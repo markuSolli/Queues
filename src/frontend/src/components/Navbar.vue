@@ -3,11 +3,18 @@
     <div id="left-logo"><h1>Queues</h1></div>
     <div id="left">
       <h1>Queues</h1>
-      <router-link class="link" tag="li" to="/">Courses</router-link>
-      <router-link class="link" tag="li" to="/about">About</router-link>
-      <router-link class="link" tag="li" to="/archieve">Archieve</router-link>
+      <router-link class="link" tag="li" to="/"
+        ><i class="fa-solid fa-list"></i> Courses</router-link
+      >
+      <router-link class="link" tag="li" to="/about"
+        ><i class="fa-solid fa-message-text"></i
+        ><i class="fa-solid fa-info"></i> About</router-link
+      >
+      <router-link class="link" tag="li" to="/archieve"
+        ><i class="fa-solid fa-box-archive"></i> Archieve</router-link
+      >
       <router-link v-if="properRank" class="link" tag="li" to="/management"
-        >Management</router-link
+        ><i class="fa-solid fa-list-check"></i> Management</router-link
       >
     </div>
     <div id="right-menu" @click="openMenu">
@@ -22,7 +29,9 @@
       <div @click="clickLink('/profile')" class="link">Profile</div>
     </div>
     <div id="right">
-      <router-link class="link" tag="li" to="/profile">Profile</router-link>
+      <router-link class="link" tag="li" to="/profile">
+        <i class="fa-solid fa-user"></i> Profile</router-link
+      >
     </div>
   </div>
 </template>
@@ -81,7 +90,7 @@ h1 {
 
 .link {
   display: inline;
-  margin: 0 0 0 20px;
+  margin: 15px 0 0 30px;
   color: white;
   text-decoration: none;
 }
@@ -105,6 +114,11 @@ h1 {
 
 #right {
   float: right;
+  display: flex;
+}
+
+#right-expanded {
+  display: none;
 }
 
 li.router-link-active,
@@ -114,7 +128,7 @@ li.router-link-exact-active {
   cursor: pointer;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   #left {
     display: none;
   }
