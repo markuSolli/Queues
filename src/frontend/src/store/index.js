@@ -5,7 +5,7 @@ export default createStore({
   state: {
     loggedIn: true,
     accessToken: null,
-    role: 1,
+    role: 2,
     email: "",
     firstName: "",
     lastName: "",

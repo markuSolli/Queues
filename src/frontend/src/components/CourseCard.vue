@@ -1,13 +1,13 @@
 <template>
   <div id="card" @click="clickCardFunc">
     <div class="queue-element-1">
-      <h3>{{ title }}</h3>
+      <h3>{{ code }} {{ title }}</h3>
     </div>
 
     <div class="queue-element-2"></div>
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
-      <div id="prog-text"><h4>Course progress:</h4></div>
+      <div id="prog-text"><h4>Progress:</h4></div>
       <div class="loadingBar-1">1</div>
       <div class="loadingBar-1">2</div>
       <div class="loadingBar-1">3</div>
@@ -58,6 +58,7 @@ export default {
     let active = ref(course.active);
     let archived = ref(course.archived);
     let title = ref(course.title);
+    let code = ref(course.code);
     let id = course.id;
     let cardInQueue = props.cardInQueue;
     let clickedButton = false;
@@ -143,6 +144,10 @@ export default {
       deleteCourse,
       clickArchive,
       clickCardFunc,
+      stopQueue,
+      startQueue,
+      restoreFromArchieve,
+      code,
       toggleQueue
     };
   },
@@ -230,5 +235,19 @@ export default {
   justify-self: end;
   align-self: end;
   display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+  #card {
+    grid-template-areas: "element-1" "element-2" "element-3" "element-4";
+  }
+  .queue-element-1,
+  .queue-element-2,
+  .queue-element-3,
+  .queue-element-4 {
+    justify-self: start;
+    align-self: start;
+    display: flex;
+  }
 }
 </style>
