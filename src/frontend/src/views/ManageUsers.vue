@@ -22,8 +22,8 @@
     <div v-for="user in listOfUsers" :key="user.email">
       <UserCard
         :email="user.email"
-        :firstname="user.firstname"
-        :lastname="user.lastname"
+        :firstname="user.firstName"
+        :lastname="user.lastName"
         :role="user.role"
         :edit="true"
       />
@@ -42,18 +42,15 @@ export default {
   components: { Button, UserCard},
   setup(){
     let create = ref(false);
-    let listOfUsers = ref([
-      {
-        email: "asdasdasd",
-        firstname: "thor",
-        lastname: "dfdfdf",
-        role: 0,
-      },
-      { email: "123123", firstname: "thor1", lastname: "dfdfdf2", role: 1 },
-      { email: "ghghgh", firstname: "thor2", lastname: "dfdfdf3", role: 1 },
-      { email: "ghghgh2", firstname: "thor2", lastname: "dfdfdf3", role: 2 },
-      { email: "ghghgh4", firstname: "thor2", lastname: "dfdfdf3", role: 3 },
-    ]);
+    let listOfUsers = ref([]);
+
+    http.get("/users")
+    .then((response) => {
+      listOfUsers.value = response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
     const addUserInterfaceOn = () => {
       create.value = true;
@@ -62,10 +59,23 @@ export default {
       create.value = false;
     };
     const addUser = (email, firstname, lastname, role) => {
-      // add user to database
-      console.log(email + firstname + lastname + role);
+      const newUser = {
+        email: email,
+        firstName: firstname,
+        lastName: lastname,
+        role: role
+      }
 
-      // add fake data to list
+      // add user to database
+      http.post("/signup", newUser)
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+
+      // push to list
       listOfUsers.value.push({
         email: email,
         firstname: firstname,
@@ -73,7 +83,7 @@ export default {
         role: role,
       });
 
-      // if succesfull close window
+      // close window
       addUserInterfaceOff();
     };
 
