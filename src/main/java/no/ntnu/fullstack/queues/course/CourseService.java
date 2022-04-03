@@ -1,17 +1,24 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.task.*;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
     private final UserService userService;
+    private final ApprovedService approvedService;
 
-    public CourseService(CourseRepository courseRepository, UserService userService) {
+    public CourseService(CourseRepository courseRepository, UserService userService, ApprovedService approvedService) {
         this.courseRepository = courseRepository;
         this.userService = userService;
+        this.approvedService = approvedService;
     }
 
     /**
@@ -198,6 +205,84 @@ public class CourseService {
         Course course = getCourse(id);
         course.setActive(active);
         return courseRepository.save(course);
+    }
+
+    /**
+     * Returns a list of current progress of all courses for a user
+     * @param user
+     * @return
+     */
+    public List<CourseProgress> getAllCourseProgress(User user) {
+        List<CourseProgress> progress = new ArrayList<>();
+        Iterable<Course> courses = courseRepository.findAllByUsers_User(user);
+        Iterable<Approved> allApproved = approvedService.getAllApproved(user);
+        for(Course course : courses) {
+            CourseProgress courseProgress = new CourseProgress();
+            courseProgress.setId(course.getId());
+            courseProgress.setCode(course.getCode());
+            courseProgress.setTitle(course.getTitle());
+            courseProgress.setSeason(course.getSeason());
+            courseProgress.setYear(course.getYear());
+            courseProgress.setActive(course.isActive());
+            courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
+            progress.add(courseProgress);
+        }
+        return progress;
+    }
+
+    /**
+     * Fetches the progress related to one specific course
+     *
+     * @param courseId id of course to check for
+     * @param user which users progress
+     * @return progress of user in course
+     */
+    public CourseProgress getCourseProgress(Long courseId, User user) {
+        CourseProgress courseProgress = new CourseProgress();
+        Course course = getCourse(courseId);
+        Iterable<Approved> allApproved = approvedService.getAllApproved(user);
+        courseProgress.setId(course.getId());
+        courseProgress.setCode(course.getCode());
+        courseProgress.setTitle(course.getTitle());
+        courseProgress.setSeason(course.getSeason());
+        courseProgress.setYear(course.getYear());
+        courseProgress.setActive(course.isActive());
+        courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
+        return courseProgress;
+    }
+
+    /**
+     * Helper method for calculation which tasks are approved in a course based on all approvals
+     *
+     * @param course course
+     * @param approvals approved tasks
+     * @return list of all tasks in the course, with a boolean indication whether they are approved or not
+     */
+    private List<TaskGroupProgress> calculateProgress(Course course, Iterable<Approved> approvals) {
+        List<TaskGroupProgress> taskGroupProgress = new ArrayList<>();
+        for(TaskGroup taskGroup : course.getTaskGroups()) {
+            System.out.println(taskGroup);
+            int completed = 0;
+            TaskGroupProgress taskGroupProgressItem = new TaskGroupProgress(taskGroup.getId(),taskGroup.getNumber(), taskGroup.getRequired());
+            List<TaskProgress> taskProgress = new ArrayList<>();
+            for(Task task: taskGroup.getTasks()) {
+                boolean approved = false;
+                for(Approved approvedItem : approvals) {
+                    if(task.getId() == approvedItem.getTask().getId()) {
+                        // Task is approved!
+                        completed++;
+                        approved = true;
+                    }
+                }
+                taskProgress.add(new TaskProgress(task.getId(), task.getNumber(), approved));
+            }
+            taskGroupProgressItem.setCompleted(completed);
+            taskProgress.sort(Comparator.comparingInt(TaskProgress::getNumber));
+            taskGroupProgressItem.setTaskProgress(taskProgress);
+            taskGroupProgress.add(taskGroupProgressItem);
+        }
+        taskGroupProgress.sort(Comparator.comparingInt(TaskGroupProgress::getNumber));
+        return taskGroupProgress;
     }
 
 }
