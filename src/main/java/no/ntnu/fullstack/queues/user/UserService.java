@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -51,7 +49,7 @@ public class UserService implements UserDetailsService {
         if(userDTO.getPassword() == null) {
             User user = new User(userDTO.getEmail(), null, userDTO.getFirstName(), userDTO.getLastName());
             user.setRole(role);
-            user.setEnabled(false);
+            user.setActivation(generateActivationCode());
             sendActivationMail(user);
             return userRepository.save(user);
         }
@@ -96,12 +94,14 @@ public class UserService implements UserDetailsService {
         return userRepository.existsById(email);
     }
 
-    /*
-    Note − Please switch ON 'allow less secure apps' in your Gmail account settings before sending an email.
+    /**
+     * Send an e-mail from the applications account to the given users e-mail account with its
+     * activation link.
+     * @param user the user to send mail to
      */
     private void sendActivationMail(User user){
-        String serverEmail = "";    //TODO: Create GMail account
-        String serverPassword = "";
+        String serverEmail = "queuesfullstack@gmail.com";
+        String serverPassword = "d4741nG3N1or";
         try {
             Properties properties = new Properties();
             properties.put("mail.smtp.auth", "true");
@@ -120,11 +120,44 @@ public class UserService implements UserDetailsService {
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
             msg.setSubject("Activate your Queues profile");
             msg.setSentDate(new Date());
-            msg.setContent("Tutorials point email", "text/html"); //TODO: Set content
+            msg.setContent("<p>An account has been made for you, visit the following link to set a password:</p>" +
+                    "<a href=http://localhost:3000/" + user.getActivation() + "</a>", "text/html");
 
             Transport.send(msg);
         } catch (MessagingException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Generate a random alphanumerical String of 10 characters
+     * @return a random string.
+     */
+    private String generateActivationCode(){
+        int leftLimit = 48;
+        int rightLimit = 122;
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+
+    /**
+     * Get the user object with the given activation code
+     * @param activation the activation code generated for the user.
+     * @return the matching user object.
+     * @throws NoSuchElementException
+     */
+    public User getUserByActivationCode(String activation) throws NoSuchElementException{
+        Optional<User> user = userRepository.findByActivation(activation);
+        if(user.isPresent()){
+            return user.get();
+        }else{
+            throw new NoSuchElementException();
         }
     }
 }
