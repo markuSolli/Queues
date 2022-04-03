@@ -73,6 +73,7 @@ export default {
     });
 
     const deleteCourse = () => {
+      clickedButton = true;
       http.delete("/courses/" + id).then((response) => {});
     };
 
@@ -87,8 +88,15 @@ export default {
       });
     };
 
-    const clickArchieve = () => {};
-    const restoreFromArchieve = () => {};
+    const clickArchieve = () => {
+      clickedButton = true;
+      console.log("click archieve");
+      http.put("/courses/" + id, { archived: true }).then((response) => {});
+    };
+    const restoreFromArchieve = () => {
+      clickedButton = true;
+      http.put("/courses/" + id, { archived: false }).then((response) => {});
+    };
 
     const clickCardFunc = () => {
       if (cardInQueue) {
