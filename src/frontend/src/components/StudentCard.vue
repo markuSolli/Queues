@@ -3,17 +3,22 @@
     <div id="studentcard-container" v-bind:class="{ guide: guide }">
       <div class="element-1">{{ firstname }} {{ lastname }}</div>
       <div class="element-2">{{ type }}</div>
-      <div class="element-3">
-        {{ time }}
+      <div class="element-3">{{ time }}</div>
+      <div class="element-4">
+        {{ studass }}
       </div>
-      <div class="element-4">{{ studass }}</div>
-      <div class="element-5" v-if="!guide">
-        <Button
-          v-if="!beingApproved"
-          :title="'Supervise'"
-          @click="superviseStudent"
-        />
-        <Button v-else :title="'Approve'" @click="approveStudent" />
+
+      <div v-if="guide" class="element-5">{{ task }}</div>
+      <div v-else>
+        <div class="element-5">{{ task }}</div>
+        <div class="element-5" v-if="!guide && isStudAss">
+          <Button
+            v-if="!beingApproved"
+            :title="'Assist'"
+            @click="superviseStudent"
+          />
+          <Button v-else :title="'Approve'" @click="approveStudent" />
+        </div>
       </div>
     </div>
     <div
@@ -28,10 +33,12 @@
 import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 import Button from "../components/Button.vue";
+import http from "@/service/http-common";
 
 export default {
   components: { Button },
   props: [
+    "id",
     "email",
     "firstname",
     "lastname",
@@ -40,13 +47,16 @@ export default {
     "studentAssistant",
     "guide",
     "isStudAss",
+    "task",
   ],
   setup(props) {
+    const id = ref(props.id);
     const email = ref(props.email);
     const firstname = ref(props.firstname);
     const lastname = ref(props.lastname);
     const time = ref(props.time);
     const type = ref(props.type);
+    const task = ref(props.task);
     const studass = ref(props.studentAssistant);
     const guide = ref(props.guide);
     const isStudAss = ref(props.isStudAss);
@@ -59,10 +69,17 @@ export default {
     });
 
     const superviseStudent = () => {
+      http.put("/queue/" + id.value + "/assist").then((response) => {
+        console.log(response.data);
+      });
       // put name of studass into this queue in database
     };
 
-    const approveStudent = () => {};
+    const approveStudent = () => {
+      http.post("/queue/" + id.value + "/approve").then((response) => {
+        console.log(response.data);
+      });
+    };
 
     return {
       email,
@@ -76,6 +93,7 @@ export default {
       isStudAss,
       superviseStudent,
       approveStudent,
+      task,
     };
   },
 };
@@ -134,27 +152,32 @@ export default {
 
 .element-1 {
   grid-column: 1 / 2;
-  justify-self: start;
+  justify-self: center;
+  align-self: center;
 }
 
 .element-2 {
   grid-column: 2 / 3;
   justify-self: center;
+  align-self: center;
 }
 
 .element-3 {
   grid-column: 3 / 4;
   justify-self: center;
   font-size: 16px;
+  align-self: center;
 }
 
 .element-4 {
   grid-column: 4 / 5;
   justify-self: center;
+  align-self: center;
 }
 
 .element-5 {
   grid-column: 5 / 6;
-  justify-self: end;
+  justify-self: center;
+  align-self: center;
 }
 </style>

@@ -79,6 +79,13 @@ public class CourseController {
         return new ResponseEntity<>(courseService.createCourse(courseDTO), HttpStatus.CREATED);
     }
 
+    /**
+     * Updates the course at the given id with the given data
+     *
+     * @param id id of course
+     * @param courseDTO data
+     * @return updated course
+     */
     @PutMapping("{id}")
     public ResponseEntity<Course> editCourse(@PathVariable Long id, @RequestBody CourseDTO courseDTO) {
         logger.info("Editing course {} ...", id);
@@ -89,6 +96,12 @@ public class CourseController {
         }
     }
 
+    /**
+     * Deletes the course at the given id
+     *
+     * @param id id of course to delete
+     * @return no content
+     */
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteCourse(@PathVariable Long id) {
         logger.info("Deleting course {} ...", id);
@@ -96,11 +109,39 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //TODO: This method is not complete
     @GetMapping("/{id}/approved")
     public ResponseEntity<String> getApproved(@PathVariable Long id, Authentication authentication) {
-        logger.info("Retrieving all approved courses");
+        logger.info("Retrieving all approved tasks for course {}...", id);
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>("", HttpStatus.OK);
     }
+
+    /**
+     * Modifies the archived status of the course with the given status to match the given boolean value
+     *
+     * @param id id og course to modify
+     * @param archived value to set it to
+     * @return modified course
+     */
+    @PatchMapping("/{id}/archived")
+    public ResponseEntity<Course> toggleArchived(@PathVariable Long id, @RequestBody Boolean archived){
+        logger.info(archived ? "Archiving course {}..." : "Restoring course {}...", id);
+        return new ResponseEntity<>(courseService.toggleArchived(id, archived), HttpStatus.OK);
+    }
+
+    /**
+     * Modifies the active status of the course with the given status to match the given boolean value
+     *
+     * @param id id of course to modify
+     * @param active value to set it to
+     * @return modified course
+     */
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<Course> toggleActive(@PathVariable Long id, @RequestBody Boolean active){
+        logger.info(active ? "Activating course {}..." : "Deactivating course {}...", id);
+        return new ResponseEntity<>(courseService.toggleActive(id, active), HttpStatus.OK);
+    }
+
 
 }

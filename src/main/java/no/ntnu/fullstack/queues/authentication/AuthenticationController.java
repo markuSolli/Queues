@@ -111,8 +111,11 @@ public class AuthenticationController {
         return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
     }
 
-    @GetMapping("/roger")
-    public void roger() {
+    /**
+     * This method is used for populating the database with some example users for testing
+     */
+    @GetMapping("/example")
+    public void populateWithExampleData() {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("roger@roger.no");
         userDTO.setPassword("roger");
@@ -120,6 +123,22 @@ public class AuthenticationController {
         userDTO.setLastName("Rogersen");
         try {
             userService.signup(userDTO, Role.ADMIN);
+        } catch (Exception e) {
+            // Already signed up!
+        }
+
+        UserDTO teacher = new UserDTO("teacher@teacher.no", "Lærer", "Vekkesen");
+        teacher.setPassword("lærer");
+
+        UserDTO assistant = new UserDTO("assistant@assistant.no", "Assistent", "Hjelpersen");
+        assistant.setPassword("assistent");
+
+        UserDTO student = new UserDTO("student@student.no", "Student", "Øvesen");
+        student.setPassword("student");
+        try {
+            userService.signup(teacher, Role.TEACHER);
+            userService.signup(assistant, Role.ASSISTANT);
+            userService.signup(student, Role.STUDENT);
         } catch (Exception e) {
             // Already signed up!
         }

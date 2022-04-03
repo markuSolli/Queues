@@ -1,13 +1,13 @@
 <template>
   <div id="card" @click="clickCardFunc">
     <div class="queue-element-1">
-      <h3>{{ title }}</h3>
+      <h3>{{ code }} {{ title }}</h3>
     </div>
 
     <div class="queue-element-2"></div>
     <div class="queue-element-3"></div>
     <div class="queue-element-4" v-if="cardInQueue">
-      <div id="prog-text"><h4>Course progress:</h4></div>
+      <div id="prog-text"><h4>Progress:</h4></div>
       <div class="loadingBar-1">1</div>
       <div class="loadingBar-1">2</div>
       <div class="loadingBar-1">3</div>
@@ -17,25 +17,43 @@
       <div class="loadingBar-2">7</div>
     </div>
 
+    <!-- ADMIN / TEACHER -->
     <div class="queue-element-4" v-if="edit && !cardInQueue && !archived">
       <Button :title="'Edit'" @click="editCourse" />
-      <Button :title="'Archieve'" @click="clickArchieve" />
+      <Button :title="'Archive'" @click="clickArchive" />
       <Button :title="'Delete'" @click="deleteCourse" />
-    </div>
-    <div class="queue-element-4" v-if="assistant && active && !cardInQueue">
-      <Button :title="'Stop queue'" @click="stopQueue" />
-    </div>
-    <div
-      class="queue-element-4"
-      v-if="assistant && !active && !cardInQueue && !archived"
-    >
-      <Button :title="'Start queue'" @click="startQueue" />
+      <div class="queue-element-4" v-if="active && !cardInQueue">
+        <Button :title="'Stop queue'" @click="toggleQueue" />
+      </div>
+      <div class="queue-element-4" v-if="!active && !cardInQueue">
+        <Button :title="'Start queue'" @click="toggleQueue" />
+      </div>
+      <div
+        class="queue-element-4"
+        v-if="assistant && !active && !cardInQueue && !archived"
+      >
+        <Button :title="'Start queue'" @click="toggleQueue" />
+      </div>
     </div>
     <div
       class="queue-element-4"
       v-if="archived && !assistant && !student && !cardInQueue && archived"
     >
-      <Button :title="'Restore course'" @click="restoreFromArchieve" />
+      <Button :title="'Restore course'" @click="clickArchive" />
+    </div>
+
+    <!-- ASSISTANT -->
+    <div
+      class="queue-element-4"
+      v-if="assistant && !active && !cardInQueue && !archived"
+    >
+      <Button :title="'Start queue'" @click="toggleQueue" />
+    </div>
+    <div
+      class="queue-element-4"
+      v-if="assistant && active && !cardInQueue && !archived"
+    >
+      <Button :title="'Stop queue'" @click="toggleQueue" />
     </div>
   </div>
 </template>
@@ -58,6 +76,7 @@ export default {
     let active = ref(course.active);
     let archived = ref(course.archived);
     let title = ref(course.title);
+    let code = ref(course.code);
     let id = course.id;
     let cardInQueue = props.cardInQueue;
     let clickedButton = false;
@@ -88,14 +107,12 @@ export default {
       });
     };
 
-    const clickArchieve = () => {
+    const clickArchive = () => {
       clickedButton = true;
-      console.log("click archieve");
-      http.put("/courses/" + id, { archived: true }).then((response) => {});
-    };
-    const restoreFromArchieve = () => {
-      clickedButton = true;
-      http.put("/courses/" + id, { archived: false }).then((response) => {});
+
+      http
+        .patch("/courses/" + id + "/archived", !archived.value)
+        .then((response) => {});
     };
 
     const clickCardFunc = () => {
@@ -129,8 +146,13 @@ export default {
       }
     };
 
-    const startQueue = () => {};
-    const stopQueue = () => {};
+    const toggleQueue = () => {
+      clickedButton = true;
+
+      http
+        .patch("/courses/" + id + "/active", !active.value)
+        .then((response) => {});
+    };
 
     return {
       edit,
@@ -142,11 +164,10 @@ export default {
       cardInQueue,
       editCourse,
       deleteCourse,
-      clickArchieve,
+      clickArchive,
       clickCardFunc,
-      stopQueue,
-      startQueue,
-      restoreFromArchieve,
+      code,
+      toggleQueue,
     };
   },
 };
@@ -233,5 +254,19 @@ export default {
   justify-self: end;
   align-self: end;
   display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+  #card {
+    grid-template-areas: "element-1" "element-2" "element-3" "element-4";
+  }
+  .queue-element-1,
+  .queue-element-2,
+  .queue-element-3,
+  .queue-element-4 {
+    justify-self: start;
+    align-self: start;
+    display: flex;
+  }
 }
 </style>

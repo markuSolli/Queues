@@ -1,7 +1,9 @@
 <template>
-  <div id="main">
+  <div>
     <div id="queue-container">
-      <div id="queue-container-header"><h1>Active</h1></div>
+      <div id="queue-container-header">
+        <h1><i class="fa-solid fa-toggle-on"></i> Active</h1>
+      </div>
 
       <div v-for="course in activeCourses" :key="course.id">
         <CourseCard :course="course" :cardInQueue="true" />
@@ -9,7 +11,9 @@
     </div>
 
     <div id="queue-container">
-      <div id="queue-container-header"><h1>Inactive</h1></div>
+      <div id="queue-container-header">
+        <h1><i class="fa-solid fa-toggle-off"></i> Inactive</h1>
+      </div>
       <div v-for="course in inActiveCourses" :key="course.id">
         <CourseCard :course="course" :cardInQueue="true" />
       </div>
@@ -30,7 +34,7 @@ export default {
     let inActiveCourses = ref();
 
     onMounted(() => {
-      http.get("/courses").then((response) => {
+      http.get("/courses?archived=false").then((response) => {
         let active = [];
         let inactive = [];
 

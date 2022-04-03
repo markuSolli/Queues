@@ -1,9 +1,9 @@
 <template>
   <div>
-<!--    <h1>{{queue[0].course.title}}</h1>-->
+    <!--    <h1>{{queue[0].course.title}}</h1>-->
 
     <div id="topbar">
-      <h2 id="queue-header">Students in queue</h2>
+      <h2 id="queue-header">Queue: {{ code }} {{ title }}</h2>
       <div id="button-position">
         <Button :title="'Enter queue'" @click="goToQueue" />
       </div>
@@ -16,12 +16,23 @@
         :studentAssistant="'Student assistant'"
         :type="'Type'"
         :time="'Time'"
+        :task="'Task'"
       />
-      <StudentCard :isStudAss="isStudAss" :studentAssistant="'ererer'" />
-      <StudentCard />
-      <StudentCard />
-      <StudentCard />
-      <StudentCard />
+      <div v-for="queueItem in queue" :key="queueItem.id">
+        <StudentCard
+          :isStudAss="isStudAss"
+          :guide="false"
+          :id="queueItem.id"
+          :firstname="queueItem.user.firstName"
+          :lastname="queueItem.user.lastName"
+          :type="queueItem.help ? 'help' : 'approval'"
+          :studentAssistant="
+            queueItem.assistant
+              ? queueItem.assistant.firstName + queueItem.assistant.lastName
+              : null
+          "
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -31,10 +42,11 @@ import StudentCard from "../components/StudentCard.vue";
 import Button from "../components/Button.vue";
 import { useRoute } from "vue-router";
 import router from "../router";
-import {computed, onMounted} from "@vue/runtime-core";
+import { computed, onMounted } from "@vue/runtime-core";
 import { onBeforeMount } from "vue";
 import http from "@/service/http-common";
 import { ref } from "@vue/reactivity";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -43,21 +55,57 @@ export default {
   },
   setup() {
     const route = useRoute();
+    const store = useStore();
+
     const queue = ref([]);
-    let isStudAss = computed(() => {
-      return true;
-    });
+    let isStudAss = ref(false);
+    const user = ref();
+    const code = ref();
+    const title = ref();
 
     onBeforeMount(() => {
       http
-          .get("/queue/" + route.params.id)
-          .then(response => {
-            console.log(response.data);
-            queue.value = response.data;
-          })
-          .catch(err => console.log(err));
-      ;
-    })
+        .get("/queue/" + route.params.id)
+        .then((response) => {
+          console.log(response.data);
+          queue.value = response.data;
+          code.value = response.data[0].course.code;
+          title.value = response.data[0].course.title;
+        })
+        .catch((err) => console.log(err));
+
+      if (store.state.role < 3) {
+        isStudAss.value = true;
+      }
+      // check if logged in student is student assistant for this course
+      // first get user email
+      /* let currentUser = "";
+      http
+        .get("/me")
+        .then((response) => {
+          currentUser = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // then check if role of current user is assistant in this course
+      http
+        .get("/courses/" + route.params.id)
+        .then((response) => {
+          for (const user in response.data.users) {
+            if (
+              currentUser.email === response.data.users[user].user.email &&
+              response.data.users[user].role === "ASSISTANT"
+            ) {
+              //console.log("passed");
+              isStudAss.value = true;
+            }
+          }
+        })
+        .catch((err) => console.log(err));
+        */
+    });
 
     const goToQueue = () => {
       router.push({
@@ -66,7 +114,7 @@ export default {
       });
     };
 
-    return { goToQueue, isStudAss, queue };
+    return { goToQueue, isStudAss, queue, code, title };
   },
 };
 </script>

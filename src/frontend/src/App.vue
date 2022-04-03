@@ -1,5 +1,7 @@
 <template>
-  <div id="grid" v-if="!isLoading"><Navbar v-if="loggedIn" /> <router-view /></div>
+  <div id="grid" v-if="!isLoading">
+    <Navbar v-if="loggedIn" /> <router-view />
+  </div>
 </template>
 
 <script>
@@ -19,7 +21,7 @@ export default {
         console.log("Fetching user");
         try {
           const response = await refreshToken();
-          if(!response.data.accessToken) {
+          if (!response.data.accessToken) {
             //
             return;
           }
@@ -30,9 +32,9 @@ export default {
         } finally {
           isLoading.value = false;
         }
-      }
+      };
       fetchUser();
-    })
+    });
 
     const store = useStore();
 

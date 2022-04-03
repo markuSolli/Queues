@@ -27,11 +27,21 @@ public class QueueService {
     }
 
     /**
+     * Fetches the queue with the given id from the database. Throws QueueNotFoundException if there is none
+     *
+     * @param id id of queue to find
+     * @return queue with given id
+     */
+    public Queue getQueue(Long id) {
+        return queueRepository.findById(id).orElseThrow(() -> new QueueNotFoundException(id));
+    }
+
+    /**
      * Get list of all queues for a given course
      * @param courseID the unique id of the course
      * @return list of matching queues
      */
-    public Iterable<Queue> getQueue(Long courseID) {
+    public Iterable<Queue> getQueueFromCourseId(Long courseID) {
         return queueRepository.findAllByCourseId(courseID);
     }
 
@@ -59,10 +69,11 @@ public class QueueService {
 
     /**
      * Approve the queue and delete it
-     * @param queue the queue to approve
+     * @param id id of the queue to approve
      * @return the new approval object
      */
-    public Approved approveQueue(Queue queue, User assistant){
+    public Approved approveQueue(Long id, User assistant){
+        Queue queue = getQueue(id);
         Approved approval = approvedService.approveQueue(queue, assistant);
         deleteQueue(queue);
         return approval;
@@ -70,14 +81,14 @@ public class QueueService {
 
     /**
      * Attach an assistant to a queue
-     * @param queue the queue that gets an assistant
+     * @param id id of the queue that gets an assistant
      * @param assistant the assistant to attach
      * @return the edited queue object
      */
-    public Queue assistQueue(Queue queue, User assistant){
-        Queue existingQueue = queueRepository.findById(queue.getId()).orElse(new Queue());
+    public Queue assistQueue(Long id, User assistant){
+        Queue existingQueue = queueRepository.findById(id).orElseThrow(() -> new QueueNotFoundException(id));
         existingQueue.setAssistant(assistant);
-        return queueRepository.save(queue);
+        return queueRepository.save(existingQueue);
     }
 }
 
