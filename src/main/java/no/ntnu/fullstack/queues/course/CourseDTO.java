@@ -1,10 +1,9 @@
 package no.ntnu.fullstack.queues.course;
 
-import no.ntnu.fullstack.queues.location.Room;
+import no.ntnu.fullstack.queues.location.Location;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ public class CourseDTO {
     private List<User> assistants;
     private List<User> teachers;
     private Set<TaskGroup> taskGroups;
-    private Set<Room> rooms;
+    private Set<Location> rooms;
 
     public CourseDTO() {
     }
@@ -104,11 +103,11 @@ public class CourseDTO {
         this.taskGroups = taskGroups;
     }
 
-    public Set<Room> getRooms() {
+    public Set<Location> getRooms() {
         return rooms;
     }
 
-    public void setRooms(Set<Room> rooms) {
+    public void setRooms(Set<Location> rooms) {
         this.rooms = rooms;
     }
 }

@@ -1,6 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
-import no.ntnu.fullstack.queues.location.Room;
+import no.ntnu.fullstack.queues.location.Location;
 import no.ntnu.fullstack.queues.task.Task;
 import no.ntnu.fullstack.queues.task.TaskGroup;
 import no.ntnu.fullstack.queues.user.User;
@@ -22,7 +22,7 @@ public class Course {
     private boolean archived = false;
     private boolean active = false;
     @ManyToMany
-    private Set<Room> rooms = new HashSet<>();
+    private Set<Location> rooms = new HashSet<>();
     @OneToMany(mappedBy = "course",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TaskGroup> taskGroups = new HashSet<>();
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -111,11 +111,11 @@ public class Course {
         this.taskGroups.addAll(taskGroups);
     }
 
-    public Set<Room> getRooms() {
+    public Set<Location> getRooms() {
         return rooms;
     }
 
-    public void setRooms(Set<Room> rooms) {
+    public void setRooms(Set<Location> rooms) {
         if(rooms == null) {
             return;
         }
