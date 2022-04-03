@@ -19,7 +19,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     @JsonIgnore
-    private boolean enabled = true;
+    private String activation;
     @JsonIgnore
     private Role role;
 
@@ -60,10 +60,6 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public Role getRole() {
         return role;
     }
@@ -78,6 +74,14 @@ public class User implements UserDetails {
 
     public void setCourses(Set<UserCourse> courses) {
         this.courses = courses;
+    }
+
+    public String getActivation(){
+        return activation;
+    }
+
+    public void setActivation(String activationCode){
+        this.activation = activationCode;
     }
 
     @JsonIgnore
@@ -117,7 +121,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return activation == null;
     }
 
     @Override
