@@ -6,9 +6,9 @@ export default createStore({
     loggedIn: true,
     accessToken: null,
     role: 1,
-    email: "Smith@ntnu.no",
-    firstName: "smith",
-    lastName: "hansen",
+    email: "",
+    firstName: "",
+    lastName: "",
   },
   getters: {},
   mutations: {
