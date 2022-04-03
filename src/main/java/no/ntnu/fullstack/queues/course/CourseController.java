@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,6 +62,23 @@ public class CourseController {
         try {
             logger.info("Retrieving course {}", id);
             return new ResponseEntity<>(courseService.getCourse(id), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/progress")
+    public ResponseEntity<List<CourseProgress>> getAllProgress(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(courseService.getAllCourseProgress(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/progress/{course_id}")
+    public ResponseEntity<CourseProgress> getProgress(@PathVariable(name = "course_id") Long courseId, Authentication authentication) {
+        try {
+            User user = (User) authentication.getPrincipal();
+            return new ResponseEntity<>(courseService.getCourseProgress(courseId, user), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
