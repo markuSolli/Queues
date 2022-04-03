@@ -1,7 +1,6 @@
 package no.ntnu.fullstack.queues.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -13,7 +12,7 @@ public class Task {
     private Long id;
     private int number;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     private TaskGroup taskGroup;
 
     protected Task() {}
@@ -44,5 +43,13 @@ public class Task {
 
     public void setTaskGroup(TaskGroup taskGroup) {
         this.taskGroup = taskGroup;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", number=" + number +
+                '}';
     }
 }

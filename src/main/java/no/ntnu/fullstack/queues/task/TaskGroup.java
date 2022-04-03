@@ -1,6 +1,11 @@
 package no.ntnu.fullstack.queues.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import no.ntnu.fullstack.queues.course.Course;
+
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,9 +16,11 @@ public class TaskGroup {
     private Long id;
     private int required;
     private int number;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_group_id")
-    private Set<Task> tasks;
+    @JsonIgnore
+    @ManyToOne
+    private Course course;
+    @OneToMany(mappedBy = "taskGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Task> tasks = new HashSet<>();
 
     protected TaskGroup() {}
 
@@ -45,11 +52,36 @@ public class TaskGroup {
         this.number = number;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
     public Set<Task> getTasks() {
         return tasks;
     }
 
     public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
+        if(tasks == null) {
+            return;
+        }
+        this.tasks.clear();
+        for(Task task : tasks) {
+            task.setTaskGroup(this);
+        }
+        this.tasks.addAll(tasks);
+    }
+
+    @Override
+    public String toString() {
+        return "TaskGroup{" +
+                "id=" + id +
+                ", required=" + required +
+                ", number=" + number +
+                ", tasks=" + tasks +
+                '}';
     }
 }
