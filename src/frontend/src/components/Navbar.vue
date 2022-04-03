@@ -45,7 +45,7 @@ export default {
   components: {},
   setup() {
     const store = useStore();
-    let expanded = ref(true);
+    let expanded = ref(false);
 
     const openMenu = () => {
       expanded.value = !expanded.value;
