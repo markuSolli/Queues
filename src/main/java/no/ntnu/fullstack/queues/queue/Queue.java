@@ -1,9 +1,8 @@
 package no.ntnu.fullstack.queues.queue;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.ntnu.fullstack.queues.course.Course;
-import no.ntnu.fullstack.queues.location.Room;
+import no.ntnu.fullstack.queues.location.Location;
 import no.ntnu.fullstack.queues.task.Task;
 import no.ntnu.fullstack.queues.user.User;
 
@@ -24,7 +23,7 @@ public class Queue {
     private Date time;
     private boolean help;
     @ManyToOne
-    private Room room;
+    private Location room;
     private Integer desk;
     @ManyToOne
     private Task task;
@@ -33,7 +32,7 @@ public class Queue {
 
     protected Queue() {}
 
-    public Queue(Course course, User user, Date time, boolean help, Room room, Integer desk, Task task) {
+    public Queue(Course course, User user, Date time, boolean help, Location room, Integer desk, Task task) {
         this.course = course;
         this.user = user;
         this.time = time;
@@ -83,11 +82,11 @@ public class Queue {
         this.help = help;
     }
 
-    public Room getRoom() {
+    public Location getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public void setRoom(Location room) {
         this.room = room;
     }
 
