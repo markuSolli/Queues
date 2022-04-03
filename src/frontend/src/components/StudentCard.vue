@@ -7,15 +7,18 @@
       <div class="element-4">
         {{ studass }}
       </div>
-      <div class="element-5" v-if="!guide">
-      <div class="element-4">{{ studass }}</div>
-      <div class="element-5" v-if="!guide && isStudAss">
-        <Button
-          v-if="!beingApproved"
-          :title="'Supervise'"
-          @click="superviseStudent"
-        />
-        <Button v-else :title="'Approve'" @click="approveStudent" />
+
+      <div v-if="guide" class="element-5">{{ task }}</div>
+      <div v-else>
+        <div class="element-5">{{ task }}</div>
+        <div class="element-5" v-if="!guide && isStudAss">
+          <Button
+            v-if="!beingApproved"
+            :title="'Assist'"
+            @click="superviseStudent"
+          />
+          <Button v-else :title="'Approve'" @click="approveStudent" />
+        </div>
       </div>
     </div>
     <div
@@ -23,7 +26,6 @@
       class="being-approved"
       v-bind:class="{ beingapprovedcolor: beingApproved }"
     ></div>
-  </div>
   </div>
 </template>
 
@@ -45,6 +47,7 @@ export default {
     "studentAssistant",
     "guide",
     "isStudAss",
+    "task",
   ],
   setup(props) {
     const id = ref(props.id);
@@ -53,6 +56,7 @@ export default {
     const lastname = ref(props.lastname);
     const time = ref(props.time);
     const type = ref(props.type);
+    const task = ref(props.task);
     const studass = ref(props.studentAssistant);
     const guide = ref(props.guide);
     const isStudAss = ref(props.isStudAss);
@@ -89,6 +93,7 @@ export default {
       isStudAss,
       superviseStudent,
       approveStudent,
+      task,
     };
   },
 };
@@ -147,7 +152,7 @@ export default {
 
 .element-1 {
   grid-column: 1 / 2;
-  justify-self: start;
+  justify-self: center;
   align-self: center;
 }
 
@@ -172,7 +177,7 @@ export default {
 
 .element-5 {
   grid-column: 5 / 6;
-  justify-self: end;
+  justify-self: center;
   align-self: center;
 }
 </style>

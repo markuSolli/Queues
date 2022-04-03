@@ -16,9 +16,12 @@
         :studentAssistant="'Student assistant'"
         :type="'Type'"
         :time="'Time'"
+        :task="'Task'"
       />
       <div v-for="queueItem in queue" :key="queueItem.id">
         <StudentCard
+          :isStudAss="isStudAss"
+          :guide="false"
           :id="queueItem.id"
           :firstname="queueItem.user.firstName"
           :lastname="queueItem.user.lastName"
@@ -64,6 +67,7 @@ export default {
       http
         .get("/queue/" + route.params.id)
         .then((response) => {
+          console.log(response.data);
           queue.value = response.data;
           code.value = response.data[0].course.code;
           title.value = response.data[0].course.title;
@@ -71,7 +75,6 @@ export default {
         .catch((err) => console.log(err));
 
       if (store.state.role < 3) {
-        console.log(store.state.role);
         isStudAss.value = true;
       }
       // check if logged in student is student assistant for this course
