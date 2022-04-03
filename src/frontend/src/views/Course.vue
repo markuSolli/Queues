@@ -36,15 +36,27 @@
     </div>
 
     <div class="row">
-      <PersonList :title="'Teachers'" :list="listOfTeachers" />
+      <PersonList
+        :title="'Teachers'"
+        :list="listOfTeachers"
+        :idName="'teachersID'"
+      />
     </div>
 
     <div class="row">
-      <PersonList :title="'Student assistants'" :list="listOfStudAss" />
+      <PersonList
+        :title="'Student assistants'"
+        :list="listOfStudAss"
+        :idName="'assistantsID'"
+      />
     </div>
 
     <div class="row">
-      <PersonList :title="'Students'" :list="listOfStudents" />
+      <PersonList
+        :title="'Students'"
+        :list="listOfStudents"
+        :idName="'studentsID'"
+      />
     </div>
 
     <div class="row">
