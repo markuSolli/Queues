@@ -261,19 +261,20 @@ public class CourseService {
     private List<TaskGroupProgress> calculateProgress(Course course, Iterable<Approved> approvals) {
         List<TaskGroupProgress> taskGroupProgress = new ArrayList<>();
         for(TaskGroup taskGroup : course.getTaskGroups()) {
+            System.out.println(taskGroup);
             int completed = 0;
             TaskGroupProgress taskGroupProgressItem = new TaskGroupProgress(taskGroup.getId(),taskGroup.getNumber(), taskGroup.getRequired());
             List<TaskProgress> taskProgress = new ArrayList<>();
             for(Task task: taskGroup.getTasks()) {
-                for(Approved approved : approvals) {
-                    if(task.getId() == approved.getTask().getId()) {
+                boolean approved = false;
+                for(Approved approvedItem : approvals) {
+                    if(task.getId() == approvedItem.getTask().getId()) {
                         // Task is approved!
-                        taskProgress.add(new TaskProgress(task.getId(), task.getNumber(), true));
                         completed++;
-                    } else {
-                        taskProgress.add(new TaskProgress(task.getId(), task.getNumber(), false));
+                        approved = true;
                     }
                 }
+                taskProgress.add(new TaskProgress(task.getId(), task.getNumber(), approved));
             }
             taskGroupProgressItem.setCompleted(completed);
             taskProgress.sort(Comparator.comparingInt(TaskProgress::getNumber));
