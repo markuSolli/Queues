@@ -28,7 +28,7 @@ public class QueueController {
     public ResponseEntity<Iterable<Queue>> getQueue(@PathVariable Long id){
         try{
             logger.info("Retrieving queue for course " + id + "...");
-            return new ResponseEntity<>(queueService.getQueue(id), HttpStatus.OK);
+            return new ResponseEntity<>(queueService.getQueueFromCourseId(id), HttpStatus.OK);
         }catch(Exception e){
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -55,12 +55,15 @@ public class QueueController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/approve")
-    public ResponseEntity<Approved> approveQueue(@RequestBody Queue queue, Authentication authentication){
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<Approved> approveQueue(@PathVariable Long id, Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        logger.info("Approving queue " + queue.toString() + "...");
-        Approved addedApproval = queueService.approveQueue(queue, user);
-        return new ResponseEntity<>(addedApproval, HttpStatus.CREATED);
+        logger.info("Approving queue {}...", id);
+        try {
+            return new ResponseEntity<>(queueService.approveQueue(id, user), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping
