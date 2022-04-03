@@ -19,11 +19,15 @@
       />
       <div v-for="queueItem in queue" :key="queueItem.id">
         <StudentCard
-          :isStudAss="isStudAss"
-          :studentAssistant="queueItem.assistant"
+          :id="queueItem.id"
           :firstname="queueItem.user.firstName"
           :lastname="queueItem.user.lastName"
           :type="queueItem.help ? 'help' : 'approval'"
+          :studentAssistant="
+            queueItem.assistant
+              ? queueItem.assistant.firstName + queueItem.assistant.lastName
+              : null
+          "
         />
       </div>
     </div>

@@ -3,9 +3,11 @@
     <div id="studentcard-container" v-bind:class="{ guide: guide }">
       <div class="element-1">{{ firstname }} {{ lastname }}</div>
       <div class="element-2">{{ type }}</div>
-      <div class="element-3">
-        {{ time }}
+      <div class="element-3">{{ time }}</div>
+      <div class="element-4">
+        {{ studass }}
       </div>
+      <div class="element-5" v-if="!guide">
       <div class="element-4">{{ studass }}</div>
       <div class="element-5" v-if="!guide && isStudAss">
         <Button
@@ -28,10 +30,12 @@
 import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 import Button from "../components/Button.vue";
+import http from "@/service/http-common";
 
 export default {
   components: { Button },
   props: [
+    "id",
     "email",
     "firstname",
     "lastname",
@@ -42,6 +46,7 @@ export default {
     "isStudAss",
   ],
   setup(props) {
+    const id = ref(props.id);
     const email = ref(props.email);
     const firstname = ref(props.firstname);
     const lastname = ref(props.lastname);
@@ -59,10 +64,17 @@ export default {
     });
 
     const superviseStudent = () => {
+      http.put("/queue/" + id.value + "/assist").then((response) => {
+        console.log(response.data);
+      });
       // put name of studass into this queue in database
     };
 
-    const approveStudent = () => {};
+    const approveStudent = () => {
+      http.post("/queue/" + id.value + "/approve").then((response) => {
+        console.log(response.data);
+      });
+    };
 
     return {
       email,
