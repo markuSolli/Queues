@@ -137,10 +137,10 @@ public class AuthenticationController {
     }
 
     @PutMapping("/activate")
-    public ResponseEntity<UserInfo> activateUser(@RequestBody UserDTO userDTO){
-        logger.info("Activating user " + userDTO.getEmail() + "...");
+    public ResponseEntity<UserInfo> activateUser(@RequestBody String code, @RequestBody String password){
+        logger.info("Activating user from code " + code + "...");
         try {
-            User user = userService.activateUser(userDTO);
+            User user = userService.activateUser(code, password);
             return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
         }catch(NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
