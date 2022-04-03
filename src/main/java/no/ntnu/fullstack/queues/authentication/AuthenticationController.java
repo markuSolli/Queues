@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin
@@ -120,6 +121,17 @@ public class AuthenticationController {
             userService.signup(userDTO, Role.ADMIN);
         } catch (Exception e) {
             // Already signed up!
+        }
+    }
+
+    @GetMapping("/{activation}")
+    public ResponseEntity<User> getUserByActivationCode(@PathVariable String activation){
+        logger.info("Sending user info for activation code " + activation + "...");
+        try{
+            User user = userService.getUserByActivationCode(activation);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
