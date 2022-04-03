@@ -17,14 +17,32 @@
       <div class="loadingBar-2">7</div>
     </div>
 
+    <!-- ADMIN / TEACHER -->
     <div class="queue-element-4" v-if="edit && !cardInQueue && !archived">
       <Button :title="'Edit'" @click="editCourse" />
       <Button :title="'Archive'" @click="clickArchive" />
       <Button :title="'Delete'" @click="deleteCourse" />
+      <div class="queue-element-4" v-if="active && !cardInQueue">
+        <Button :title="'Stop queue'" @click="toggleQueue" />
+      </div>
+      <div class="queue-element-4" v-if="!active && !cardInQueue">
+        <Button :title="'Start queue'" @click="toggleQueue" />
+      </div>
+      <div
+        class="queue-element-4"
+        v-if="assistant && !active && !cardInQueue && !archived"
+      >
+        <Button :title="'Start queue'" @click="toggleQueue" />
+      </div>
     </div>
-    <div class="queue-element-4" v-if="assistant && active && !cardInQueue">
-      <Button :title="'Stop queue'" @click="toggleQueue" />
+    <div
+      class="queue-element-4"
+      v-if="archived && !assistant && !student && !cardInQueue && archived"
+    >
+      <Button :title="'Restore course'" @click="clickArchive" />
     </div>
+
+    <!-- ASSISTANT -->
     <div
       class="queue-element-4"
       v-if="assistant && !active && !cardInQueue && !archived"
@@ -33,9 +51,9 @@
     </div>
     <div
       class="queue-element-4"
-      v-if="archived && !assistant && !student && !cardInQueue && archived"
+      v-if="assistant && active && !cardInQueue && !archived"
     >
-      <Button :title="'Restore course'" @click="clickArchive" />
+      <Button :title="'Stop queue'" @click="toggleQueue" />
     </div>
   </div>
 </template>
