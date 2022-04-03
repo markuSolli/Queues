@@ -126,14 +126,24 @@ public class AuthenticationController {
     }
 
     @GetMapping("/activation/{code}")
-    public ResponseEntity<User> getUserByActivationCode(@PathVariable String code){
+    public ResponseEntity<UserInfo> getUserByActivationCode(@PathVariable String code){
         logger.info("Sending user info for activation code " + code + "...");
         try{
             User user = userService.getUserByActivationCode(code);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
         }catch(NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    @PutMapping("/activate")
+    public ResponseEntity<UserInfo> activateUser(@RequestBody UserDTO userDTO){
+        logger.info("Activating user " + userDTO.getEmail() + "...");
+        try {
+            User user = userService.activateUser(userDTO);
+            return new ResponseEntity<>(new UserInfo(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole()), HttpStatus.OK);
+        }catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

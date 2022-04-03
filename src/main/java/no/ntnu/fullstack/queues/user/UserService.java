@@ -115,7 +115,7 @@ public class UserService implements UserDetailsService {
                 }
             });
 
-            String link = "http://localhost:8080/activation/" + user.getActivation();
+            String link = "http://localhost:8080/activateUser/" + user.getActivation();
 
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(serverEmail, false));
@@ -162,5 +162,23 @@ public class UserService implements UserDetailsService {
         }else{
             throw new NoSuchElementException();
         }
+    }
+
+    /**
+     * Activate an existing user, assigning a password
+     * @param userDTO user details, including password
+     * @return the new User object
+     * @throws NoSuchElementException
+     */
+    public User activateUser(UserDTO userDTO) throws NoSuchElementException{
+        Optional<User> optionalUser = userRepository.findByEmail(userDTO.getEmail());
+        if(optionalUser.isEmpty()) throw new NoSuchElementException();
+
+        User existingUser = optionalUser.get();
+        String encodedPassword = bCrypt.encode(userDTO.getPassword());
+        User user = new User(existingUser.getEmail(), encodedPassword, existingUser.getFirstName(), existingUser.getLastName());
+        user.setRole(existingUser.getRole());
+
+        return userRepository.save(user);
     }
 }
