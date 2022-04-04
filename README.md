@@ -16,7 +16,7 @@ The server has a role policy that requires an Admin to start with, by visiting l
 The Admin has full access to the website, and is able to create courses and new users. Newly created users gets an e-mail with an activation link to set their password.  
 Teachers can manage courses that they are assigned to by the admin. New students, rooms and assignments can be added to a course.  
 Student assistants can approve assignments for other students by going into a courses queue page, and picking a student in line.  
-A Student can place themselves in a courses queue when its opened, and get approved their assignments. On the course page they also get a status on how many assignments they have approved in each course.  
+A Student can place themselves in a courses queue when its opened, and get their assignments approved. On the course page they also get a status on how many assignments they have approved in each course.  
 
 ## Libraries
 This project makes use of some great external libraries. 
