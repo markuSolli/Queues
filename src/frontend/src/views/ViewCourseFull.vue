@@ -115,8 +115,6 @@ export default {
           });
         }
 
-        console.log(course);
-
         code.value = course.code;
         title.value = course.title;
         taskGroups.value = course.taskGroups;
@@ -128,21 +126,28 @@ export default {
     };
 
     const taskIsApproved = (task, student) => {
-      let isApproved = student.approved.map((approvedItem) => {
-        console.log("Approved task: " + approvedItem.task.id);
-        console.log("Task: " + task.id);
-        if (approvedItem.task.id === task.id) {
-          console.log("equal");
-          return true;
-        }
-        return false;
+      return student.approved.find((approvedItem) => {
+        return approvedItem.task.id === task.id;
       });
-      return isApproved[0];
     };
 
     const coursePassed = (taskGroups, student) => {
-      console.log(taskGroups);
-      console.log(student.approved);
+      const totalRequired = taskGroups.lenth;
+      let totalCompleted = 0;
+      for (const taskGroup of taskGroups) {
+        let completed = 0;
+        for (const task of taskGroup.tasks) {
+          if (taskIsApproved(task, student)) {
+            completed++;
+          }
+        }
+        if (completed >= taskGroup.required) {
+          totalCompleted++;
+        }
+      }
+      if (totalCompleted >= totalRequired) {
+        return true;
+      }
       return false;
     };
 
