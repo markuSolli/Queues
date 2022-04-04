@@ -4,14 +4,15 @@
       <div class="element-1">{{ firstname }} {{ lastname }}</div>
       <div class="element-2">{{ type }}</div>
       <div class="element-3">{{ time }}</div>
-      <div class="element-4">
+      <div class="element-4">{{ location }}</div>
+      <div class="element-5">
         {{ studass }}
       </div>
+      <div class="element-6">{{ task }}</div>
 
-      <div v-if="guide" class="element-5">{{ task }}</div>
+      <div v-if="guide" class="element-7"></div>
       <div v-else>
-        <div class="element-5">{{ task }}</div>
-        <div class="element-5" v-if="!guide && isStudAss">
+        <div class="element-7" v-if="!guide && isStudAss">
           <Button
             v-if="!beingApproved"
             :title="'Assist'"
@@ -48,6 +49,7 @@ export default {
     "guide",
     "isStudAss",
     "task",
+    "location",
   ],
   setup(props) {
     const id = ref(props.id);
@@ -57,6 +59,7 @@ export default {
     const time = ref(props.time);
     const type = ref(props.type);
     const task = ref(props.task);
+    const location = ref(props.location);
     const studass = ref(props.studentAssistant);
     const guide = ref(props.guide);
     const isStudAss = ref(props.isStudAss);
@@ -94,6 +97,7 @@ export default {
       superviseStudent,
       approveStudent,
       task,
+      location,
     };
   },
 };
@@ -117,7 +121,7 @@ export default {
   padding: 10px;
   margin: 0px 0px 10px 0px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   flex: 1 1 auto;
   font-size: 16px;
 }
@@ -179,5 +183,21 @@ export default {
   grid-column: 5 / 6;
   justify-self: center;
   align-self: center;
+}
+.element-6 {
+  grid-column: 6 / 7;
+  justify-self: center;
+  align-self: center;
+}
+.element-7 {
+  grid-column: 7 / 8;
+  justify-self: center;
+  align-self: center;
+}
+
+@media only screen and (max-width: 600px) {
+  #studentcard-container {
+    font-size: 10px;
+  }
 }
 </style>

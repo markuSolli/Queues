@@ -17,9 +17,11 @@
         :type="'Type'"
         :time="'Time'"
         :task="'Task'"
+        :location="'Location'"
       />
       <div v-for="queueItem in queue" :key="queueItem.id">
         <StudentCard
+          :location="queueItem.room.title"
           :isStudAss="isStudAss"
           :guide="false"
           :id="queueItem.id"
