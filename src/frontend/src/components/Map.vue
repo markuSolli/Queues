@@ -5,9 +5,24 @@
 <script>
 import { onMounted, ref } from "@vue/runtime-core";
 export default {
+  props: ["viewOnly", "showRoom"],
   setup(props, { emit }) {
     let mapRef = ref();
     let selectedRoom = ref({});
+
+    const goToLocation = (room) => {
+      console.log(room);
+      map.flyTo({
+        center: room,
+        zoom: 19,
+        speed: 1,
+      });
+      var marker = new Mazemap.MazeMarker({
+        zLevel: room.zLevel, // The floor zLevel coordinate is given here
+      })
+        .setLngLat(room) // Set the LngLat coordinates here
+        .addTo(map);
+    };
 
     onMounted(() => {
       //--------- MAZEMAP ----------//
@@ -15,9 +30,9 @@ export default {
         // container id specified in the HTML
         container: mapRef.value,
         campuses: "default",
-        center: { lng: 10.404674604795176, lat: 63.41558686615829 },
+        center: { lat: props.showRoom.lat, lng: props.showRoom.lng },
         zoom: 19,
-        zLevel: 4,
+        zLevel: props.showRoom ? props.showRoom.zLevel : 1,
         scrollZoom: true,
         doubleClickZoom: false,
         touchZoomRotate: false,
@@ -38,6 +53,18 @@ export default {
       // define a global
       var mazeMarker;
 
+      if (props.viewOnly) {
+        map.flyTo({
+          center: props.showRoom,
+          zoom: 19,
+          speed: 1,
+        });
+        var marker = new Mazemap.MazeMarker({
+          zLevel: props.showRoom ? props.showRoom.zLevel : 1, // The floor zLevel coordinate is given here
+        })
+          .setLngLat(props.showRoom) // Set the LngLat coordinates here
+          .addTo(map);
+      }
       function onMapClick(e) {
         clearPoiMarker(selectedRoom.value);
         var lngLat = e.lngLat;
@@ -59,7 +86,6 @@ export default {
             return false;
           });
       }
-
       function clearPoiMarker(poi) {
         if (mazeMarker) {
           mazeMarker.remove();
