@@ -58,16 +58,16 @@ build_back:
   only:
     - main
 
-#build_front:
-#  image: node:14.15.4
-#  stage: build
-#  needs: ["test_front"]
-#  script:
-#    - cd src/frontend
-#    - npm install --progress=false
-#    - npm run build
-#  artifacts:
-#    paths:
-#      - dist/
-#  only:
-#    - main
+build_front:
+  image: node:14.15.4
+  stage: build
+  needs: ["test_front"]
+  script:
+    - cd src/frontend
+    - npm install --progress=false
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - main
