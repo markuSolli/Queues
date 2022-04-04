@@ -103,6 +103,8 @@ public class CourseService {
 
         course.setTaskGroups(courseDTO.getTaskGroups());
 
+        course.setRooms(courseDTO.getRooms());
+
         return courseRepository.save(course);
     }
 
@@ -261,7 +263,6 @@ public class CourseService {
     private List<TaskGroupProgress> calculateProgress(Course course, Iterable<Approved> approvals) {
         List<TaskGroupProgress> taskGroupProgress = new ArrayList<>();
         for(TaskGroup taskGroup : course.getTaskGroups()) {
-            System.out.println(taskGroup);
             int completed = 0;
             TaskGroupProgress taskGroupProgressItem = new TaskGroupProgress(taskGroup.getId(),taskGroup.getNumber(), taskGroup.getRequired());
             List<TaskProgress> taskProgress = new ArrayList<>();

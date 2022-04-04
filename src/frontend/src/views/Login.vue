@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="login" v-on:keyup.enter="logIn">
     <div id="login-box">
       <h1>Login</h1>
       <div id="input-row">
@@ -33,8 +33,7 @@ import { ref } from "@vue/reactivity";
 import Button from "../components/Button.vue";
 import { useStore } from "vuex";
 import router from "../router";
-import { login } from "@/service/AuthenticationService";
-import http from "../service/http-common";
+import { login, whoAmI } from "@/service/AuthenticationService";
 
 export default {
   components: { Button },
@@ -46,25 +45,17 @@ export default {
 
     const logIn = async () => {
       try {
-        const response = await login({
+        let response = await login({
           email: username.value,
           password: password.value,
         });
 
         store.commit("setAccessToken", response.data.accessToken);
+        store.commit("updateLoggedin", true);
 
         // SET LOGGED IN USER IN STATE
-        http
-          .get("/me")
-          .then((response) => {
-            store.commit("updateLoggedin", true);
-            store.commit("updateEmail", response.data.email);
-            store.commit("updateFirstname", response.data.firstName);
-            store.commit("updateLastname", response.data.lastName);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        response = await whoAmI();
+        store.commit("setUser", response.data);
         // ----------------------------
 
         router.push("/");
