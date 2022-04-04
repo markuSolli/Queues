@@ -269,7 +269,9 @@ public class CourseService {
             courseProgress.setActive(course.isActive());
             courseProgress.setArchived(course.isArchived());
             courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
-            progress.add(courseProgress);
+            if(!courseProgress.isArchived()) {
+                progress.add(courseProgress);
+            }
         }
         return progress;
     }

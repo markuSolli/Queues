@@ -29,7 +29,7 @@ export default {
     let courses = ref();
 
     onMounted(() => {
-      http.get("/courses").then((response) => {
+      http.get("/courses?archived=false").then((response) => {
         courses.value = response.data;
       });
     });
