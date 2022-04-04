@@ -3,7 +3,6 @@ package no.ntnu.fullstack.queues.authentication;
 import io.jsonwebtoken.JwtException;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtResponse;
 import no.ntnu.fullstack.queues.authentication.jwt.JwtUtil;
-import no.ntnu.fullstack.queues.authentication.jwt.JwtValidationFilter;
 import no.ntnu.fullstack.queues.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,13 +179,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Iterable<UserInfo>> getAllUsers(Authentication authentication){
-        User user = (User) authentication.getPrincipal();
+    public ResponseEntity<Iterable<UserInfo>> getAllUsers(){
         logger.info("Fetching all users...");
-        try {
-            return new ResponseEntity<>(userService.getAllUsers(user), HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 }

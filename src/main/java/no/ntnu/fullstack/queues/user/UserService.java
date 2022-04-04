@@ -174,13 +174,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Get all users in the database, as long as the user calling is an Admin
-     * @param user the user calling this method
+     * Get all users in the database
      * @return an iterable of all users
-     * @throws IllegalAccessError
      */
-    public Iterable<UserInfo> getAllUsers(User user) throws IllegalAccessError{
-        if(user.getRole() != Role.ADMIN) throw new IllegalAccessError();
+    public Iterable<UserInfo> getAllUsers(){
         Iterable<User> users = userRepository.findAll();
         List<UserInfo> userInfos = new ArrayList<>();
         for(User u : users){
@@ -190,13 +187,17 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Register a new, unactivated user
+     * Register a new, unactivated user. Works as long as the role of the new user
+     * is less than or equal to the caller.
      * @param user the new user
+     * @param caller the user calling this method
      * @return the created user
      * @throws UserAlreadyExistsException
+     * @throws IllegalAccessError
      */
     public User register(User user, User caller) throws UserAlreadyExistsException{
         if(userExits(user.getEmail())) throw new UserAlreadyExistsException("User already exists");
+        if(caller.getRole().ordinal() <= user.getRole().ordinal()) throw new IllegalAccessError();
         User newUser = new User(user.getEmail(), null, user.getFirstName(), user.getLastName());
         newUser.setRole(user.getRole());
         newUser.setActivation(generateActivationCode());
