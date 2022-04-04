@@ -1,5 +1,5 @@
 <template>
-  <div id="card" @click="clickCardFunc">
+  <div id="card" :class="archived ? 'archived' : null" @click="clickCardFunc">
     <div class="queue-element-1">
       <h3>{{ code }} {{ title }}</h3>
     </div>
@@ -266,6 +266,10 @@ export default {
   justify-self: end;
   align-self: end;
   display: flex;
+}
+
+.archived {
+  opacity: 0.6;
 }
 
 @media only screen and (max-width: 600px) {
