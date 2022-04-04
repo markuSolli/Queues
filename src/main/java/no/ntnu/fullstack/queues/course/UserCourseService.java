@@ -1,8 +1,11 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.user.Role;
 import no.ntnu.fullstack.queues.user.User;
 import no.ntnu.fullstack.queues.user.UserService;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserCourseService {
@@ -32,10 +35,11 @@ public class UserCourseService {
      * Check if the user has a role in a course
      * @param user the user
      * @param course the course
-     * @return true or false
+     * @return the role the user has in a course, or null
      */
-    public boolean existsInCourse(User user, Course course){
-        return userCourseRepository.existsByUserAndCourse(user, course);
+    public CourseRole roleInCourse(User user, Course course){
+        Optional<UserCourse> optional = userCourseRepository.findByUserAndCourse(user, course);
+        return optional.map(UserCourse::getRole).orElse(null);
     }
 
 }
