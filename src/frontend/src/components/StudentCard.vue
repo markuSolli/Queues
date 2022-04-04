@@ -16,6 +16,11 @@
         <div class="element-7" v-if="!guide && isStudAss">
           <div v-if="help">
             <Button :title="'Done'" @click="doneWithoutTaskApproved" />
+            <Button
+                v-if="!beingApproved"
+                :title="'Assist'"
+                @click="superviseStudent"
+              />
           </div>
           <div v-else>
             <div v-if="!beingApproved">
