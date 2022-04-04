@@ -137,8 +137,8 @@ export default {
       if (route.params.id) {
         console.log("Params!" + route.params.id);
         http.get("/courses/" + route.params.id).then((response) => {
-          rooms.value = course.rooms;
           const course = response.data;
+          rooms.value = course.rooms;
           title.value = course.title;
           code.value = course.code;
           season.value = course.season;
