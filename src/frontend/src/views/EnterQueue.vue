@@ -36,23 +36,13 @@
     </div>
     <div id="spacer">
       <h2>Select rooms</h2>
-      <Map
-        ref="mapRef"
-        @poi="getLocation"
-        :viewOnly="true"
-        :showRoom="{
-          lat: 63.41629177278119,
-          lng: 10.408879926196926,
-          zLevel: 4,
-        }"
-      />
       <div v-for="(room, index) in rooms" :key="room.title" id="list-rooms">
         <div id="list-rooms-left">{{ room.buildingName }} {{ room.title }}</div>
         <div id="list-rooms-right">
           <Button :title="'Select'" @click="selectRoom(index)" />
         </div>
       </div>
-      <div>Selected room: {{ selectedRoom }}</div>
+      <div>Selected room: {{ selectBuildingName }} {{ selectRoomName }}</div>
     </div>
     <div id="spacer">
       <h2>Select type:</h2>
@@ -96,7 +86,8 @@ export default {
     let taskGroupProgress = ref([]);
     let rooms = ref([]);
     let selectedRoom = ref();
-    let mapRef = ref();
+    let selectBuildingName = ref();
+    let selectRoomName = ref();
 
     onMounted(() => {
       http.get("/courses/progress/" + route.params.id).then((response) => {
@@ -107,19 +98,16 @@ export default {
 
       http.get("/courses/" + route.params.id).then((response) => {
         rooms.value = response.data.rooms;
-        selectedRoom.value = rooms.value[0];
-        console.log(response.data);
+        selectedRoom.value = response.data.rooms[0];
+        selectBuildingName.value = response.data.rooms[0].buildingName;
+        selectRoomName.value = response.data.rooms[0].title;
       });
     });
 
     const selectRoom = (index) => {
       selectedRoom.value = rooms.value[index];
-
-      mapRef.value.goToLocation({
-        lat: 63.41629177278119,
-        lng: 10.408879926196926,
-        zLevel: 4,
-      });
+      selectBuildingName.value = selectedRoom.value.buildingName;
+      selectRoomName.value = selectedRoom.value.title;
     };
 
     const taskClick = (taskNumber, taskId) => {
@@ -137,9 +125,12 @@ export default {
       approval.value = true;
     };
     const enterQueue = () => {
+      console.log(selectedRoom.value);
+
       http
         .post("/queue/" + route.params.id + "/" + selectedTaskId.value, {
           help: help.value,
+          room: selectedRoom.value,
         })
         .then((response) => {
           console.log(response.data);
@@ -165,9 +156,10 @@ export default {
       course,
       taskGroupProgress,
       selectedRoom,
-      mapRef,
       rooms,
       selectRoom,
+      selectBuildingName,
+      selectRoomName,
     };
   },
 };
