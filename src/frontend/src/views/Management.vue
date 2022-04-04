@@ -9,8 +9,8 @@
         <Button :title="'Manage rooms'" :route="'manageRooms'" />
       </div>
     </div>
-    <div v-for="course in courses" :key="course.id" id="course-list">
-      <CourseCard :course="course" />
+    <div v-for="course in courses" :key="course.id + course.archived + course.active" id="course-list">
+      <CourseCard @refresh="refresh" :course="course" />
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@ import CourseCard from "../components/CourseCard.vue";
 import UserCard from "../components/UserCard.vue";
 import { computed, onMounted } from "@vue/runtime-core";
 import http from "@/service/http-common";
+import router from "../router";
 
 export default {
   components: { Button, CourseCard, UserCard },
@@ -34,8 +35,16 @@ export default {
       });
     });
 
+    const refresh = () => {
+      console.log("refresh");
+      http.get("/courses").then((response) => {
+        courses.value = response.data;
+      });
+    }
+
     return {
       courses,
+      refresh
     };
   },
 };
