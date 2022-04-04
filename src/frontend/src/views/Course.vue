@@ -56,10 +56,14 @@
     </div>
 
     <div id="add-rooms">
+      <h2>Select rooms</h2>
       <Map @poi="getLocation" />
       <Button :title="'Add currently selected room'" @click="addRoomToList" />
-      <div v-for="room in rooms" :key="room.title" id="list-rooms">
-        {{ room.buildingName }} {{ room.title }}
+      <div v-for="(room, index) in rooms" :key="room.title" id="list-rooms">
+        <div id="list-rooms-left">{{ room.buildingName }} {{ room.title }}</div>
+        <div id="list-rooms-right">
+          <Button :title="'Remove'" @click="removeRoom(index)" />
+        </div>
       </div>
     </div>
 
@@ -121,6 +125,10 @@ export default {
 
     const addRoomToList = () => {
       rooms.value.push(selectedRoom.value);
+    };
+
+    const removeRoom = (index) => {
+      rooms.value.splice(index, 1);
     };
 
     // EDIT
@@ -279,6 +287,7 @@ export default {
       rooms,
       getLocation,
       addRoomToList,
+      removeRoom,
     };
   },
 };
@@ -287,6 +296,24 @@ export default {
 <style>
 #list-rooms {
   display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5px;
+}
+
+#list-rooms-left {
+  grid-column: 1/2;
+  justify-self: start;
+  align-self: center;
+}
+
+#list-rooms-right {
+  grid-column: 2/3;
+  justify-self: end;
+  align-self: center;
+}
+
+#add-rooms {
+  margin-top: 100px;
 }
 
 #season-dropdown {
