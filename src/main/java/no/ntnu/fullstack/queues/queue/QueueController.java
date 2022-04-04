@@ -45,6 +45,8 @@ public class QueueController {
         } catch (TaskNotFoundException | CourseNotFoundException e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 

@@ -3,7 +3,8 @@
     <div id="studentcard-container" v-bind:class="{ guide: guide }">
       <div class="element-1">{{ firstname }} {{ lastname }}</div>
       <div class="element-2">{{ type }}</div>
-      <div class="element-3">{{ time }}</div>
+      <div  v-if="timeTitle == 'Time'" class="element-3">{{ timeTitle }}</div>
+      <div  v-else class="element-3">{{ time }}</div>
       <div class="element-4">{{ location }}</div>
       <div class="element-5">
         {{ studass }}
@@ -61,13 +62,16 @@ export default {
     "task",
     "location",
     "help",
+    "timeNow",
+    "timeTitle"
   ],
   setup(props) {
     const id = ref(props.id);
     const email = ref(props.email);
     const firstname = ref(props.firstname);
     const lastname = ref(props.lastname);
-    const time = ref(props.time);
+    const time = ref(msToTime(props.timeNow - props.time));
+    const timeTitle = ref(props.time);
     const type = ref(props.type);
     const task = ref(props.task);
     const location = ref(props.location);
@@ -82,6 +86,19 @@ export default {
         return false;
       }
     });
+
+    function msToTime(duration) {
+  var milliseconds = Math.floor((duration % 1000) / 100),
+    seconds = Math.floor((duration / 1000) % 60),
+    minutes = Math.floor((duration / (1000 * 60)) % 60),
+    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  return hours + ":" + minutes + ":" + seconds;
+}
 
     const superviseStudent = () => {
       http.put("/queue/" + id.value + "/assist").then((response) => {
@@ -102,6 +119,8 @@ export default {
       });
     };
 
+
+
     return {
       email,
       firstname,
@@ -118,6 +137,7 @@ export default {
       location,
       help,
       doneWithoutTaskApproved,
+      timeTitle
     };
   },
 };

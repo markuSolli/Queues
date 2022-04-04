@@ -14,7 +14,7 @@
       <div id="queue-container-header">
         <h1><i class="fa-solid fa-toggle-off"></i> Inactive</h1>
       </div>
-      <div v-for="course in inActiveCourses" :key="course.id">
+      <div v-for="course in inActiveCourses" :key="course.id + course.active">
         <CourseCard :course="course" :cardInQueue="true" />
       </div>
     </div>

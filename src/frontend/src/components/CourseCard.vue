@@ -67,7 +67,7 @@ import http from "@/service/http-common";
 export default {
   props: ["course", "cardInQueue", "clickCardFunc"],
   components: { Button },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
     let course = Object.assign({}, props.course);
 
@@ -104,7 +104,10 @@ export default {
 
     const deleteCourse = () => {
       clickedButton = true;
-      http.delete("/courses/" + id).then((response) => {});
+      http.delete("/courses/" + id).then((response) => {
+        emit("refresh");
+      });
+      
     };
 
     const editCourse = () => {
@@ -123,7 +126,9 @@ export default {
 
       http
         .patch("/courses/" + id + "/archived", !archived.value)
-        .then((response) => {});
+        .then((response) => {
+          emit("refresh");
+        });
     };
 
     const clickCardFunc = () => {
@@ -162,7 +167,9 @@ export default {
 
       http
         .patch("/courses/" + id + "/active", !active.value)
-        .then((response) => {});
+        .then((response) => {
+          emit("refresh");
+        });
     };
 
     return {

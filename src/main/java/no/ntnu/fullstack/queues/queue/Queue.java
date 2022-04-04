@@ -66,8 +66,8 @@ public class Queue {
         this.user = user;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public long getTime() {
+        return  time.getTime();
     }
 
     public void setTime(Timestamp time) {

@@ -1,6 +1,7 @@
 package no.ntnu.fullstack.queues.queue;
 
 import no.ntnu.fullstack.queues.authentication.CustomAuthenticationException;
+import no.ntnu.fullstack.queues.course.Course;
 import no.ntnu.fullstack.queues.course.CourseNotFoundException;
 import no.ntnu.fullstack.queues.course.CourseRole;
 import no.ntnu.fullstack.queues.course.CourseService;
@@ -53,11 +54,13 @@ public class QueueService {
      * @param user the user sending the request
      * @return the added queue
      */
-    public Queue addQueue(Queue queue, User user, Long courseId, Long taskId) throws TaskNotFoundException, CourseNotFoundException {
+    public Queue addQueue(Queue queue, User user, Long courseId, Long taskId) throws TaskNotFoundException, CourseNotFoundException, IllegalArgumentException {
+        Course course = courseService.getCourse(courseId);
+        if(queueRepository.existsByUserAndTask_TaskGroup_Course(user, course)) throw new IllegalArgumentException();
         queue.setUser(user);
         Timestamp now = new Timestamp(System.currentTimeMillis());
         queue.setTime(now);
-        queue.setCourse(courseService.getCourse(courseId));
+        queue.setCourse(course);
         queue.setTask(taskService.getTask(taskId));
         return queueRepository.save(queue);
     }
