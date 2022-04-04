@@ -11,6 +11,6 @@ describe('Button.vue test', () => {
           }
     })
 
-    expect(wrapper.find(".title").text()).toBe("buttonTitle")
+    expect(wrapper.find('#button').text()).toBe("buttonTitle")
   })
 })

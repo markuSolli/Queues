@@ -1,20 +1,17 @@
 import { shallowMount } from '@vue/test-utils'
-import Button from '@/components/Button.vue'
+import StudentCard from '@/components/StudentCard.vue'
 
 
-describe('Button.vue test', () => {
-  it('renders message when component is created', () => {
-    // render the component
-    const wrapper = shallowMount(Button, {
-      props: {
-        title: 'Vue Project'
-      }
-    })
-
-    // check the name of the component
-    expect(wrapper.vm.$options.name).toMatch('Header')
-
-    // check that the title is rendered
-    expect(wrapper.text()).toMatch('Vue Project')
-  })
+describe('StudentCard.vue test', () => {
+    it('renders title card', () => {
+        // render the component
+        const wrapper = shallowMount(StudentCard, {
+            propsData: {
+                firstname: "Roger",
+                lastname: "Rogersen",
+              }
+        })
+    
+        expect(wrapper.find('.element-1').text()).toBe("Roger Rogersen")
+      })
 })
