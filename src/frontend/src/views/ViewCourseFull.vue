@@ -132,7 +132,7 @@ export default {
     };
 
     const coursePassed = (taskGroups, student) => {
-      const totalRequired = taskGroups.lenth;
+      const totalRequired = taskGroups.length;
       let totalCompleted = 0;
       for (const taskGroup of taskGroups) {
         let completed = 0;
@@ -141,10 +141,14 @@ export default {
             completed++;
           }
         }
+        console.log(completed);
+        console.log(taskGroup.required);
         if (completed >= taskGroup.required) {
           totalCompleted++;
         }
       }
+      console.log(totalCompleted);
+      console.log(totalRequired);
       if (totalCompleted >= totalRequired) {
         return true;
       }

@@ -135,7 +135,6 @@ export default {
     onMounted(() => {
       // id is sent, we know this is for edit
       if (route.params.id) {
-        console.log("Params!" + route.params.id);
         http.get("/courses/" + route.params.id).then((response) => {
           const course = response.data;
           rooms.value = course.rooms;
@@ -163,10 +162,7 @@ export default {
             });
           }
         });
-        console.log("yo");
       } else {
-        console.log("No params");
-
         // add current user to top of teachers list
         http
           .get("/me")
@@ -245,7 +241,6 @@ export default {
             }
           });
       } else {
-        console.log(rooms.value);
         http
           .post("/courses", {
             code: code.value,
