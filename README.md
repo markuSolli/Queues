@@ -12,7 +12,7 @@ The backend runs on Spring Boot with Maven, we prefer opening the project in Int
 The frontend is built on vue, so open src/frontend and run 'npm run serve' to host the website on port 8080.
 
 ## Usage
-The server has a role policy that requires an Admin to start with, by visiting localhost:3000/example and admin with username 'roger@roger.no' and password 'roger' gets created.  
+The server has a role policy that requires an Admin to start with, by visiting localhost:3000/example an admin with username 'roger@roger.no' and password 'roger' gets created.  
 The Admin has full access to the website, and is able to create courses and new users. Newly created users gets an e-mail with an activation link to set their password.  
 Teachers can manage courses that they are assigned to by the admin. New students, rooms and assignments can be added to a course.  
 Student assistants can approve assignments for other students by going into a courses queue page, and picking a student in line.  
