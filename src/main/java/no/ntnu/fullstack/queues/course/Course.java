@@ -160,6 +160,21 @@ public class Course {
         }
     }
 
+    /**
+     * Find which course role a user has in this course. If the user is not in the course, the method returns null
+     *
+     * @param user user to look for
+     * @return course role of user, null if the user is not in the course
+     */
+    public CourseRole findCourseRole(User user) {
+        for(UserCourse userCourse : users) {
+            if(userCourse.getUser().equals(user)) {
+                return userCourse.getRole();
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
