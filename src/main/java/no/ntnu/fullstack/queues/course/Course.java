@@ -183,7 +183,7 @@ public class Course {
      * @return true of user is in the course, false if not
      */
     public boolean isUserInCourse(User user) {
-        return findCourseRole(user) == null;
+        return findCourseRole(user) != null;
     }
 
     @Override

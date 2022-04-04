@@ -27,7 +27,6 @@ public class QueueController {
     @GetMapping("{course_id}")
     public ResponseEntity<Iterable<Queue>> getQueue(@PathVariable(name = "course_id") Long courseId){
         try{
-            logger.info("Retrieving queue for course " + courseId + "...");
             return new ResponseEntity<>(queueService.getQueueFromCourseId(courseId), HttpStatus.OK);
         }catch(Exception e){
             logger.error(e.getMessage());
