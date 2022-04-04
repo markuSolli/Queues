@@ -35,11 +35,24 @@
       </div>
     </div>
     <div id="spacer">
-      <h2>Select room:</h2>
-      <div>
-        Selected room: {{ selectedRoom.buildingName }}
-        {{ selectedRoom.roomName }}
+      <h2>Select rooms</h2>
+      <Map
+        ref="mapRef"
+        @poi="getLocation"
+        :viewOnly="true"
+        :showRoom="{
+          lat: 63.41629177278119,
+          lng: 10.408879926196926,
+          zLevel: 4,
+        }"
+      />
+      <div v-for="(room, index) in rooms" :key="room.title" id="list-rooms">
+        <div id="list-rooms-left">{{ room.buildingName }} {{ room.title }}</div>
+        <div id="list-rooms-right">
+          <Button :title="'Select'" @click="selectRoom(index)" />
+        </div>
       </div>
+      <div>Selected room: {{ selectedRoom }}</div>
     </div>
     <div id="spacer">
       <h2>Select type:</h2>
@@ -69,9 +82,10 @@ import { useRoute } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
 import http from "@/service/http-common";
 import router from "../router";
+import Map from "../components/Map.vue";
 
 export default {
-  components: { Button },
+  components: { Button, Map },
   setup() {
     const route = useRoute();
     let selectedTask = ref(0);
@@ -80,6 +94,9 @@ export default {
     let approval = ref(true);
     let course = ref({});
     let taskGroupProgress = ref([]);
+    let rooms = ref([]);
+    let selectedRoom = ref();
+    let mapRef = ref();
 
     onMounted(() => {
       http.get("/courses/progress/" + route.params.id).then((response) => {
@@ -87,7 +104,23 @@ export default {
         course.value = response.data;
         taskGroupProgress.value = response.data.taskGroupProgress;
       });
+
+      http.get("/courses/" + route.params.id).then((response) => {
+        rooms.value = response.data.rooms;
+        selectedRoom.value = rooms.value[0];
+        console.log(response.data);
+      });
     });
+
+    const selectRoom = (index) => {
+      selectedRoom.value = rooms.value[index];
+
+      mapRef.value.goToLocation({
+        lat: 63.41629177278119,
+        lng: 10.408879926196926,
+        zLevel: 4,
+      });
+    };
 
     const taskClick = (taskNumber, taskId) => {
       selectedTask.value = taskNumber;
@@ -131,14 +164,38 @@ export default {
       approval,
       course,
       taskGroupProgress,
-      mapRef,
       selectedRoom,
+      mapRef,
+      rooms,
+      selectRoom,
     };
   },
 };
 </script>
 
 <style>
+#list-rooms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5px;
+}
+
+#list-rooms-left {
+  grid-column: 1/2;
+  justify-self: start;
+  align-self: center;
+}
+
+#list-rooms-right {
+  grid-column: 2/3;
+  justify-self: end;
+  align-self: center;
+}
+
+#add-rooms {
+  margin-top: 100px;
+}
+
 #group-header {
   grid-row: 1/2;
   font-size: 25px;

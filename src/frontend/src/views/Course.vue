@@ -57,7 +57,7 @@
 
     <div id="add-rooms">
       <h2>Select rooms</h2>
-      <Map @poi="getLocation" />
+      <Map @poi="getLocation" :viewOnly="false" />
       <Button :title="'Add currently selected room'" @click="addRoomToList" />
       <div v-for="(room, index) in rooms" :key="room.title" id="list-rooms">
         <div id="list-rooms-left">{{ room.buildingName }} {{ room.title }}</div>
