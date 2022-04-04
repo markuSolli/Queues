@@ -1,0 +1,9 @@
+no.ntnu.fullstack.queues
+no.ntnu.fullstack.queues.authentication
+no.ntnu.fullstack.queues.authentication.jwt
+no.ntnu.fullstack.queues.config
+no.ntnu.fullstack.queues.course
+no.ntnu.fullstack.queues.location
+no.ntnu.fullstack.queues.queue
+no.ntnu.fullstack.queues.task
+no.ntnu.fullstack.queues.user
