@@ -11,10 +11,12 @@ import { useStore } from "vuex";
 import { refreshToken, whoAmI } from "@/service/AuthenticationService";
 import { onBeforeMount } from "vue";
 import router from "./router";
+import { useRoute } from "vue-router";
 
 export default {
   components: { Navbar },
   setup() {
+    const route = useRoute();
     let isLoading = ref(true);
 
     onBeforeMount(() => {
@@ -31,8 +33,10 @@ export default {
           response = await whoAmI();
           store.commit("setUser", response.data);
         } catch (err) {
-          router.push("/login");
           console.log(err);
+          if (!route.path.includes("activateUser")) {
+            router.push("/login");
+          }
         } finally {
           isLoading.value = false;
         }
