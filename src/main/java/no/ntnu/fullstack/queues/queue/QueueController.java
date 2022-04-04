@@ -42,7 +42,7 @@ public class QueueController {
         try {
             Queue addedQueue = queueService.addQueue(queue, user, courseId, taskId);
             return new ResponseEntity<>(addedQueue, HttpStatus.CREATED);
-        } catch (TaskNotFoundException | CourseNotFoundException e) {
+        } catch (TaskNotFoundException | CourseNotFoundException | IllegalArgumentException e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
