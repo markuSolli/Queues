@@ -136,6 +136,7 @@ export default {
       // id is sent, we know this is for edit
       if (route.params.id) {
         http.get("/courses/" + route.params.id).then((response) => {
+          console.log(response.data);
           const course = response.data;
           rooms.value = course.rooms;
           title.value = course.title;
@@ -266,6 +267,7 @@ export default {
     const getSeasonRightFormat = (season) => {
       if (season === "Spring") return "SPRING";
       if (season === "Autumn") return "AUTUMN";
+      return season;
     };
 
     return {
