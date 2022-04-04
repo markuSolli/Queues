@@ -30,8 +30,8 @@ export default {
         // container id specified in the HTML
         container: mapRef.value,
         campuses: "default",
-        center: { lat: 63.417316170706776, lng: 10.404371888938078 },
-        zoom: 15,
+        center: { lat: props.showRoom.lat, lng: props.showRoom.lng },
+        zoom: 19,
         zLevel: props.showRoom ? props.showRoom.zLevel : 1,
         scrollZoom: true,
         doubleClickZoom: false,
@@ -64,30 +64,28 @@ export default {
         })
           .setLngLat(props.showRoom) // Set the LngLat coordinates here
           .addTo(map);
-      } else {
-        function onMapClick(e) {
-          clearPoiMarker(selectedRoom.value);
-          var lngLat = e.lngLat;
-          var zLevel = map.zLevel;
-
-          // Fetching via Data API
-          // NB: Adding optional campusId parameter, makes lookup much faster, but can be omitted
-          Mazemap.Data.getPoiAt(lngLat, zLevel)
-            .then((poi) => {
-              // Place a marker on the map, or highlight the room
-              placePoiMarker(poi);
-              emit("poi", poi);
-              selectedRoom.value = {
-                buildingName: poi.properties.buildingName,
-                roomName: poi.properties.title,
-              };
-            })
-            .catch(function () {
-              return false;
-            });
-        }
       }
+      function onMapClick(e) {
+        clearPoiMarker(selectedRoom.value);
+        var lngLat = e.lngLat;
+        var zLevel = map.zLevel;
 
+        // Fetching via Data API
+        // NB: Adding optional campusId parameter, makes lookup much faster, but can be omitted
+        Mazemap.Data.getPoiAt(lngLat, zLevel)
+          .then((poi) => {
+            // Place a marker on the map, or highlight the room
+            placePoiMarker(poi);
+            emit("poi", poi);
+            selectedRoom.value = {
+              buildingName: poi.properties.buildingName,
+              roomName: poi.properties.title,
+            };
+          })
+          .catch(function () {
+            return false;
+          });
+      }
       function clearPoiMarker(poi) {
         if (mazeMarker) {
           mazeMarker.remove();

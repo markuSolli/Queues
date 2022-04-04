@@ -103,28 +103,24 @@ export default {
         console.log(response.data.taskGroupProgress);
         course.value = response.data;
         taskGroupProgress.value = response.data.taskGroupProgress;
-        rooms.value = [
-          {
-            lat: 63.41629177278119,
-            lng: 10.408879926196926,
-            zLevel: 4,
-            buildingName: "bob",
-            title: "room 1",
-          },
-        ];
+      });
+
+      http.get("/courses/" + route.params.id).then((response) => {
+        rooms.value = response.data.rooms;
+        selectedRoom.value = rooms.value[0];
+        console.log(response.data);
       });
     });
 
     const selectRoom = (index) => {
-      selectRoom.value = rooms[index];
+      selectedRoom.value = rooms.value[index];
+
       mapRef.value.goToLocation({
         lat: 63.41629177278119,
         lng: 10.408879926196926,
         zLevel: 4,
       });
     };
-
-    const flyToLocation = () => {};
 
     const taskClick = (taskNumber, taskId) => {
       selectedTask.value = taskNumber;
