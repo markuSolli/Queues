@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-on:keyup.enter="enterQueue">
     <h1>Entering queue...</h1>
     <div id="spacer">
       <h2>Select task:</h2>

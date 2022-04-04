@@ -1,6 +1,6 @@
 <template>
   <div id="activate-user-grid">
-    <div id="activate-user-box">
+    <div id="activate-user-box" v-on:keyup.enter="activateUser">
       <div class="row"><h1>Activate user</h1></div>
       <div class="row">
         <h3>{{ user.email }}</h3>
