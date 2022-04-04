@@ -74,7 +74,7 @@ public class QueueService {
         if(queue.getCourse().findCourseRole(user) == null && user.getRole() != Role.ADMIN) {
             throw new CustomAuthenticationException("Queues cannot be deleted from users that are not enrolled in the course");
         }
-        if(queue.getCourse().findCourseRole(user).equals(CourseRole.STUDENT) && !queue.getUser().equals(user)) {
+        if(CourseRole.STUDENT.equals(queue.getCourse().findCourseRole(user)) && !queue.getUser().equals(user)) {
             throw new CustomAuthenticationException("Students are not allowed to queues courses that are not their own");
         }
 

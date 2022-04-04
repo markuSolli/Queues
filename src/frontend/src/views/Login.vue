@@ -7,7 +7,7 @@
           class="input-field"
           type="text"
           v-model="username"
-          placeholder="Username"
+          placeholder="Email"
         />
       </div>
 
