@@ -14,8 +14,7 @@ import java.util.Date;
 @Configuration
 public class JwtConfig {
 
-    // Very secret key
-    private static final String SECRET_KEY = "Thiskeyisverysecretandwillstayisthissecretkey";
+    private static final String SECRET_KEY = "gU5v9I1harU9wUSgx9PvtY/xSCrSdCUaMGReamgRBjk=";
 
     // Mainly used for code readability
     private static final long MINUTES = 60 * 1000;
