@@ -5,7 +5,7 @@
 <script>
 import { onMounted, ref } from "@vue/runtime-core";
 export default {
-  setup() {
+  setup(props, { emit }) {
     let mapRef = ref();
     let selectedRoom = ref({});
 
@@ -49,7 +49,7 @@ export default {
           .then((poi) => {
             // Place a marker on the map, or highlight the room
             placePoiMarker(poi);
-            console.log(poi.properties.buildingName);
+            emit("poi", poi);
             selectedRoom.value = {
               buildingName: poi.properties.buildingName,
               roomName: poi.properties.title,

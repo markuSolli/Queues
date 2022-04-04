@@ -56,7 +56,11 @@
     </div>
 
     <div id="add-rooms">
-      <Map />
+      <Map @poi="getLocation" />
+      <Button :title="'Add currently selected room'" @click="addRoomToList" />
+      <div v-for="room in rooms" :key="room.title" id="list-rooms">
+        {{ room.buildingName }} {{ room.title }}
+      </div>
     </div>
 
     <div class="row">
@@ -95,6 +99,29 @@ export default {
     let tasks = ref({
       taskgroups: [],
     });
+    let rooms = ref([]);
+    let selectedRoom = ref();
+
+    const getLocation = (poi) => {
+      selectedRoom.value = {
+        buildingId: poi.properties.buildingId,
+        buildingName: poi.properties.buildingName,
+        campusId: poi.properties.campusId,
+        floorId: poi.properties.floorId,
+        floorName: poi.properties.floorName,
+        id: poi.properties.id,
+        identifier: poi.properties.identifier,
+        poiId: poi.properties.poiId,
+        title: poi.properties.title,
+        getzLevel: poi.properties.zLevel,
+        lat: poi.geometry.coordinates[0][0][0],
+        lon: poi.geometry.coordinates[0][0][1],
+      };
+    };
+
+    const addRoomToList = () => {
+      rooms.value.push(selectedRoom.value);
+    };
 
     // EDIT
     onMounted(() => {
@@ -102,6 +129,7 @@ export default {
       if (route.params.id) {
         console.log("Params!" + route.params.id);
         http.get("/courses/" + route.params.id).then((response) => {
+          rooms.value = course.rooms;
           const course = response.data;
           title.value = course.title;
           code.value = course.code;
@@ -166,6 +194,7 @@ export default {
                 students: listOfStudents.value,
                 assistants: listOfStudAss.value,
                 teachers: listOfTeachers.value,
+                rooms: rooms.value,
               })
               .then((response) => {
                 if (response.status == 201) {
@@ -197,6 +226,7 @@ export default {
             students: listOfStudents.value,
             assistants: listOfStudAss.value,
             teachers: listOfTeachers.value,
+            rooms: rooms.value,
           })
           .then((response) => {
             console.log(response.status);
@@ -207,6 +237,7 @@ export default {
             }
           });
       } else {
+        console.log(rooms.value);
         http
           .post("/courses", {
             code: code.value,
@@ -217,6 +248,7 @@ export default {
             students: listOfStudents.value,
             assistants: listOfStudAss.value,
             teachers: listOfTeachers.value,
+            rooms: rooms.value,
           })
           .then((response) => {
             if (response.status == 201) {
@@ -244,12 +276,19 @@ export default {
       season,
       year,
       createCourse,
+      rooms,
+      getLocation,
+      addRoomToList,
     };
   },
 };
 </script>
 
 <style>
+#list-rooms {
+  display: grid;
+}
+
 #season-dropdown {
   padding: 5px;
   border-radius: 20px;
