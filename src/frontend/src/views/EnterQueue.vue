@@ -60,8 +60,11 @@
       </div>
     </div>
     <div id="button-pos">
-      <Button :title="'Enter queue'" @click="enterQueue" />
+      <div id="button-enter-queue"><Button :title="'Enter queue'" @click="enterQueue" /></div>
+      
+      <div id="error-message">{{ errorMessage }}</div>
     </div>
+    
   </div>
 </template>
 
@@ -88,6 +91,7 @@ export default {
     let selectedRoom = ref();
     let selectBuildingName = ref();
     let selectRoomName = ref();
+    let errorMessage = ref();
 
     onMounted(() => {
       http.get("/courses/progress/" + route.params.id).then((response) => {
@@ -103,6 +107,17 @@ export default {
         selectRoomName.value = response.data.rooms[0].title;
       });
     });
+
+    const checkIfTaskHasBeenApproved = () => {
+      for(const group in taskGroupProgress.value){
+        for(const task in taskGroupProgress.value[group].taskProgress){
+          const taskObject = taskGroupProgress.value[group].taskProgress[task];
+          if(taskObject.number == selectedTask.value){
+            if(taskObject.approved == true) return true;
+          }
+        }
+      }
+    }
 
     const selectRoom = (index) => {
       selectedRoom.value = rooms.value[index];
@@ -127,7 +142,8 @@ export default {
     const enterQueue = () => {
       console.log(selectedRoom.value);
 
-      http
+      if(!checkIfTaskHasBeenApproved()) {
+          http
         .post("/queue/" + route.params.id + "/" + selectedTaskId.value, {
           help: help.value,
           room: selectedRoom.value,
@@ -143,6 +159,11 @@ export default {
             },
           });
         });
+      } else {
+        errorMessage.value = "Task " + selectedTask.value + " has already been approved, pick another task!"
+      }
+
+      
     };
 
     return {
@@ -160,12 +181,25 @@ export default {
       selectRoom,
       selectBuildingName,
       selectRoomName,
+      errorMessage,
     };
   },
 };
 </script>
 
 <style>
+#button-enter-queue{
+  grid-row: 1/2;
+  display: flex;
+  justify-self: center;
+}
+#error-message {
+  grid-row: 2/3;
+  color: red;
+  display:flex;
+  justify-self: center;
+}
+
 #list-rooms {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -230,8 +264,8 @@ export default {
 }
 
 #button-pos {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
 }
 
 #spacer {
