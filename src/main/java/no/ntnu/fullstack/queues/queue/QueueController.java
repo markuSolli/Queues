@@ -42,9 +42,11 @@ public class QueueController {
         try {
             Queue addedQueue = queueService.addQueue(queue, user, courseId, taskId);
             return new ResponseEntity<>(addedQueue, HttpStatus.CREATED);
-        } catch (TaskNotFoundException | CourseNotFoundException | IllegalArgumentException e) {
+        } catch (TaskNotFoundException | CourseNotFoundException e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
