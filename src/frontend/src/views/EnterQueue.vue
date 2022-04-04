@@ -306,4 +306,21 @@ export default {
 .selected-task {
   background: rgb(212, 145, 0);
 }
+
+@media only screen and (max-width: 500px) {
+  .task-1,
+.task-2 {
+  background: green;
+  border-radius: 10px;
+
+  font-size: 30px;
+  padding: 5px 15px;
+  margin: 0px 5px;
+}
+}
+
+.task-2 {
+  background: red;
+}
+
 </style>
