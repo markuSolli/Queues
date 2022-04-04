@@ -25,6 +25,7 @@
           :isStudAss="isStudAss"
           :guide="false"
           :id="queueItem.id"
+          :task="queueItem.task.number"
           :firstname="queueItem.user.firstName"
           :lastname="queueItem.user.lastName"
           :type="queueItem.help ? 'help' : 'approval'"
