@@ -92,13 +92,14 @@ export default {
     });
 
     let assistant = computed(() => {
-      if (store.state.role == 2) return true;
+      if (store.state.role == "ASSISTANT") return true;
     });
     let edit = computed(() => {
-      if (store.state.role < 2) return true;
+      if (store.state.role == "ADMIN" || store.state.role == "TEACHER")
+        return true;
     });
     let student = computed(() => {
-      if (store.state.role == 3) return true;
+      if (store.state.role == "STUDENT") return true;
     });
 
     const deleteCourse = () => {

@@ -24,7 +24,9 @@
       <div @click="clickLink('/')" class="link">Courses</div>
       <div @click="clickLink('/about')" class="link">About</div>
       <div @click="clickLink('/archieve')" class="link">Archieve</div>
-      <div @click="clickLink('/management')" class="link">Management</div>
+      <div v-if="properRank" @click="clickLink('/management')" class="link">
+        Management
+      </div>
 
       <div @click="clickLink('/profile')" class="link">Profile</div>
     </div>
@@ -53,9 +55,15 @@ export default {
     };
 
     const properRank = computed(() => {
-      if (store.state.role < 3) {
+      if (
+        store.state.role == "ADMIN" ||
+        store.state.role == "TEACHER" ||
+        store.state.role == "ASSISTANT"
+      ) {
+        console.log("true");
         return true;
       } else {
+        console.log("false");
         return false;
       }
     });
