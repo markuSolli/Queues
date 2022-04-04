@@ -36,7 +36,7 @@
 
           <Button
             :title="'Remove group'"
-            @click="removeGroup(list, index)"
+            @click="removeGroup(list, taskgroup.number)"
           />
         </div>
       </div>
@@ -84,7 +84,7 @@ export default {
     };
 
     const removeGroup = (list, number) => {
-      list.taskgroups.splice(number, 1);
+      list.taskgroups.splice(number - 1, 1);
       for (let i = 0; i < list.value.taskgroups.length; i++) {
         list.value.taskgroups[i].number = i + 1;
       }
