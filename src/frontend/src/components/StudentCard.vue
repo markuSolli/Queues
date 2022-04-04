@@ -13,12 +13,22 @@
       <div v-if="guide" class="element-7"></div>
       <div v-else>
         <div class="element-7" v-if="!guide && isStudAss">
-          <Button
-            v-if="!beingApproved"
-            :title="'Assist'"
-            @click="superviseStudent"
-          />
-          <Button v-else :title="'Approve'" @click="approveStudent" />
+          <div v-if="help">
+            <Button :title="'Done'" @click="doneWithoutTaskApproved" />
+          </div>
+          <div v-else>
+            <div v-if="!beingApproved">
+              <Button
+                v-if="!beingApproved"
+                :title="'Assist'"
+                @click="superviseStudent"
+              />
+            </div>
+            <div v-else>
+              <Button :title="'Approve'" @click="approveStudent" />
+              <Button :title="'Cancel'" @click="doneWithoutTaskApproved" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -50,6 +60,7 @@ export default {
     "isStudAss",
     "task",
     "location",
+    "help",
   ],
   setup(props) {
     const id = ref(props.id);
@@ -62,6 +73,7 @@ export default {
     const location = ref(props.location);
     const studass = ref(props.studentAssistant);
     const guide = ref(props.guide);
+    const help = ref(props.help);
     const isStudAss = ref(props.isStudAss);
     const beingApproved = computed(() => {
       if (studass.value) {
@@ -84,6 +96,8 @@ export default {
       });
     };
 
+    const doneWithoutTaskApproved = () => {};
+
     return {
       email,
       firstname,
@@ -98,6 +112,8 @@ export default {
       approveStudent,
       task,
       location,
+      help,
+      doneWithoutTaskApproved,
     };
   },
 };

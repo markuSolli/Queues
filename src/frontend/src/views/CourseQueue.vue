@@ -21,6 +21,7 @@
       />
       <div v-for="queueItem in queue" :key="queueItem.id">
         <StudentCard
+          :help="queueItem.help"
           :location="queueItem.room.title"
           :isStudAss="isStudAss"
           :guide="false"
@@ -28,7 +29,7 @@
           :task="queueItem.task.number"
           :firstname="queueItem.user.firstName"
           :lastname="queueItem.user.lastName"
-          :type="queueItem.help ? 'help' : 'approval'"
+          :type="queueItem.help ? 'Help' : 'Approval'"
           :studentAssistant="
             queueItem.assistant
               ? queueItem.assistant.firstName + queueItem.assistant.lastName
