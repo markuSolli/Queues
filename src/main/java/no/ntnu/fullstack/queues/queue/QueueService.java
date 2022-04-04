@@ -56,7 +56,8 @@ public class QueueService {
     public Queue addQueue(Queue queue, User user, Long courseId, Long taskId) throws TaskNotFoundException, CourseNotFoundException, IllegalArgumentException {
         Course course = courseService.getCourse(courseId);
         if(queueRepository.existsByUserAndTask_TaskGroup_Course(user, course)) throw new IllegalArgumentException();
-        if(!userCourseService.existsInCourse(user, course)) throw new IllegalArgumentException();
+        CourseRole role = userCourseService.roleInCourse(user, course);
+        if(role == null) throw new IllegalArgumentException();
         queue.setUser(user);
         Timestamp now = new Timestamp(System.currentTimeMillis());
         queue.setTime(now);
@@ -101,7 +102,8 @@ public class QueueService {
      */
     public Approved approveQueue(Long id, User assistant){
         Course course = getQueue(id).getCourse();
-        if(!userCourseService.existsInCourse(assistant, course)) throw new IllegalArgumentException();
+        CourseRole role = userCourseService.roleInCourse(assistant, course);
+        if(role == null || role.ordinal() < 1) throw new IllegalArgumentException();
         Queue queue = getQueue(id);
         Approved approval = approvedService.approveQueue(queue, assistant);
         deleteQueue(queue.getId());
@@ -117,7 +119,8 @@ public class QueueService {
      */
     public Queue assistQueue(Long id, User assistant){
         Course course = getQueue(id).getCourse();
-        if(!userCourseService.existsInCourse(assistant, course)) throw new IllegalArgumentException();
+        CourseRole role = userCourseService.roleInCourse(assistant, course);
+        if(role == null || role.ordinal() < 1) throw new IllegalArgumentException();
         Queue existingQueue = queueRepository.findById(id).orElseThrow(() -> new QueueNotFoundException(id));
         existingQueue.setAssistant(assistant);
         return queueRepository.save(existingQueue);
