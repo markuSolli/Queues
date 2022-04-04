@@ -148,4 +148,13 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
+
+    /**
+     * Returns true if a user is an admin
+     *
+     * @return true if admin, false if not
+     */
+    public boolean isAdmin() {
+        return role == Role.ADMIN;
+    }
 }

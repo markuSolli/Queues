@@ -48,18 +48,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
                 .and()
                 .authorizeRequests()
+                    // Authentication endpoints
                     .antMatchers("/login").permitAll()
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/token").permitAll()
                     .antMatchers("/example").permitAll()
-                    .antMatchers("/activation/**").permitAll()
                     .antMatchers("/activate").permitAll()
+                    .antMatchers("/activation/**").permitAll()
                     .antMatchers("/swagger-ui/**").permitAll()
                     .antMatchers("/v3/api-docs/**").permitAll()
-                    .antMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/courses/**").hasRole("ADMIN")
                     .antMatchers( "/register").hasRole("TEACHER")
                     .antMatchers( "/users").hasRole("ADMIN")
+                    // Queue endpoints
+                    .antMatchers("/queue/*/assist").hasRole("ASSISTANT")
+                    .antMatchers("/queue/*/approve").hasRole("ASSISTANT")
+                    // Course endpoints
+                    .antMatchers(HttpMethod.POST,"/courses/**").hasRole("TEACHER")
+                    .antMatchers(HttpMethod.PUT,"/courses/**").hasRole("TEACHER")
+                    .antMatchers(HttpMethod.DELETE,"/courses/**").hasRole("TEACHER")
+                    .antMatchers(HttpMethod.PATCH,"/courses/active").hasRole("ASSISTANT")
+                    .antMatchers(HttpMethod.PATCH,"/courses/archive").hasRole("TEACHER")
                 .anyRequest().authenticated();
     }
 

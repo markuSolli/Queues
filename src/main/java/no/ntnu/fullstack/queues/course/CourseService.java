@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.authentication.CustomAuthenticationException;
 import no.ntnu.fullstack.queues.task.*;
 import no.ntnu.fullstack.queues.user.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -50,6 +51,21 @@ public class CourseService {
         return courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
     }
 
+
+    /**
+     * Returns the course with the given id, if the user asking for it is in the course
+     * @param id id of course to look for
+     * @param user loggen in user
+     * @return course, if the user is allowed to
+     */
+    public Course getCourse(Long id, User user) {
+        Course course = getCourse(id);
+        if(!course.isUserInCourse(user) && !user.isAdmin()) {
+            throw new CustomAuthenticationException("A user can only access a course the user is enrolled in");
+        }
+        return course;
+    }
+
     /**
      * Adds the given course to the database
      *
@@ -88,6 +104,19 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
+    /**
+     * Deletes the given course if the user is allowed to do so
+     *
+     * @param id course to delete
+     * @param caller caller of method
+     */
+    public void deleteCourse(Long id, User caller) {
+        Course course = getCourse(id);
+        if(course.findCourseRole(caller) != CourseRole.TEACHER && !caller.isAdmin()) {
+            throw new CustomAuthenticationException("A user must be a teacher in the course to delete it");
+        }
+        courseRepository.deleteById(id);
+    }
 
     /**
      * Takes all data about a course and creates a complete network of everything that should be stored
@@ -114,8 +143,11 @@ public class CourseService {
      * @param courseDTO new data for course
      * @return the edited course
      */
-    public Course editCourse(Long id, CourseDTO courseDTO) throws UsernameNotFoundException{
+    public Course editCourse(Long id, CourseDTO courseDTO, User caller) throws UsernameNotFoundException{
         Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+        if(existingCourse.findCourseRole(caller) != CourseRole.TEACHER && !caller.isAdmin()) {
+            throw new CustomAuthenticationException("A user must be a teacher in the course to edit it");
+        }
 
         existingCourse.getUsers().clear();
         setUsers(courseDTO, existingCourse);
@@ -186,14 +218,18 @@ public class CourseService {
 
 
     /**
-     * Changes the state flag of a course into the given value
+     * Changes the state flag of a course into the given value if the user calling the method is allowed to do so
      *
      * @param id id of course to update
      * @param archived new state
+     * @param caller caller of method
      * @return edited course
      */
-    public Course toggleArchived(Long id, boolean archived) {
+    public Course toggleArchived(Long id, boolean archived, User caller) {
         Course course = getCourse(id);
+        if(course.findCourseRole(caller) != CourseRole.TEACHER && !caller.isAdmin()) {
+            throw new CustomAuthenticationException("Users can only archive and restore courses they are teachers in");
+        }
         course.setArchived(archived);
         return courseRepository.save(course);
     }
@@ -204,8 +240,11 @@ public class CourseService {
      * @param active new state
      * @return edited course
      */
-    public Course toggleActive(Long id, boolean active) {
+    public Course toggleActive(Long id, boolean active, User caller) {
         Course course = getCourse(id);
+        if(course.findCourseRole(caller) != CourseRole.ASSISTANT && !caller.isAdmin()) {
+            throw new CustomAuthenticationException("Users can only activate and deactivate courses they are assistants in");
+        }
         course.setActive(active);
         return courseRepository.save(course);
     }
