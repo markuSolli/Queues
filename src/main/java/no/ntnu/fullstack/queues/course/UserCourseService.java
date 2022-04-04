@@ -28,4 +28,14 @@ public class UserCourseService {
         userCourseRepository.save(new UserCourse(user, course, courseRole));
     }
 
+    /**
+     * Check if the user has a role in a course
+     * @param user the user
+     * @param course the course
+     * @return true or false
+     */
+    public boolean existsInCourse(User user, Course course){
+        return userCourseRepository.existsByUserAndCourse(user, course);
+    }
+
 }
