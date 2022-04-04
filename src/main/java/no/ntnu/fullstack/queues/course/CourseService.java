@@ -103,6 +103,8 @@ public class CourseService {
 
         course.setTaskGroups(courseDTO.getTaskGroups());
 
+        course.setRooms(courseDTO.getRooms());
+
         return courseRepository.save(course);
     }
 
