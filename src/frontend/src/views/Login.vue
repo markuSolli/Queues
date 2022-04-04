@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="login" v-on:keyup.enter="logIn">
     <div id="login-box">
       <h1>Login</h1>
       <div id="input-row">
