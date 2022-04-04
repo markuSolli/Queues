@@ -99,10 +99,10 @@ public class Course {
     }
 
     public void setTaskGroups(Set<TaskGroup> taskGroups) {
+        this.taskGroups.clear();
         if(taskGroups == null) {
             return;
         }
-        this.taskGroups.clear();
         for(TaskGroup taskGroup : taskGroups) {
             taskGroup.setCourse(this);
             for(Task task : taskGroup.getTasks()) {
