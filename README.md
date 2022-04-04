@@ -1,19 +1,22 @@
-# queues
+# Queues
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Voluntary project in our Fullstack course. Our task was to build a website for assignment-approval in a school setting. Teachers can register courses and create users for its students, where the students can get in queue for getting an assignment approved by a teacher or a teaching assistant.
 
 ## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+![Front page view of website](banner.PNG)
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Installation 
+Host a MySQL server with address 'localhost:3306' with a schema with name 'qs', user 'root', and password 'password'.  
+The backend runs on Spring Boot with Maven, we prefer opening the project in IntelliJ and clicking the 'Run QueuesApplication' button.  
+The frontend is built on vue, so open src/frontend and run 'npm run serve' to host the website on port 8080.
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+The server has a role policy that requires an Admin to start with, by visiting localhost:3000/example and admin with username 'roger@roger.no' and password 'roger' gets created.
+The Admin has full access to the website, and is able to create courses and new users. Newly created users gets an e-mail with an activation link to set their password.
+Teachers can manage courses that they are assigned to by the admin. New students, rooms and assignments can be added to a course.
+Student assistants can approve assignments for other students by going into a courses queue page, and picking a student in line.
+A Student can place themselves in a courses queue when its opened, and get approved their assignments. On the course page they also get a status on how many assignments they have approved in each course.
 
 ## Libraries
 This project makes use of some great external libraries. 
