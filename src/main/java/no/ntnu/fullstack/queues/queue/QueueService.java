@@ -1,10 +1,7 @@
 package no.ntnu.fullstack.queues.queue;
 
 import no.ntnu.fullstack.queues.authentication.CustomAuthenticationException;
-import no.ntnu.fullstack.queues.course.Course;
-import no.ntnu.fullstack.queues.course.CourseNotFoundException;
-import no.ntnu.fullstack.queues.course.CourseRole;
-import no.ntnu.fullstack.queues.course.CourseService;
+import no.ntnu.fullstack.queues.course.*;
 import no.ntnu.fullstack.queues.task.Approved;
 import no.ntnu.fullstack.queues.task.ApprovedService;
 import no.ntnu.fullstack.queues.task.TaskNotFoundException;
@@ -21,12 +18,14 @@ public class QueueService {
     private final ApprovedService approvedService;
     private final CourseService courseService;
     private final TaskService taskService;
+    private final UserCourseService userCourseService;
 
-    public QueueService(QueueRepository queueRepository, ApprovedService approvedService, CourseService courseService, TaskService taskService) {
+    public QueueService(QueueRepository queueRepository, ApprovedService approvedService, CourseService courseService, TaskService taskService, UserCourseService userCourseService) {
         this.queueRepository = queueRepository;
         this.approvedService = approvedService;
         this.courseService = courseService;
         this.taskService = taskService;
+        this.userCourseService = userCourseService;
     }
 
     /**
@@ -57,6 +56,7 @@ public class QueueService {
     public Queue addQueue(Queue queue, User user, Long courseId, Long taskId) throws TaskNotFoundException, CourseNotFoundException, IllegalArgumentException {
         Course course = courseService.getCourse(courseId);
         if(queueRepository.existsByUserAndTask_TaskGroup_Course(user, course)) throw new IllegalArgumentException();
+        if(!userCourseService.existsInCourse(user, course)) throw new IllegalArgumentException();
         queue.setUser(user);
         Timestamp now = new Timestamp(System.currentTimeMillis());
         queue.setTime(now);
@@ -97,8 +97,11 @@ public class QueueService {
      * Approve the queue and delete it
      * @param id id of the queue to approve
      * @return the new approval object
+     * @throws IllegalArgumentException
      */
     public Approved approveQueue(Long id, User assistant){
+        Course course = getQueue(id).getCourse();
+        if(!userCourseService.existsInCourse(assistant, course)) throw new IllegalArgumentException();
         Queue queue = getQueue(id);
         Approved approval = approvedService.approveQueue(queue, assistant);
         deleteQueue(queue.getId());
@@ -110,8 +113,11 @@ public class QueueService {
      * @param id id of the queue that gets an assistant
      * @param assistant the assistant to attach
      * @return the edited queue object
+     * @throws IllegalArgumentException
      */
     public Queue assistQueue(Long id, User assistant){
+        Course course = getQueue(id).getCourse();
+        if(!userCourseService.existsInCourse(assistant, course)) throw new IllegalArgumentException();
         Queue existingQueue = queueRepository.findById(id).orElseThrow(() -> new QueueNotFoundException(id));
         existingQueue.setAssistant(assistant);
         return queueRepository.save(existingQueue);
