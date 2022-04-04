@@ -1,23 +1,26 @@
 <template>
   <div>
-    <h1>Course name</h1>
+    <h1>{{ course.code + " " + course.title }}</h1>
     <div id="spacer">
       <h2>Task summary</h2>
       <div id="list-of-tasks">
         <div
           id="taskgroup-grid"
-          v-for="taskGroup in taskGroups"
+          v-for="taskGroup in course.taskGroupProgress"
           :key="taskGroup.id"
         >
           <div id="group-header">Group {{ taskGroup.number }}</div>
           <div id="taskgroup">
-            <div v-for="task in taskGroup.tasks" :key="task.id">
-              <div class="task-1">
+            <div v-for="task in taskGroup.taskProgress" :key="task.id">
+              <div :class="task.approved ? 'task-1' : 'task-2'">
                 {{ task.number }}
               </div>
             </div>
           </div>
-          <div id="group-status">Group status: / {{ taskGroup.required }}</div>
+          <div id="group-status">
+            {{ taskGroup.completed }} completed /
+            {{ taskGroup.required }} required
+          </div>
         </div>
       </div>
     </div>
@@ -33,29 +36,17 @@ import { useRoute } from "vue-router";
 export default {
   setup() {
     const route = useRoute();
-    let taskGroups = ref();
+    const course = ref({});
+    let taskGroups = ref([]);
 
     onMounted(() => {
-      http.get("/courses/" + route.params.id).then((response) => {
-        const course = response.data;
-
-        // sort groups
-        course.taskGroups.sort(function (a, b) {
-          return a.number - b.number;
-        });
-
-        // sort tasks
-        for (const taskGroup in course.taskGroups) {
-          course.taskGroups[taskGroup].tasks.sort(function (a, b) {
-            return a.number - b.number;
-          });
-        }
-
-        taskGroups.value = course.taskGroups;
+      http.get("/courses/progress/" + route.params.id).then((response) => {
+        console.log(response.data);
+        course.value = response.data;
       });
     });
 
-    return { taskGroups };
+    return { course, taskGroups };
   },
 };
 </script>
