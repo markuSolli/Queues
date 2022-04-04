@@ -4,7 +4,7 @@ export default createStore({
   state: {
     loggedIn: false,
     accessToken: null,
-    role: 1,
+    role: 3,
     email: "",
     firstName: "",
     lastName: "",
@@ -28,6 +28,9 @@ export default createStore({
     },
     updateLastname(state, val) {
       state.lastName = val;
+    },
+    updateRole(state, val) {
+      state.role = val;
     },
     setAccessToken(state, val) {
       state.accessToken = val;

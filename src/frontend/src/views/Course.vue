@@ -55,6 +55,10 @@
       />
     </div>
 
+    <div id="add-rooms">
+      <Map />
+    </div>
+
     <div class="row">
       <div id="done-button">
         <Button :title="'Done'" @click="createCourse" />
@@ -74,9 +78,10 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { onMounted } from "@vue/runtime-core";
 import http from "@/service/http-common";
+import Map from "../components/Map.vue";
 
 export default {
-  components: { Button, PersonList, TaskList },
+  components: { Button, PersonList, TaskList, Map },
   setup() {
     const route = useRoute();
     const status = ref("");

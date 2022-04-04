@@ -73,7 +73,11 @@ export default {
         })
         .catch((err) => console.log(err));
 
-      if (store.state.role < 3) {
+      if (
+        store.state.role == "ASSISTANT" ||
+        store.state.role == "TEACHER" ||
+        store.state.role == "ADMIN"
+      ) {
         isStudAss.value = true;
       }
       // check if logged in student is student assistant for this course
