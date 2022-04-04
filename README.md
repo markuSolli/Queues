@@ -18,7 +18,20 @@ Teachers can manage courses that they are assigned to by the admin. New students
 Student assistants can approve assignments for other students by going into a courses queue page, and picking a student in line.  
 A Student can place themselves in a courses queue when its opened, and get their assignments approved. On the course page they also get a status on how many assignments they have approved in each course.  
 
-## Libraries
-This project makes use of some great external libraries. 
+## Documentation
+Documentation of the project architecture can be found in the Project_Architecture.pdf-file in the root folder.
+The server has been well documented with Javadoc, and the html can be found at JavaDoc/index.html in the root folder.
+Documentation for all server endpoints can be found when visiting the url localhost:3000/swagger-ui/index.html (when the server is running).
 
-- For token generation, we use [this JWT token Library](https://github.com/jwtk/jjwt)
+## Libraries
+This project makes use of some great external libraries: 
+
+### Frontend:
+- For api requests, we use [axios](https://www.npmjs.com/package/axios)
+- For fonts, we use [FontAwesome](https://fontawesome.com/)
+- For token decoding in the frontend, we use [jwt-decode](https://www.npmjs.com/package/jwt-decode)
+- For mapping the location of rooms, we use [MazeMap API](https://www.mazemap.com/solutions/developer-apis)
+
+### Backend:
+- For api endpoint documentation, we use [Springdoc with Swagger-ui](https://springdoc.org/)
+- For token generation in the backend, we use [this JWT token Library](https://github.com/jwtk/jjwt)
