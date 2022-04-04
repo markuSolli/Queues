@@ -141,6 +141,7 @@ export default {
     };
     const enterQueue = () => {
       console.log(selectedRoom.value);
+      errorMessage.value = "";
 
       if(!checkIfTaskHasBeenApproved()) {
           http
@@ -149,8 +150,6 @@ export default {
           room: selectedRoom.value,
         })
         .then((response) => {
-          console.log(response.data);
-
           // redirect to queue in successfull
           router.push({
             name: "courseQueue",
@@ -158,9 +157,11 @@ export default {
               id: route.params.id,
             },
           });
+        }).catch((error) => {
+          if(error.response.status == "409") errorMessage.value += "You are already in this queue\n";
         });
       } else {
-        errorMessage.value = "Task " + selectedTask.value + " has already been approved, pick another task!"
+        errorMessage.value += "Task " + selectedTask.value + " has already been approved, pick another task!\n";
       }
 
       

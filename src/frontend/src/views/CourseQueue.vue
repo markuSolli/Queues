@@ -34,7 +34,7 @@
           :type="queueItem.help ? 'Help' : 'Approval'"
           :studentAssistant="
             queueItem.assistant
-              ? queueItem.assistant.firstName + queueItem.assistant.lastName
+              ? queueItem.assistant.firstName + ' ' + queueItem.assistant.lastName
               : null
           "
         />
