@@ -2,7 +2,7 @@
   <div id="nav">
     <div id="left-logo"><h1>Queues</h1></div>
     <div id="left">
-      <h1>Queues</h1>
+      <h1 @click="pushToHome">Queues</h1>
       <router-link class="link" tag="li" to="/"
         ><i class="fa-solid fa-list"></i> Courses</router-link
       >
@@ -11,7 +11,7 @@
         ><i class="fa-solid fa-info"></i> About</router-link
       >
       <router-link class="link" tag="li" to="/archieve"
-        ><i class="fa-solid fa-box-archive"></i> Archieve</router-link
+        ><i class="fa-solid fa-box-archive"></i> Archive</router-link
       >
       <router-link v-if="properRank" class="link" tag="li" to="/management"
         ><i class="fa-solid fa-list-check"></i> Management</router-link
@@ -23,7 +23,7 @@
     <div v-if="expanded" id="right-expanded">
       <div @click="clickLink('/')" class="link">Courses</div>
       <div @click="clickLink('/about')" class="link">About</div>
-      <div @click="clickLink('/archieve')" class="link">Archieve</div>
+      <div @click="clickLink('/archieve')" class="link">Archive</div>
       <div v-if="properRank" @click="clickLink('/management')" class="link">
         Management
       </div>
@@ -74,11 +74,16 @@ export default {
       router.push(route);
     };
 
+    const pushToHome = () => {
+      router.push("/");
+    }
+
     return {
       properRank,
       expanded,
       openMenu,
       clickLink,
+      pushToHome
     };
   },
 };
@@ -152,7 +157,7 @@ li.router-link-exact-active {
 
   #right-menu {
     display: block;
-    padding: 10;
+    padding: 10px;
     font-size: 25px;
     cursor: pointer;
     float: right;
