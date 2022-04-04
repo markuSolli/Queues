@@ -35,6 +35,7 @@ public class AuthenticationController {
             User newUser = userService.register(user, caller);
             return new ResponseEntity<>(newUser.getEmail(), HttpStatus.CREATED);
         }catch(Exception e){
+            logger.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 
         }

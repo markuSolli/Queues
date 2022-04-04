@@ -103,7 +103,7 @@ public class QueueService {
     public Approved approveQueue(Long id, User assistant){
         Course course = getQueue(id).getCourse();
         CourseRole role = userCourseService.roleInCourse(assistant, course);
-        if(role == null || role.ordinal() < 1) throw new IllegalArgumentException();
+        if(role == null || role.ordinal() < 1) throw new CustomAuthenticationException("User can only assist in courses they are enrolled in as assistants");
         Queue queue = getQueue(id);
         Approved approval = approvedService.approveQueue(queue, assistant);
         deleteQueue(queue.getId());
@@ -121,7 +121,8 @@ public class QueueService {
         Course course = getQueue(id).getCourse();
         CourseRole role = userCourseService.roleInCourse(assistant, course);
         if(role == null || role.ordinal() < 1) throw new IllegalArgumentException();
-        Queue existingQueue = queueRepository.findById(id).orElseThrow(() -> new QueueNotFoundException(id));
+        if(queueRepository.existsByAssistant(assistant)) throw new IllegalArgumentException("User is already assisting another user");
+        Queue existingQueue = getQueue(id);
         existingQueue.setAssistant(assistant);
         return queueRepository.save(existingQueue);
     }

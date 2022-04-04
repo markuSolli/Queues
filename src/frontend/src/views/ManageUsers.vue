@@ -67,7 +67,7 @@ export default {
       }
 
       // add user to database
-      http.post("/signup", newUser)
+      http.post("/register", newUser)
       .then((response) => {
         console.log(response.data)
       })

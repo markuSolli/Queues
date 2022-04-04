@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.queue;
 
+import no.ntnu.fullstack.queues.authentication.CustomAuthenticationException;
 import no.ntnu.fullstack.queues.course.CourseController;
 import no.ntnu.fullstack.queues.course.CourseNotFoundException;
 import no.ntnu.fullstack.queues.task.Approved;
@@ -68,19 +69,27 @@ public class QueueController {
         logger.info("Approving queue {}...", id);
         try {
             return new ResponseEntity<>(queueService.approveQueue(id, user), HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (CustomAuthenticationException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (QueueNotFoundException e) {
+            logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}/assist")
     public ResponseEntity<Queue> assistQueue(@PathVariable Long id, Authentication authentication){
-        logger.info("Attaching assistant to queue {}...", id);
-        User caller = (User) authentication.getPrincipal();
         try {
+            logger.info("Attaching assistant to queue {}...", id);
+            User caller = (User) authentication.getPrincipal();
             return new ResponseEntity<>(queueService.assistQueue(id, caller), HttpStatus.OK);
-        }catch(Exception e){
+        } catch(QueueNotFoundException e){
+            logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (IllegalArgumentException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 }

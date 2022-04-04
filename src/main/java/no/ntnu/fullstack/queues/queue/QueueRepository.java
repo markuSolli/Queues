@@ -10,4 +10,5 @@ public interface QueueRepository extends CrudRepository<Queue, Long> {
 
     Iterable<Queue> findAllByCourseId(Long courseID);
     boolean existsByUserAndTask_TaskGroup_Course(User user, Course course);
+    boolean existsByAssistant(User assistant);
 }

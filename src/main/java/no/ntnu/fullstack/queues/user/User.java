@@ -21,7 +21,6 @@ public class User implements UserDetails {
     private String lastName;
     @JsonIgnore
     private String activation;
-    @JsonIgnore
     private Role role;
 
     @JsonIgnore
