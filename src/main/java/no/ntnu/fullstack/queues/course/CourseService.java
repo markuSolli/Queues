@@ -116,17 +116,18 @@ public class CourseService {
      */
     public Course editCourse(Long id, CourseDTO courseDTO) throws UsernameNotFoundException{
         Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+
+        existingCourse.getUsers().clear();
+        setUsers(courseDTO, existingCourse);
+
         existingCourse.setCode(courseDTO.getCode());
         existingCourse.setTitle(courseDTO.getTitle());
         existingCourse.setSeason(courseDTO.getSeason());
         existingCourse.setYear(courseDTO.getYear());
-        existingCourse.setTitle(courseDTO.getTitle());
         existingCourse.setTaskGroups(courseDTO.getTaskGroups());
         existingCourse.setRooms(courseDTO.getRooms());
 
         // Edit users
-        existingCourse.getUsers().clear();
-        setUsers(courseDTO, existingCourse);
         return courseRepository.save(existingCourse);
     }
 

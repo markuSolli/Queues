@@ -127,14 +127,6 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //TODO: This method is not complete
-    @GetMapping("/{id}/approved")
-    public ResponseEntity<String> getApproved(@PathVariable Long id, Authentication authentication) {
-        logger.info("Retrieving all approved tasks for course {}...", id);
-        User user = (User) authentication.getPrincipal();
-        return new ResponseEntity<>("", HttpStatus.OK);
-    }
-
     /**
      * Modifies the archived status of the course with the given status to match the given boolean value
      *

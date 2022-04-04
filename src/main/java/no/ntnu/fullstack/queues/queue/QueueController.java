@@ -24,11 +24,11 @@ public class QueueController {
         this.queueService = queueService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Iterable<Queue>> getQueue(@PathVariable Long id){
+    @GetMapping("{course_id}")
+    public ResponseEntity<Iterable<Queue>> getQueue(@PathVariable(name = "course_id") Long courseId){
         try{
-            logger.info("Retrieving queue for course " + id + "...");
-            return new ResponseEntity<>(queueService.getQueueFromCourseId(id), HttpStatus.OK);
+            logger.info("Retrieving queue for course " + courseId + "...");
+            return new ResponseEntity<>(queueService.getQueueFromCourseId(courseId), HttpStatus.OK);
         }catch(Exception e){
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
