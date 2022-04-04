@@ -21,7 +21,7 @@ public class Course {
     private int year;
     private boolean archived = false;
     private boolean active = false;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Location> rooms = new HashSet<>();
     @OneToMany(mappedBy = "course",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TaskGroup> taskGroups = new HashSet<>();
