@@ -197,7 +197,7 @@ public class UserService implements UserDetailsService {
      */
     public User register(User user, User caller) throws UserAlreadyExistsException{
         if(userExits(user.getEmail())) throw new UserAlreadyExistsException("User already exists");
-        if(caller.getRole().ordinal() <= user.getRole().ordinal()) throw new IllegalAccessError();
+        if(caller.getRole().ordinal() > user.getRole().ordinal()) throw new IllegalAccessError();
         User newUser = new User(user.getEmail(), null, user.getFirstName(), user.getLastName());
         newUser.setRole(user.getRole());
         newUser.setActivation(generateActivationCode());
