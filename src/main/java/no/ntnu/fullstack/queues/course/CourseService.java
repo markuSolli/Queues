@@ -226,6 +226,7 @@ public class CourseService {
             courseProgress.setSeason(course.getSeason());
             courseProgress.setYear(course.getYear());
             courseProgress.setActive(course.isActive());
+            courseProgress.setArchived(course.isArchived());
             courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
             progress.add(courseProgress);
         }
@@ -249,6 +250,7 @@ public class CourseService {
         courseProgress.setSeason(course.getSeason());
         courseProgress.setYear(course.getYear());
         courseProgress.setActive(course.isActive());
+        courseProgress.setArchived(course.isArchived());
         courseProgress.setTaskGroupProgress(calculateProgress(course, allApproved));
         return courseProgress;
     }

@@ -13,6 +13,7 @@ public class CourseProgress {
     private String code;
     private String title;
     private boolean active;
+    private boolean archived;
     private Season season;
     private int year;
     private List<TaskGroupProgress> taskGroupProgress;
@@ -48,6 +49,14 @@ public class CourseProgress {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public Season getSeason() {
