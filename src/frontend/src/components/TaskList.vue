@@ -86,7 +86,7 @@ export default {
     const removeGroup = (list, number) => {
       list.taskgroups.splice(number - 1, 1);
       for (let i = 0; i < list.value.taskgroups.length; i++) {
-        list.value.taskgroups[i].number = i + 1;
+        list.value.taskgroups[i].number = i;
       }
       updateTaskCount();
     };
