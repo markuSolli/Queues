@@ -1,5 +1,6 @@
 package no.ntnu.fullstack.queues.course;
 
+import no.ntnu.fullstack.queues.authentication.CustomAuthenticationException;
 import no.ntnu.fullstack.queues.user.Role;
 import no.ntnu.fullstack.queues.user.User;
 import org.slf4j.Logger;
@@ -58,10 +59,11 @@ public class CourseController {
      * @return course with the given id, if there is one.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Course> getCourse(@PathVariable Long id) {
+    public ResponseEntity<Course> getCourse(@PathVariable Long id, Authentication authentication) {
         try {
+            User user = (User) authentication.getPrincipal();
             logger.info("Retrieving course {}", id);
-            return new ResponseEntity<>(courseService.getCourse(id), HttpStatus.OK);
+            return new ResponseEntity<>(courseService.getCourse(id, user), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -79,9 +81,12 @@ public class CourseController {
         try {
             User user = (User) authentication.getPrincipal();
             return new ResponseEntity<>(courseService.getCourseProgress(courseId, user), HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (CourseNotFoundException e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CustomAuthenticationException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -105,12 +110,17 @@ public class CourseController {
      * @return updated course
      */
     @PutMapping("{id}")
-    public ResponseEntity<Course> editCourse(@PathVariable Long id, @RequestBody CourseDTO courseDTO) {
-        logger.info("Editing course {} ...", id);
+    public ResponseEntity<Course> editCourse(@PathVariable Long id, @RequestBody CourseDTO courseDTO, Authentication authentication) {
         try {
-            return new ResponseEntity<>(courseService.editCourse(id,courseDTO), HttpStatus.OK);
-        } catch (UsernameNotFoundException e) {
+            User user = (User) authentication.getPrincipal();
+            logger.info("Editing course {} ...", id);
+            return new ResponseEntity<>(courseService.editCourse(id, courseDTO, user), HttpStatus.OK);
+        } catch (UsernameNotFoundException | CourseNotFoundException e) {
+            logger.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CustomAuthenticationException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -122,9 +132,17 @@ public class CourseController {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteCourse(@PathVariable Long id) {
-        logger.info("Deleting course {} ...", id);
-        courseService.deleteCourse(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            logger.info("Deleting course {} ...", id);
+            courseService.deleteCourse(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomAuthenticationException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED) ;
+        } catch (CourseNotFoundException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -135,9 +153,18 @@ public class CourseController {
      * @return modified course
      */
     @PatchMapping("/{id}/archived")
-    public ResponseEntity<Course> toggleArchived(@PathVariable Long id, @RequestBody Boolean archived){
-        logger.info(archived ? "Archiving course {}..." : "Restoring course {}...", id);
-        return new ResponseEntity<>(courseService.toggleArchived(id, archived), HttpStatus.OK);
+    public ResponseEntity<Course> toggleArchived(@PathVariable Long id, @RequestBody Boolean archived, Authentication authentication){
+        try {
+            User user = (User) authentication.getPrincipal();
+            logger.info(archived ? "Archiving course {}..." : "Restoring course {}...", id);
+            return new ResponseEntity<>(courseService.toggleArchived(id, archived, user), HttpStatus.OK);
+        } catch (CustomAuthenticationException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED) ;
+        } catch (CourseNotFoundException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -148,10 +175,17 @@ public class CourseController {
      * @return modified course
      */
     @PatchMapping("/{id}/active")
-    public ResponseEntity<Course> toggleActive(@PathVariable Long id, @RequestBody Boolean active){
-        logger.info(active ? "Activating course {}..." : "Deactivating course {}...", id);
-        return new ResponseEntity<>(courseService.toggleActive(id, active), HttpStatus.OK);
+    public ResponseEntity<Course> toggleActive(@PathVariable Long id, @RequestBody Boolean active, Authentication authentication){
+        try {
+            User user = (User) authentication.getPrincipal();
+            logger.info(active ? "Activating course {}..." : "Deactivating course {}...", id);
+            return new ResponseEntity<>(courseService.toggleActive(id, active, user), HttpStatus.OK);
+        } catch (CustomAuthenticationException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (CourseNotFoundException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
-
 }
