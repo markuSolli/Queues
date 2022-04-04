@@ -19,8 +19,10 @@
         :task="'Task'"
         :location="'Location'"
       />
-      <div v-for="queueItem in queue" :key="queueItem.id">
+      <div v-for="queueItem in queue" :key="queueItem.id + queueItem.assistant + timeNow">
         <StudentCard
+        :timeNow="timeNow"
+        :time="queueItem.time"
           :help="queueItem.help"
           :location="queueItem.room.title"
           :isStudAss="isStudAss"
@@ -46,7 +48,7 @@ import StudentCard from "../components/StudentCard.vue";
 import Button from "../components/Button.vue";
 import { useRoute } from "vue-router";
 import router from "../router";
-import { computed, onMounted } from "@vue/runtime-core";
+import { computed, onMounted, onUnmounted } from "@vue/runtime-core";
 import { onBeforeMount } from "vue";
 import http from "@/service/http-common";
 import { ref } from "@vue/reactivity";
@@ -66,6 +68,27 @@ export default {
     const user = ref();
     const code = ref();
     const title = ref();
+    const timeNow = ref(Date.now());
+
+    const timeNowFunc = () => {
+      timeNow.value = Date.now();
+
+      http
+        .get("/queue/" + route.params.id)
+        .then((response) => {
+          queue.value = response.data;
+          code.value = response.data[0].course.code;
+          title.value = response.data[0].course.title;
+        })
+        .catch((err) => console.log(err));
+    }
+
+    let intervalID = setInterval(timeNowFunc, 1000);
+
+    onUnmounted(() => {
+      clearInterval(intervalID);
+      console.log("clearing interval");
+    });
 
     onBeforeMount(() => {
       http
@@ -121,7 +144,7 @@ export default {
       });
     };
 
-    return { goToQueue, isStudAss, queue, code, title };
+    return { goToQueue, isStudAss, queue, code, title, timeNow };
   },
 };
 </script>

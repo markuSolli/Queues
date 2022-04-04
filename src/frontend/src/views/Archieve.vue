@@ -5,8 +5,8 @@
       <div id="title"><h2>Archived courses</h2></div>
     </div>
 
-    <div v-for="course in archivedCourses" :key="course.id" id="course-list">
-      <CourseCard :course="course" />
+    <div v-for="course in archivedCourses" :key="course.id + course.archived" id="course-list">
+      <CourseCard @refresh="refresh" :course="course" />
     </div>
   </div>
 </template>
@@ -28,8 +28,16 @@ export default {
       });
     });
 
+    const refresh = () => {
+      console.log("refresh");
+      http.get("/courses?archived=true").then((response) => {
+        archivedCourses.value = response.data;
+      });
+    }
+
     return {
       archivedCourses,
+      refresh
     };
   },
 };
