@@ -48,11 +48,12 @@ public class QueueController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteQueue(@RequestBody Queue queue){
-        logger.info("Deleting queue " + queue.toString() + "...");
-        queueService.deleteQueue(queue);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteQueue(@PathVariable Long id, Authentication authentication){
+        logger.info("Removing {} from queue...", id);
+        User user = (User) authentication.getPrincipal();
+        queueService.removeFromQueue(id, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{id}/approve")
