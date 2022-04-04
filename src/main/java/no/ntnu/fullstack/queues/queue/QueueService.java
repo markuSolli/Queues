@@ -1,12 +1,15 @@
 package no.ntnu.fullstack.queues.queue;
 
+import no.ntnu.fullstack.queues.authentication.CustomAuthenticationException;
 import no.ntnu.fullstack.queues.course.Course;
 import no.ntnu.fullstack.queues.course.CourseNotFoundException;
+import no.ntnu.fullstack.queues.course.CourseRole;
 import no.ntnu.fullstack.queues.course.CourseService;
 import no.ntnu.fullstack.queues.task.Approved;
 import no.ntnu.fullstack.queues.task.ApprovedService;
 import no.ntnu.fullstack.queues.task.TaskNotFoundException;
 import no.ntnu.fullstack.queues.task.TaskService;
+import no.ntnu.fullstack.queues.user.Role;
 import no.ntnu.fullstack.queues.user.User;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +66,31 @@ public class QueueService {
     }
 
     /**
-     * Deletes the given queue
-     * @param queue the queue to delete
+     * Removes a queue spot from the queue. If the caller is a user, it be their own spot they are removing
+     *
+     * @param id id of queue to delete
+     * @param user caller of removal
      */
-    public void deleteQueue(Queue queue){
-        queueRepository.deleteById(queue.getId());
+    public void removeFromQueue(Long id, User user) {
+        Queue queue = getQueue(id);
+
+        if(queue.getCourse().findCourseRole(user) == null && user.getRole() != Role.ADMIN) {
+            throw new CustomAuthenticationException("Queues cannot be deleted from users that are not enrolled in the course");
+        }
+        if(CourseRole.STUDENT.equals(queue.getCourse().findCourseRole(user)) && !queue.getUser().equals(user)) {
+            throw new CustomAuthenticationException("Students are not allowed to queues courses that are not their own");
+        }
+
+        // If we get here, the user is allowed to perform det deletion
+        deleteQueue(id);
+    }
+
+    /**
+     * Deletes the given queue
+     * @param id id of the queue to delete
+     */
+    public void deleteQueue(Long id){
+        queueRepository.deleteById(id);
     }
 
     /**
@@ -78,7 +101,7 @@ public class QueueService {
     public Approved approveQueue(Long id, User assistant){
         Queue queue = getQueue(id);
         Approved approval = approvedService.approveQueue(queue, assistant);
-        deleteQueue(queue);
+        deleteQueue(queue.getId());
         return approval;
     }
 

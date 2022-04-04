@@ -113,7 +113,11 @@ export default {
       });
     };
 
-    const doneWithoutTaskApproved = () => {};
+    const doneWithoutTaskApproved = () => {
+      http.delete("/queue/" + id.value).then((response) => {
+        console.log(response.data);
+      });
+    };
 
 
 

@@ -6,7 +6,6 @@
       <div id="buttons">
         <Button :title="'Add new course'" :route="'course'" />
         <Button :title="'Manage users'" :route="'manageUsers'" />
-        <Button :title="'Manage rooms'" :route="'manageRooms'" />
       </div>
     </div>
     <div v-for="course in courses" :key="course.id + course.archived + course.active" id="course-list">
