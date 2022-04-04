@@ -124,7 +124,6 @@ public class CourseService {
         existingCourse.setTitle(courseDTO.getTitle());
         existingCourse.setSeason(courseDTO.getSeason());
         existingCourse.setYear(courseDTO.getYear());
-        existingCourse.setTitle(courseDTO.getTitle());
         existingCourse.setTaskGroups(courseDTO.getTaskGroups());
         existingCourse.setRooms(courseDTO.getRooms());
 
