@@ -2,6 +2,10 @@
 
 ## Description
 Voluntary project in our Fullstack course. Our task was to build a website for assignment-approval in a school setting. Teachers can register courses and create users for its students, where the students can get in queue for getting an assignment approved by a teacher or a teaching assistant.
+The developers for this project are:
+- Markus Solli Pedersen, markussp@stud.ntnu.no
+- Nicolay Caspersen Roness, nicolayr@stud.ntnu.no
+- Leonard Opsal Taklo, leonaro@stud.ntnu.no
 
 ## Visuals
 ![Front page view of website](banner.PNG)
